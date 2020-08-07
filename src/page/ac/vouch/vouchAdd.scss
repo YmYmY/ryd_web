@@ -1,0 +1,130 @@
+.addLabourAccountPage{
+    .tableInfo{
+        border:$border;
+        padding:30px;
+        .title{
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            margin-bottom: 10px;
+            color: $main-color;
+            position: relative;
+            z-index: 9;
+            &::after{
+                content: "";
+                width: 226px;
+                height: 3px;
+                background: #666666;
+                margin: 5px 0 0 -118px;
+                position: absolute;
+                left: 50%;
+                top: 100%;
+            }
+            &::before{
+                content: "";
+                width: 226px;
+                height: 1px;
+                background: #666666;
+                margin: 11px 0 0 -118px;
+                position: absolute;
+                left: 50%;
+                top: 100%;
+            }
+        }
+        .date{
+            width: 300px;
+            position: relative;
+            margin-left: -75px;
+            left: 50%;
+            .el-input__inner{
+                border:none;
+                color: $main-color;
+            }
+        }
+        .headInfo{
+            div{
+                line-height: 28px;
+                span{
+                    color:$main-color;
+                }
+            }
+        }
+    }
+    .feeTable{
+        border-top: $border;
+        border-left: $border;
+        table-layout: fixed;
+        margin-top: 10px;
+        td{
+            border-bottom: $border;
+            border-right: $border;
+            height: 40px;
+            text-align: center;
+            .el-input__inner{
+                border:none;
+                width: 100%;
+                padding: 0 3px;
+                text-align: center;
+            }
+        }
+        .thead{
+            background: #f4f8fb;
+        }
+        .tfoot{
+            background: #f5f5f5;
+        }
+        .subject{
+            position: relative;
+            .subjectList{
+                position: absolute;
+                width: 100%;
+                top: 40px;
+                left: -1px;
+                border:$border;
+                border-bottom: none;
+                box-shadow: 0 0 3px rgba(0,0,0,0.1);
+                background: #fff;
+                z-index: 999;
+                li{
+                    border-bottom: $border;
+                    overflow: hidden;
+                    cursor: pointer;
+                    &:first-child{
+                        cursor: initial;
+                    }
+                    &:hover{
+                        background: $hover-color;
+                    }
+                    .code{
+                        width: 84px;
+                        float: left;
+                        border-right: $border;
+                        height: 40px;
+                        line-height: 40px;
+                    }
+                    .name{
+                        width: calc(100% - 85px);
+                        float: left;
+                        height: 40px;
+                        line-height: 40px;
+                    }
+                }
+            }
+        }
+    }
+    &.addLabourAccountDialog{
+        .common-info{
+            border:none;
+            padding: 0;
+        }
+        .tableInfo{
+            padding: 15px;
+        }
+        .feeTable{
+            td{
+                height: 30px;
+            }
+        }
+    }
+}

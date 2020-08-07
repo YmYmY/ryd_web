@@ -1,0 +1,47 @@
+.el-input__inner{
+    font-size: 12px;
+}
+.el-input.red .el-input__inner{
+    color: red!important;
+}
+.el-tooltip__popper.is-light{
+    border-color: $tip-color;
+    color:$tip-color;
+}
+.el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow{
+    border-right-color: #faa005;
+}
+.el-button--primary{
+    background: $main-color;
+    border-color: $main-color;
+}
+.el-button--primary:hover, .el-button--primary:focus{
+    background: $main-color-hover;
+    border-color: $main-color-hover;
+}
+.el-button--primary.is-plain{
+    border-color: $main-color;
+    color: $main-color;
+    background: #fff;
+}
+.el-button--primary.is-plain:hover, .el-button--primary.is-plain:focus{
+    background: $main-color;
+    border-color: $main-color;
+    color: #FFFFFF;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner{
+    background-color: $main-color;
+    border-color: $main-color;
+}
+.el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color: $main-color;
+    border-color: $main-color;
+}
+
+.el-dialog{
+    border-radius: 3px;
+}
+
+.el-message-box__wrapper{
+    z-index: 99999!important;
+}

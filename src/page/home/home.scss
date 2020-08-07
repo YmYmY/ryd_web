@@ -1,0 +1,538 @@
+.header {
+    width: 100%;
+    height: 70px;
+    background: $main-color;
+    position: relative;
+    z-index: 99;
+    .logo{
+        height: 70px;
+        margin-left: 50px; 
+    }
+    .logo4{
+        display: none;
+    }
+    .more{
+        width:30px;
+        margin: 20px 0 0 100px;
+        cursor: pointer;
+    }
+    .home{
+        width:30px;
+        margin: 20px 0 0 20px;
+        cursor: pointer;
+    }
+    .print{
+        width:30px;
+        margin: 20px 0 0 0;
+    }
+    .msg{
+        width:30px;
+        margin: 20px 0 0 40px;
+    }
+    .help{
+        width:30px;
+        margin: 20px 0 0 40px;
+    }
+    .skin{
+        width:35px;
+        margin: 17px 0 0 40px;
+    }
+    .search-ipt{
+        margin: 14px 0 0 150px;
+        .el-input__inner{
+            height: 30px;
+            line-height: 30px;
+        }
+        p{
+            color:$tip-color;
+        }
+    }
+    .user{
+        margin-left: 40px;
+        padding-right: 60px;
+        .uesrhead{
+            margin-top: 11px;
+            width:48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+        .userInfo{
+            margin:16px 0 0 3px;
+            .infoList{
+                padding: 0 20px 0 10px;
+                position: relative;
+                border-top-right-radius: 3px;
+                border-top-left-radius: 3px;
+                max-width: 100px;
+                .name{
+                    color:#fff;
+                    @include textoverflow;
+                }
+                &::after{
+                    content:"";
+                    position: absolute;
+                    top:7px;
+                    right: 5px;
+                    @include trigon(6px,#fff,top)
+                }
+                &:hover{
+                    background: #fff;
+                    padding-top: 10px;
+                    top:-10px;
+                    .name{
+                        color:$font-color;
+                    }
+                    ul{
+                        display: block;
+                    }
+                }
+                ul{
+                    display: none;
+                    position: absolute;
+                    top: 30px;
+                    left: 0;
+                    padding-top:10px;
+                    background: #fff;
+                    min-width: 100%;
+                    box-sizing: border-box;
+                    border-bottom-right-radius: 3px;
+                    border-bottom-left-radius: 3px;
+                    box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+                    li{                        
+                        line-height: 30px;
+                        cursor: pointer;
+                        padding:0 10px;
+                        white-space: nowrap;
+                        &:hover{
+                            background:$hover-color;
+                        }
+                    }
+                }
+            }
+            .belong{
+                z-index: 9;
+                ul{
+                    li{
+                        cursor: initial;
+                    }
+                }
+                
+            }
+            .userArea{
+                margin-left: 20px;
+            }
+        }
+    }
+}
+.header.header-mini{
+    height: 40px;
+    .logo{
+        display: none;
+    }
+    .logo4{
+        display: block;
+        height: 20px;
+        margin:10px 0 0 50px;
+    }
+    .more{
+        width: 20px;
+        margin: 10px 0 0 100px;
+    }
+    .home{
+        width: 20px;
+        margin: 10px 0 0 20px;
+    }
+    .search-ipt{
+        display: none;
+    }
+    .user{
+        .uesrhead{
+            display: none;
+        }
+        .userInfo{
+            margin-top: 10px;
+            .belong{
+                display: none;
+            }
+        }
+    }
+}
+.slide_bar {
+    width: 180px;
+    height: 100%;
+    background: #fff;
+    box-sizing: border-box;
+    overflow-y: auto;
+    .search-box{
+        position: relative;
+        ul{
+            position: absolute;
+            top:39px;
+            background: #fff;
+            border-radius: 3px;
+            z-index: 9;
+            width: 100%;
+            border:$border;
+            box-sizing: border-box;
+            li{
+                padding:0 10px;
+                line-height: 30px;
+                cursor: pointer;
+                &:hover{
+                    background: $hover-color;
+                }
+            }
+        }
+    }
+    .tabTitle{
+        height: 40px;
+        line-height: 40px;
+        background: #c4cdd7;
+        font-size: 14px;
+        color: #565F6D;
+        font-weight: bold;
+        padding-left: 50px;
+    }
+    .useMore{
+        ul{
+            // max-height: 200px;
+            // overflow-y: auto;
+            li{
+                padding:5px 0 5px 50px;
+                cursor: pointer;
+                font-size: 13px;
+                line-height: 30px;
+                position: relative;
+                &:hover{
+                    background: $main-color;
+                    color:#fff;
+                }
+                .delmenu{
+                    top: 11px;
+                }
+            }
+        }
+    }
+    .menu-one{
+        position: relative;
+        .menu-one-name{
+            cursor: pointer;
+            line-height: 40px;
+            height: 40px;
+            padding-left: 50px;
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            position: relative;
+            .navIcon{
+                position: absolute;
+                left: 25px;
+                top:10px;
+                width: 20px;
+                height: 20px;
+                background: url('../../static/image/$tenantId$/u0.png') no-repeat;
+                background-size: 100% auto;
+                //运单管理
+                &.navIcon75{
+                    background-image: url('../../static/image/$tenantId$/u1.png');
+                }
+                //数据管理
+                &.navIcon76{
+                    background-image: url('../../static/image/$tenantId$/u2.png');
+                }
+                //财务管理
+                &.navIcon77{
+                    background-image: url('../../static/image/$tenantId$/u3.png');
+                }
+                //用户管理
+                &.navIcon78{
+                    background-image: url('../../static/image/$tenantId$/u4.png');
+                }
+                //平台运营
+                &.navIcon79{
+                    background-image: url('../../static/image/$tenantId$/u5.png');
+                }
+                //基础管理
+                &.navIcon80{
+                    background-image: url('../../static/image/$tenantId$/u6.png');
+                }
+            }
+            &:hover{
+                background: $main-color;
+                color:#fff;
+                .navIcon{
+                    background-position:left bottom;
+                }
+            }
+        }
+        .menu-item{
+            cursor: pointer;
+            position: relative;
+            &>.menu-name{
+                font-size: 13px;
+                line-height: 30px;
+                position: relative;
+                padding-left: 50px;
+                display: block;
+                &.haveNext::after{
+                    content:"";
+                    position: absolute;
+                    top:9px;;
+                    left: 34px;
+                    @include trigon(6px,#1089db,left)
+                }
+                &:hover{
+                    background: $main-color;
+                    color:#fff;
+                }
+                &.haveNext.open::after{
+                    top:13px;;
+                    left: 29px;
+                    @include trigon(6px,#1089db,top)
+                }                
+                &.noNext::after{
+                    content:"";
+                    @include circle(8px,$tip-color);
+                    position: absolute;
+                    top:11px;;
+                    left: 50px;
+                }
+                &.noNext:hover::after{
+                    @include circle(8px,#fff);
+                }
+                &.canOpen{
+                    &::after{
+                        content:"";
+                        @include circle(8px,$tip-color);
+                        position: absolute;
+                        top:11px;;
+                        left: 34px;
+                        border:none;
+                    }
+                    &:hover::after{
+                        @include circle(8px,#fff);
+                    }
+                }
+            }
+            .menu-three{
+                &>.menu-name{
+                    padding-left: 65px;
+                    &.haveNext::after{
+                        left: 49px;
+                    }
+                    &.haveNext.open::after{
+                        left: 44px;
+                    }
+                }                
+            }
+            .menu-four{
+                &>.menu-name{
+                    padding-left: 75px;
+                    &.haveNext::after{
+                        left: 74px;
+                    }
+                    &.haveNext.open::after{
+                        left: 69px;
+                    }            
+                    &.noNext::after{
+                        left: 58px;
+                    }
+                }                
+            }
+        }
+    }    
+    .addmenu,.delmenu{
+        position: absolute;
+        height: 14px;
+        line-height: 14px;
+        width: 14px;
+        text-align: center;
+        border-radius: 2px;
+        right: 10px;
+        top:7px;
+        font-size: 10px;
+        border:1px solid #fff;
+        color:#fff;
+    }
+}
+.slide_bar.slide_bar_mini{
+    width: 60px;
+    position: relative;
+    z-index: 9999;
+    overflow: initial;
+    .search-box.showMenuSearch{
+        position: relative;
+        z-index: 999;
+        .el-input__inner{
+            padding-left: 45px;
+            width: 180px;
+        }
+        .menuSearchList{
+            width: 200px;
+        }
+    }
+    .useMore{
+        position: relative;
+        ul{
+            position: absolute;
+            background: #fff;
+            z-index: 99;
+            top: 0;
+            left: 60px;
+            padding:10px 0;
+            border:$border;
+            li{
+                padding:0 30px 0 10px;
+                line-height: 40px;
+                white-space: nowrap;
+            }
+        }
+    }
+    .el-input__prefix{
+        left: 15px;
+    }
+    .tabTitle{
+        padding: 10px;
+        line-height: 20px;
+        text-align: center;
+        &:hover{
+            background: #dae0e6;
+        }
+    }
+    .menuList{
+        .menu-one{
+            .menu-text{
+                display: none;
+            }
+            .addmenu{
+                display: none;
+            }
+            .navIcon{
+                left: 20px!important;
+            }
+            .menu-two-box{
+                position: absolute;
+                left: 60px;
+                top: 0;
+                z-index: 99;
+                background: #fff;
+                box-shadow: 0 0 3px rgba(0,0,0,0.1);
+                padding: 10px 10px 10px 5px;
+                &>.menu-item{
+                    .menu-three{
+                        &>.menu-name{
+                            padding-left: 35px;
+                            &.noNext{
+                                &::after{
+                                    left: 20px;
+                                }
+                            }
+                        }
+                    }
+                    &>.menu-name{
+                        padding: 0 20px;
+                        white-space: nowrap;
+                        &.haveNext::after{
+                            left: 4px;
+                        }
+                        &.haveNext.open::after{
+                            left: 0;
+                        }                
+                        &.noNext::after{
+                            left: 20px;
+                        }
+                        &.noNext:hover::after{
+                            @include circle(8px,#fff);
+                        }
+                        &.canOpen{
+                            &::after{
+                                left: 4px;
+                            }
+                        }
+                    }
+                    .menu-three{
+                        &>.menu-name{
+                            white-space: nowrap;
+                            padding-left: 35px;
+                            padding-right: 10px;
+                            &.haveNext::after{
+                                left: 19px;
+                            }
+                            &.haveNext.open::after{
+                                left: 14px;
+                            }
+                        }                
+                    }
+                    .menu-four{
+                        &>.menu-name{
+                            white-space: nowrap;
+                            padding-left: 45px;
+                            padding-right: 10px;
+                            &.haveNext::after{
+                                left: 44px;
+                            }
+                            &.haveNext.open::after{
+                                left: 39px;
+                            }            
+                            &.noNext::after{
+                                left: 28px;
+                            }
+                        }                
+                    }
+                }
+            }
+        }
+    }
+}
+
+.main_content {
+    width: calc(100% - 180px);
+    height: 100%;
+    position: relative;
+    &.main_content_100{
+        width: calc(100% - 65px);
+    }
+    .main_frame{
+        padding:10px 0 10px 25px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        position: relative;
+    }
+    >div{
+        height: 100%;
+    }
+}
+
+.homeClientPage{
+    .header{
+        background: $highlight-color;
+    }
+}
+
+// 公用加载层
+.main-popup{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top:0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999999;
+  display: none;
+  .main-popup-content{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top:50%;
+    margin-top: -21px;
+  }
+  .el-icon-loading{
+    color: #000;
+    font-size: 22px;
+  }
+  .loading-text{
+    font-size: 16px;
+    color: #000;
+  }
+}

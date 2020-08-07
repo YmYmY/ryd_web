@@ -1,0 +1,78 @@
+.pcLimitsPage{
+    .tableCommon{
+        thead{
+            .el-icon-circle-plus-outline{
+                vertical-align: middle;
+                margin-bottom: 3px;
+            }
+        }
+        tbody{
+            tr{
+                cursor: initial;
+            }
+        }
+        th{
+            padding:10px;
+        }
+        td{
+            padding:10px;
+            .el-input{
+                width: 150px;
+            }
+            .field{
+                position: relative;
+                margin-right: 20px;
+                &:hover .el-icon-error{
+                    display: block;
+                }
+            }
+        }
+        .fieldList{
+            text-align: left;
+        }
+        .el-icon-circle-plus-outline,.el-icon-remove-outline,.el-icon-edit{
+            font-size: 16px;
+            color: $main-color;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        .el-icon-edit{
+            color:$tip-color;
+        }
+        .el-icon-error{
+            font-size: 14px;
+            color:red;
+            position: absolute;
+            top: -5px;
+            right: -14px;
+            cursor: pointer;
+            display: none;
+        }
+    }
+    .common-title{
+        background: #fff;
+    }
+}
+.el-popover{
+    padding:0;
+}
+.popoverList{
+    max-height: 300px;
+    overflow-y: auto;
+    .title{
+        height: 40px;
+        line-height: 40px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .item{
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        border-top: $border;
+        cursor: pointer;
+        &:hover{
+            background: $hover-color;
+        }
+    }
+}

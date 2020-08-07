@@ -1,0 +1,19 @@
+$main-color:#1c67b0;     //主体颜色
+$main-color-hover:#076eca;  //主体颜色经过辅色
+$font-color:#4a5f6d;    //字体默认颜色
+$tip-color:#faa05a;     //提示类型色值
+$border:1px solid #e0e9f3;  //边线
+$border-color: #e0e9f3;  //边线颜色
+$bg-color:#f4f8fb;      //背景颜色
+$focus-color:#ffff00;   //获取焦点后高亮颜色
+$hover-color:#ffffcc;   //鼠标经过效果
+$title-bg-color:#e0e9f3;    //标题栏通用背景颜色
+$highlight-color:#ff6600;   //高亮颜色
+
+@mixin theme($theme) {
+    @if $theme==client{
+        $main-color:#ff6600;
+        $main-color-hover:#faa05a;
+        $highlight-color:#f00; 
+    }
+}

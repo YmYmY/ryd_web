@@ -1,0 +1,773 @@
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+button,
+select,
+option,
+textarea,
+p,
+blockquote,
+th,
+td {
+  padding: 0px;
+  margin: 0px;
+  font: 12px/20px "Microsoft YaHei", "Arial";
+  color: $font-color;
+}
+
+body {
+  background: $bg-color;
+}
+
+em,
+i {
+  font-style: normal;
+}
+
+li {
+  list-style-type: none;
+}
+
+.clear {
+  clear: both;
+  float: none;
+  border: medium none;
+  line-height: 1px;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f83148;
+  text-decoration: underline
+}
+
+a.link{
+  color: $main-color;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fl {
+  float: left !important;
+}
+
+.fr {
+  float: right !important;
+}
+.fw{
+  font-weight: bold;
+}
+
+em {
+  color: red;
+}
+.red{
+  color: red!important;
+}
+
+img {
+  border: none
+}
+
+.w_auto{
+  width: auto!important;
+}
+
+// 边距配置
+.pt_20{
+  padding-top: 20px;
+}
+.pb_20{
+  padding-bottom: 20px;
+}
+.mt_20{
+  margin-top: 20px;
+}
+.mb_20{
+  margin-bottom: 20px;
+}
+.mr_10{
+  margin-right: 10px;
+}
+.ml_10{
+  margin-left: 10px;
+}
+
+//公用背景
+.popup_bj{
+  position: fixed;
+  background: rgba(0,0,0,0.5);
+  height: 100%;
+  width:100%;
+  top:0;
+  left:0;
+  z-index: 999;
+}
+
+//查询页公用样式
+.search-list {
+  background: #fff;
+  border: $border;
+  position: relative;
+  // overflow: hidden;
+  // max-height: 35px;
+  height: 35px;
+  .search-form {
+    border-radius: 3px;
+    float: left;
+    width: calc(100% - 190px);
+    border-right: $border;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 35px;
+    &:hover{
+      height: auto;
+      overflow: initial;
+      position: absolute;
+      background: #fff;
+      z-index: 1000;
+      box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    }
+    .item {
+      width: 25%;
+      float: left;
+      position: relative;
+      height: 35px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        border-bottom: 1px dashed $border-color;
+        bottom: -1px;
+        left:0;
+        height: 1px;
+        width: 100%;
+        z-index: 9;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        border-right: 1px dashed $border-color;
+        right: -1px;
+        top: 20%;
+        height: 60%;
+        z-index: 9;
+      }
+      // .label{
+      //   display: none;
+      // }
+      // .input-text {
+      //   float: left;
+      //   width: 100%;
+      // }
+      // &.have-label{        
+        .label {
+          display: block;
+          line-height: 35px;
+          text-align: left;
+          width: 100px;
+          float: left;
+          padding-right: 10px;
+          padding-left: 5px;
+          box-sizing: border-box;
+          .el-input--suffix{
+            .el-input__inner{
+              border:none;
+              padding-right: 20px;
+            }
+          }
+          .el-select .el-input .el-select__caret{
+            width:15px
+          }
+        }
+        .input-text {
+          float: left;
+          width: calc(100% - 100px);
+        }
+      // }
+      .el-input__inner {
+        width: 100%;
+        box-sizing: border-box;
+        padding-left: 0;
+        border: none;
+        height: 35px;
+        line-height: 35px;
+
+        &:focus {
+          background: $focus-color;
+        }
+      }
+      .el-date-editor.el-input{
+        width:100%;
+        .el-input__inner{
+          padding-left: 35px;
+        }
+      }
+      .el-date-editor {
+        .el-range-separator{
+          line-height: 35px;
+        }
+        .el-range-input{
+          font-size: 12px;
+        }
+        .el-input__icon{
+          line-height: 32px;
+        }
+      }
+      .el-select{
+        width:100%;
+      }
+    }
+    // .item2row{
+    //   width: 50%;
+    // }
+  }
+  .search-btn{
+    width:190px;
+    padding:5px 0;
+    float: left;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    .btn{
+      width: 50%;
+      padding:0 10px;
+      box-sizing: border-box;
+      float: left;
+      &:first-child{
+        border-right: $border;
+      }
+    }
+  }
+}
+
+.table-content{
+  border:$border;
+  background: #fff;
+  margin-top: 10px;
+  .table-title{
+    height: 50px;
+    padding-right: 105px;
+    position: relative;
+    z-index: 9;
+    h3{
+      color: $main-color;
+      font-size: 14px;
+      font-weight: 700;
+      padding-left: 40px;
+      float: left;
+      position: relative;
+      line-height: 50px;
+      &::before{
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: $main-color;
+        position: absolute;
+        top:20px;
+        left:20px;
+      }
+      .tip{
+        width: 20px;
+        margin-left: 20px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+    }
+    .table-title-btn{
+      float: right;
+      padding: 11px 0;
+      .el-button{
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+
+//公用标题框
+.common-title{
+  padding:10px;
+  background: #f7fafd;
+  .title-name{
+    line-height: 30px;
+    color:$main-color;
+    position: relative;
+    padding-left: 30px;
+    font-size: 14px;;
+    font-weight: 700;
+    &::before{
+      content: "";
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background: $main-color;
+      position: absolute;
+      left:10px;
+      top:5px;
+    }
+  }
+}
+
+//新增、信息页
+.common-info {
+  padding: 30px 20px 60px;
+  border: $border;
+  border-radius: 3px;
+  background: #fff;
+
+  .common-title {
+      padding: 5px;
+
+      .title-name {
+          font-size: 12px;
+          padding-left: 20px;
+          line-height: 20px;
+
+          &::before {
+              top: 3px;
+              left: 5px;
+          }
+      }
+  }
+
+  .content {
+      >.item {
+          display: block;
+          margin-bottom: 10px;
+          float: left;
+          width: 23%;
+          min-width: 240px;
+          margin-right: 2%;
+
+          .label-term {
+              float: left;
+              width: 84px;
+              height: 40px;
+              line-height: 40px;
+          }
+
+          .input-text {
+              float: left;
+              width: calc(100% - 84px);
+              line-height: 40px;
+              position: relative;
+
+              .el-select {
+                  width: 100%;
+              }
+
+              .lint {
+                  position: absolute;
+                  line-height: 40px;
+                  color: $main-color;
+                  text-decoration: underline;
+                  top: 0;
+                  right: 5px;
+              }
+              .unit {
+                  position: absolute;
+                  line-height: 40px;
+                  top: 0;
+                  right: 5px;
+              }
+
+              .el-checkbox-group{
+                line-height: 40px;
+              }
+              .el-date-editor.el-input{
+                width: 100%;
+              }
+          }
+          .input-range{
+            border:$border;
+            border-radius: 3px;
+            box-sizing: border-box;
+            .el-input{
+                width:auto;
+            }
+            .el-input__inner{
+                border:none;
+                width:120px;
+            }
+        }
+      }
+      .item100{
+        width: 100%;
+      }
+      .img-upload {
+          .label-term {
+              line-height: 20px;
+              margin-top: 40px;
+          }
+      }
+      &.content-text{
+        .label-term{
+          text-align: right;
+        }
+      }
+      .el-textarea__inner{
+        width: 400px;
+      }
+  }
+  
+  .bot-btn {
+      text-align: center;
+      margin-top: 40px;
+
+      .el-button {
+          width: 120px;
+      }
+  }
+}
+.page-bot-btn {
+  text-align: center;
+  margin-top: 40px;
+
+  .el-button {
+      width: 120px;
+  }
+}
+
+//左右数据切换
+.common-switch-box {
+  width: 460px;
+  border: $border;
+  border-radius: 3px;
+  background: #fff;
+  position: absolute;
+  z-index: 9999;
+  top: 20%;
+  left: 50%;
+  margin-left: -230px;
+  .setRowTop {
+      line-height: 1;
+      padding: 11px 0;
+      text-align: center;
+      border-bottom: $border;
+      h3 {
+          font-size: 16px;
+          color: #4a5f6d;
+          margin-bottom: 12px;
+          font-weight:bold;
+      }
+  }
+  .botBtn {
+      text-align: center;
+      padding: 15px 0;
+  }
+  .flow_row {
+      width: 211px;
+      border-right: $border;
+      border-bottom: $border;
+      &:last-child {
+          border: none;
+          border-left: $border;
+          border-bottom: $border;
+      }
+  }
+  .selet_all {
+      padding: 11px 20px;
+      background: #f5f8fc;
+      height: 41px;
+      border-bottom: $border;
+      box-sizing: border-box;
+  }
+  .select_list {
+      padding: 10px 10px 10px 20px;
+      height: 280px;
+      overflow: auto;
+      position: relative;
+      .el-checkbox{
+          display: block;
+          line-height: 30px
+      }
+  }
+  .screen_row {
+      position: relative;
+      margin-bottom: 12px;
+      &::before {
+          content: "";
+          width: 17px;
+          height: 17px;
+          position: absolute;
+          top: 10px;
+          right: 12px;
+          background-position: -175px 0;
+      }
+  }
+  .sure_select {
+      position: absolute;
+      top: 160px;
+      left: 50%;
+      margin-left: -14px;
+      .el-button--mini{
+          padding: 3px 7px;
+          display: block;
+          margin:0 0 10px 0;
+      }
+  }
+}
+
+// 公用表格样式
+
+
+.tableCommon {
+  position: relative;
+  z-index: 1;
+  border-collapse: collapse;
+  border: none;
+  table-layout: fixed;
+  &.tableCommonFix{    
+    th{
+      border-right: 1px solid #fff!important;   
+    }
+    td{
+        border-right: 1px solid #c9d7ea!important;            
+    }
+  }
+  .fixed-thead{
+    table-layout: fixed;
+    display: inherit;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+  }
+  thead {
+
+      tr {
+          background: $border-color;
+
+          th {
+              font-size: 12px;
+              padding: 0 5px;
+              text-align: center;
+              box-sizing: border-box;
+              white-space: nowrap;
+              line-height: 30px;
+              height: 30px;
+              border-right: 1px solid #ffffff;
+              font-weight: bold;
+              &:last-child{
+                border-right: none;
+              }
+          }
+      }
+  }
+
+  .fixed-tbody{
+    table-layout: fixed;
+    display: inherit;
+    margin-top: 30px;
+    width: 100%; 
+    margin-bottom:30px;
+  }
+  tbody {
+
+      tr {
+          background: #fff;
+          cursor: pointer;
+
+          &:hover,&.hover{
+              background: $hover-color;
+          }
+
+          td {
+              color: #333;
+              box-sizing: border-box;
+              text-align: center;
+              height: 30px;
+              padding: 0 5px;
+              text-align: center;
+              white-space: nowrap;
+              border-right: 1px solid #c9d7ea;
+              border-bottom: 1px solid #c9d7ea;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              &:last-child{
+                border-right: none;
+              }              
+              .el-input__inner{
+                height: 28px;
+              }
+          }
+      }
+  }
+  .fixed-tfoot{
+    height: 30px;
+    background: #fff;
+    position: absolute;
+    bottom: 0px;
+    table-layout: fixed;
+    display: inherit;
+    z-index: 99;
+    border-top: $border;
+    width: 100%;
+    text-align: center;
+    td{
+        border-right:$border;
+        border-bottom: $border;
+        box-sizing: border-box;
+    }
+  }
+
+  .checkbox_row {
+      pointer-events: none;
+  }
+}
+
+//列表选择弹框
+.selectAlertBox{
+  position: absolute;
+  width: 260px;
+  border:$border;
+  border-radius: 3px;
+  z-index: 999;
+  background: #fff;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,0.17);
+  .title{
+      font-size: 14px;
+      text-align: center;
+      position: relative;
+      line-height: 32px;
+      border-bottom:$border;
+      padding:6px 0;            
+      .add{
+          height: 16px;
+          width: 16px;
+          border: $border;
+          border-radius: 2px;
+          cursor: pointer;
+          position: absolute;
+          top: 14px;
+          left: 15px;
+          &::before{
+              content: "";
+              width: 10px;
+              height: 2px;
+              background: $border-color;
+              position: absolute;
+              top: 7px;
+              left: 3px;
+          }
+          &::after{
+              content: "";
+              width: 2px;
+              height: 10px;
+              background: $border-color;
+              position: absolute;
+              top: 3px;
+              left: 7px;
+          }
+      }
+  }
+  .list{
+      li{
+          height: 32px;
+          line-height: 32px;
+          border-bottom: $border;
+          padding-left: 20px;
+          text-align: left;
+          cursor: pointer;
+          &:hover{
+              background: $hover-color;
+          }
+          .del{
+              height: 16px;
+              width: 16px;
+              border: $border;
+              border-radius: 2px;
+              position: relative;
+              float: right;
+              margin: 7px 10px 0 0;
+              &::before{
+                  content: "";
+                  width: 10px;
+                  height: 2px;
+                  background: $border-color;
+                  position: absolute;
+                  top: 7px;
+                  left: 3px;
+              }
+              &:hover{
+                  background: $tip-color;
+              }
+          }
+          .el-input__inner{
+              height: 24px!important;
+              width: 150px!important;
+              border:$border;
+              border-radius: 0;
+              text-align: left;
+              margin-top: 4px;
+          }
+      }
+  }
+  .operateIcon{
+      margin-top: 5px;
+      span{
+          float: left;
+          border:1px solid $main-color;
+          margin-right: 10px;
+          height: 20px;
+          width: 20px;
+          text-align: center;
+          i{
+              color:$main-color;
+              font-size: 14px;
+              font-weight: bold;
+          }
+          &:hover{
+              background: $main-color;
+              i{
+                  color:#fff;
+              }
+          }
+      }
+  }
+  .editBtn{
+    text-align: center;
+    margin:10px 0;
+  }
+}
+
+//el-dialog样式重写优化
+.el-dialog__body{
+  .common-info .content .el-textarea__inner{
+    width:100%;
+  }
+  .tableCommon{
+    table-layout: auto;
+  }
+}

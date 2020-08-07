@@ -1,0 +1,38 @@
+.permissionPage{
+    border:$border;
+    border-radius: 3px;
+    background: #fff;
+    padding:20px;
+}
+.treeDiv{
+    width: 300px;
+    border:$border;
+    border-radius: 3px;
+    float: left;
+    .title{
+        padding:7px 5px;
+        background: #f9fbfd;
+        line-height: 28px;
+        border-bottom:$border;
+        img{
+            height: 25px;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        >span{
+            font-size: 18px;
+            font-weight: 700;
+            padding-left: 15px;
+        }
+    }
+}
+.rightTable{
+    float: right;
+    width: calc(100% - 320px);
+}
+.tableDiv{
+    margin-top: 20px;
+}
+.treeList{
+    padding-left: 20px;
+}

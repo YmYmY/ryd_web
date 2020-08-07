@@ -1,0 +1,146 @@
+.tableCommonDiv{
+    position: relative;  
+    background: #fff;
+    .table_height{
+        overflow: auto;
+        width:100%;
+        position: relative;
+        min-height: 200px;
+    }
+    
+    .tableCommonFix.tableCommon{
+        position: absolute;
+        left:0; 
+        top:0; 
+        z-index:3;
+    }
+    .tableCommonFix{
+        thead{
+            tr{
+                background: #c4cdd7;
+            }
+        }
+    }
+    .setTableRow {
+        position: absolute;
+        box-sizing: border-box;
+        right: 15px;
+        top:-39px;
+        z-index: 999;
+        .package {
+            position: absolute;
+            top: 18px;
+            right: 0;
+            background: #fff;
+            border: $border;
+            border-radius: 3px;
+            padding: 10px 20px;
+            margin-top: 10px !important;
+            text-align: left;
+            z-index: 9999;
+            min-width: 230px;
+            .listShow{
+                max-height: 300px;
+                overflow: auto;
+            }
+            .item{
+                cursor: pointer;
+                padding:3px 0;
+                line-height: 22px;
+            }
+            .bot_btn{
+                margin-top: 10px;
+                padding:0 20px;
+            }
+        }
+    }
+
+    .tableStyle {
+        margin-right: 108px;
+        margin-bottom: -74px;
+        position: relative;
+        z-index: 10;
+        width: auto;
+    }
+    .flip-list-move {
+        transition: transform 0.5s;
+    }
+
+    .no-move {
+        transition: transform 0s;
+    }
+
+    .table_page{
+        padding:10px;
+        .total{
+            color:$tip-color;
+        }
+        .num{
+            border:$border;
+            padding:0 5px;
+            line-height: 23px;
+            border-radius: 3px;
+            margin:0 3px;
+            display: inline-block;
+            cursor: pointer;
+            &:hover,&.active{
+                color:$main-color;
+                background: $bg-color;
+            }
+        }
+    }
+    //表格没有数据
+    .noData{
+        position: absolute;
+        width: 100%;
+        font-size: 16px;
+        color: #999;
+        top: 100px;
+        text-align: center;
+    }
+    //旗帜标识
+    .flag{
+        float:left;
+        top: -2px;
+        left: -5px;
+        @include flag(red);
+        //取件超时
+        &.pickerOvertime{
+            background: red;
+        }
+        //派送超时
+        &.dispatchOvertime{
+            background: blue;
+        }
+    }
+
+
+    //颜色配置
+    .bg_red{
+        background: red;
+    }
+    .bg_orange{
+        background: #ff6600;;
+    }
+    .bg_yellow{
+        background: #ffff66;
+    }
+
+    .fullscreen{
+        position: absolute;
+        bottom: 70px;
+        right: 10px;
+        z-index: 99;
+        width: 20px;
+        cursor: pointer;
+    }
+    &.scaleTable{
+        position: absolute;
+        top: 0;
+        z-index: 99;
+        height: 100%;
+        .table_height{
+            height: calc(100% - 55px)!important;
+        }
+    }
+}

@@ -1,0 +1,292 @@
+//供应商
+.loginSupplier{
+    .topTip{
+        position: absolute;
+        left: 45px;
+        top:20px;
+        .loginLogo{
+            width: 110px;
+        }
+        span{
+            font-size: 18px;
+            height: 36px;
+            line-height: 36px;
+            margin-left: 57px;
+            position: relative;
+            &::after{
+                content: "";
+                height: 36px;
+                width: 1px;
+                background:$border-color;
+                position: absolute;
+                left: -30px;
+                top: 0;
+            }
+        }
+    }
+    .topBanner{
+        height: 60%;
+        background: url('../../static/image/$tenantId$/loginBg.jpg') no-repeat center center;
+        background-size: cover;
+    }
+    .bottomInfo{
+        height: 40%;
+        background: #122a88;
+        .friendLink{
+            position: absolute;
+            bottom:15%;
+            padding-left: 120px;
+            color:#fff;
+            font-size: 14px;
+            span{
+                margin:0 20px;
+            }
+            a{
+                color:#fff;
+                font-size: 14px;
+            }
+        }
+        .introduce{
+            padding:20px;
+            border-bottom:1px solid rgba(255,255,255,0.2);
+            img{
+                margin-right: 6%;
+            }
+        }
+    }
+    .loginFrom{
+        position: absolute;
+        bottom: 20%;
+        padding:50px;
+        background: #fff;
+        left: 100px;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+        border-radius: 3px;
+        h3{
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .loginInfo{
+            width: 350px;
+            .item{
+                padding:20px 0 10px;
+                height: 40px;
+                border-bottom:$border;
+                .label{
+                    float: left;
+                    line-height: 40px;
+                    width: 80px;
+                    font-size: 14px;
+                }
+                .input-text{
+                    width: calc(100% - 80px);
+                    float: left;
+                    height: 40px;
+                    position: relative;
+                    input{
+                        border:none;
+                        height: 100%;
+                        width: 100%;
+                        font-size: 14px;
+                        &:focus{
+                            outline:none;
+                        }
+                    }
+                    .el-input__inner{
+                        height: 40px;
+                        padding:0;
+                    }
+                    .imgCode{
+                        position: absolute;
+                        right: 0;
+                        top:0;
+                    }
+                    .seePw{
+                        position: absolute;
+                        right: 0;
+                        top:10px;
+                        width: 22px;
+                        z-index: 9;
+                        cursor: pointer;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+            .remember{
+                margin:10px 0;
+                font-size: 14px;
+            }
+            .el-button{
+                width:100%;
+                margin-top: 20px;
+            }
+        }
+    }
+}
+
+//客户
+.loginClientPage{
+    .topBanner{
+        height: 60%;
+        background: url('../../static/image/$tenantId$/loginClientBg.jpg') no-repeat center center;
+        background-size: cover;
+    }
+    .bottomInfo{
+        height: 40%;
+        background: #fff;        
+    }
+    .loginFrom{
+        position: absolute;
+        bottom: 20%;
+        padding:50px;
+        background: #fff;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+        border-radius: 3px;
+        width: 400px;
+        left: 50%;
+        margin-left: -250px;
+        h3{
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            color:$main-color;
+            span{
+                font-size: 20px;
+                color:#999;
+                margin-left: 10px;
+            }
+            margin-bottom: 20px;
+        }
+        .loginInfo{
+            .item{
+                margin-bottom: 20px;
+                position: relative;
+                input{
+                    height: 45px;
+                    border:$border;
+                    display: block;
+                    padding-left: 50px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    &:focus{
+                        outline: none;
+                        border:1px solid $main-color;
+                    }
+                }
+                .ipt-icon{
+                    position: absolute;
+                    top:12px;
+                    left: 13px;
+                }
+                .imgCode{
+                    position: absolute;
+                    right: 5px;
+                    top: 4px;
+                }
+            }
+            .el-button{
+                width: 100%;
+                margin-top: 30px;
+            }
+        }
+    }
+    .copyRight{
+        position: absolute;
+        bottom:10%;
+        text-align: center;
+        width: 100%;
+        left: 0;
+    }
+}
+
+//平台
+.loginPage{
+    background: #ff6600;
+    position: relative;
+    .leftBanner{
+        width: calc(100% - 500px);
+        position: absolute;
+        height: 100%;
+        top:0;
+        left: 0;
+        background: url('../../static/image/$tenantId$/loginSupplierBg.jpg') no-repeat center center;
+        background-size: cover;
+    }
+    .loginFrom{
+        position: absolute;
+        right: 220px;
+        top:20%;
+        padding:70px 50px;
+        background: #fff;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+        border-radius: 3px;
+        width: 400px;
+        z-index: 9;        
+        h3{
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            color:$main-color;
+            margin-bottom: 40px;
+            img{
+                width: 36px;
+                vertical-align: top;
+                margin: -4px 15px 0 0;
+            }
+        }
+        .loginInfo{
+            .item{
+                margin-bottom: 20px;
+                position: relative;
+                input{
+                    height: 45px;
+                    border:$border;
+                    display: block;
+                    padding-left: 65px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    &:focus{
+                        outline: none;
+                        border:1px solid $main-color;
+                    }
+                }
+                .ipt-icon{
+                    position: absolute;
+                    top: 14px;
+                    left: 15px;
+                    width: 18px;
+                }
+                .imgCode{
+                    position: absolute;
+                    right: 5px;
+                    top: 4px;
+                }
+                &::before{
+                    content: "";
+                    width: 1px;
+                    height: 30px;
+                    background: $border-color;
+                    position: absolute;
+                    top: 10px;
+                    left: 50px;
+                }
+                &.itemCode{
+                    &::before{
+                        display: none;
+                    }
+                    input{
+                        padding-left: 15px;
+                    }
+                }
+            }
+            .el-button{
+                width: 100%;
+                margin-top: 30px;
+                height: 50px;
+            }
+        }
+    }
+}

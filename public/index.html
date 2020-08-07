@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="Cache-control" content="no-store">
+    <meta http-equiv="Cache" content="no-store">
+    <link rel="icon" href="<%= BASE_URL %>logo.ico">
+    <link rel="stylesheet" href="./static/elementui/elementui.css">
+    <title>任易调</title>
+  </head>
+  <body>
+    <script>
+      var search = window.location.search;
+      //指向登录页时登录页增加时间戳
+      if(window.location.pathname.indexOf('login')>-1 && search==''){
+        var time = new Date().getTime();
+        var href = window.location.pathname+"?v="+time;
+        window.location.href = href;
+      }
+      var time = new Date().getTime();
+      //非登录页时刷新页面增加时间戳
+      if(window.location.pathname.indexOf('index.html')==-1&&window.location.pathname.indexOf('login')==-1){
+        var href = "/index.html?v="+time;
+        window.location.href = href;
+      }
+      var oldTime = Number(search.substring(3,search.length)) + 100000;
+      if(window.location.pathname.indexOf('index.html')>-1&&time>oldTime){
+        var href = "/index.html?v="+time;
+        window.location.href = href;
+      }
+    </script>
+    <script src="./static/vue/vue.min.js"></script>
+    <script src="./static/elementui/element.js"></script>
+    <div id="app"></div>
+  </body>
+</html>

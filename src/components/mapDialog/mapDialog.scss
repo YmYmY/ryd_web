@@ -1,0 +1,44 @@
+.mapDialogPage{
+    .el-dialog{
+        .el-dialog__body{
+            padding:0;
+            position: relative;
+            .common-info{
+                padding-bottom: 30px;
+            }
+            .suggest{
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                z-index: 99;
+                width: 200px;
+                input{
+                    border:$border;
+                    height: 30px;
+                    padding: 0 12px;
+                    border-radius: 4px;
+                    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+                    width: 100%;
+                }
+                #searchResultPanel{
+                    border:$border;
+                    width:100%;
+                    height:auto;
+                    position: absolute;
+                    top: 30px;
+                    left: 0;
+                    display:none;
+                }
+            }
+            .bm-view{
+                width: 100%;
+                height: 500px;
+            }
+        }
+    }
+}
+ 
+.tangram-suggestion-main{
+    z-index: 99999;
+    
+}

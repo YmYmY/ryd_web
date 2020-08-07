@@ -1,0 +1,177 @@
+.toMainPage{
+    padding: 0 20px 30px;
+    .common-title{
+        padding:10px 0;
+    }
+    .dateTabClient{
+        border:$border;
+        border-bottom: none;
+        background: #fff;
+        margin-top: 20px;
+        .item{
+            float: left;
+            width: 94px;
+            line-height: 45px;
+            text-align: center;
+            cursor: pointer;
+            &.active,&:hover{
+                background: $highlight-color;
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+    }
+    .matter{
+        border:$border;
+        border-radius: 3px;
+        background: #fff;
+        .item{
+            float: left;
+            text-align: center;
+            width: 25%;
+            padding:20px 0;
+            position: relative;
+            .item-info{
+                display: inline-block;
+                vertical-align: middle;
+                .info-title{
+                    font-size: 16px;
+                    line-height: 1;
+                }
+                .info-count{
+                    font-size: 30px;
+                    line-height: 1;
+                    font-weight: 700;
+                    margin-top: 10px;
+                    cursor: pointer;
+                }
+            }
+            >img{
+                vertical-align: middle;
+                margin-right: 10%;
+            }
+            &::before{
+                content: '';
+                height: 80%;
+                border-right: $border;
+                position: absolute;
+                right: -1px;
+                top:10%;
+            }
+        }
+    }
+    .matter.matterClient{
+        background: #fff;
+        border:$border;
+        .item{
+            width: 16.666%;
+        }    
+    }
+    .data-statistics{
+        .item{
+            float: left;
+            height: 120px;
+            padding:30px;
+            box-sizing: border-box;
+            position: relative;
+            width:24.25%;
+            margin-right: 1%;
+            &:first-child{
+                background: #1c67b0;
+            }
+            &:nth-child(2){
+                background: #3795db;
+            }
+            &:nth-child(3){
+                background: #f87273;
+            }
+            &:last-child{
+                margin-right: 0;
+                background: #eb8807;
+            }
+            .number{
+                color:#fff;
+                font-size: 30px;
+                font-weight: 400;
+            }
+            .name{
+                position: absolute;
+                right: 20px;
+                bottom:28px;
+                color:#fff;
+                font-size: 16px;
+            }
+        }
+    }
+    .el-date-editor{
+        width: 220px!important;
+        height: 34px;
+        background: none;
+        .el-range-input{
+            background: none;
+            font-size: 12px;
+        }
+        .el-range__icon{
+            line-height: 26px;
+        }
+        .el-range-separator{
+            line-height: 26px;
+        }
+        .el-range-separator,.el-range__close-icon{
+            line-height: 26px;
+        }
+    }
+    .chartList{
+        .item{
+            width: 49.5%;
+            margin-right: 1%;
+            margin-top: 20px;
+            float: left;
+            box-sizing: border-box;
+            padding: 20px;
+            border:$border;
+            border-radius: 3px;
+            background: #fff;
+            position: relative;
+            &:nth-child(even){
+                margin-right: 0;
+            }
+            .title{
+                font-size: 14px;
+                line-height: 30px;
+            }
+            .table_height{
+                background: #fff;
+                border:$border;
+                .tableCommon{
+                    table-layout: initial;
+                }
+            }
+            .el-scrollbar__wrap {
+                overflow-x: hidden;
+            }
+            .chartTable_height{
+                overflow: auto;
+                height: 300px;
+            }
+            .chartTable{
+                margin:5px 0 20px 0;
+                th{
+                    font-weight: bold;
+                }
+                th,td{
+                    height: 30px;
+                    font-size: 12px;
+                    text-align: center;
+                    border-bottom: 1px dashed $border-color;
+                    @include textoverflow;
+                }
+            }
+        }
+    }
+    .supplierTable_height{
+        border:$border;
+        border-bottom: none;
+        overflow: auto;
+    }
+}
