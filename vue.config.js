@@ -62,8 +62,8 @@ module.exports = {
         // hotOnly: false,
         proxy:{
             "/api":{
-                target:"http://183.238.55.102:8080",//测试
-                // target:"http://192.168.0.110:11002",//本地
+                target:"http://183.238.55.102:9090",//测试
+                // target:"http://192.168.1.134:11002",//本地
                 changeOrigin:true,//true为开启代理
                 // secure: false, // 如果是https接口，需要配置这个参数
                 pathRewrite:{

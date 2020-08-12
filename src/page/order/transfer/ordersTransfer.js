@@ -4,6 +4,7 @@ import tableCommon from "@/components/table/tableCommon.vue"
 import innerTab from "@/components/innerTab/innerTab.vue"
 import printSet from "@/components/printSet/printSet.vue"
 import mycity from '@/components/mycity/mycity.vue'
+import makeTransitUp from "@/page/fc/makeTransitUp.vue"
 
 export default {
   name: 'orders',
@@ -42,6 +43,9 @@ export default {
       showPrinterView : false, //是否展开打印机设置
       currentPrinter : {}, // 当前打印机参数
       showCancelRemark : false, //取消运单
+        makeUpShow:false,
+        outgoingId:"",
+        orderId:"",
       cancelRemark : "",
       supplierList : [
         {codeValue:"supplierTenantIdByCarrier",codeName:"承运关系"},
@@ -654,7 +658,6 @@ export default {
         console.log("当前执行打印机：");
         console.log(this.currentPrinter);
       }
-      
     },
     // 参数处理 -> 异常TAB 用到
     openTab(item){
@@ -668,11 +671,73 @@ export default {
     printerViewHtml(){
       this.showPrinterView = true;
     },
+    //批量申请付款
+    bulkPayment(){
+        let that = this;
+        let selectData = that.$refs.ordersTransferManager.getSelectItem();
+        if(selectData.length == 0){
+            that.$message.error('请选择需要申请付款的数据！');
+            return;
+        }
+        for(let el of selectData){
+            if(that.common.isBlank(el.outgoingFeeDouble) || el.outgoingFeeDouble <= 0){
+                that.$message.error('中转费用为零无法申请付款！');
+                return;
+            }
+        }
+        that.outgoingIds="";
+        selectData.forEach((el,index)=>{
+            if(index == selectData.length-1){
+                that.outgoingIds+=el.outgoingId ;
+            }else {
+                that.outgoingIds+=el.outgoingId + ",";
+            }
+        })
+        that.$confirm(that.rms, '确认对所选单据操作批量申请付款？', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            let url ="api/fcIncomeBO.ajax?cmd=bulkPayment";
+            that.common.postUrl(url,{"outgoingIds":that.outgoingIds},function (data) {
+                if(data != 'success'){
+                    that.$message.error('申请失败！');
+                    return;
+                }else {
+                    that.$message({
+                        type: 'success',
+                        message: "申请成功"
+                    });
+                    that.doQuery();
+                }
+            });
+        });
+    },
+      closeCallback(){
+          let that = this;
+          that.makeUpShow=false;
+      },
+      showPay:function(){
+          let that = this;
+          let selectData = that.$refs.ordersTransferManager.getSelectItem();
+          if(selectData.length == 0){
+              that.$message.error('请选择需要付款申请的数据！');
+              return;
+          }
+          if(selectData.length != 1){
+              that.$message.error('只能选择一条数据！');
+              return;
+          }
+          that.orderId = selectData[0].orderId;
+          that.outgoingId = selectData[0].outgoingId;
+          that.makeUpShow=true;
+      },
   },
   components: {
     tableCommon,
     innerTab,
     printSet,
-    mycity
+    mycity,
+      makeTransitUp
   }
 }

@@ -527,16 +527,17 @@ export default {
           return false;
         }
         let data = orders[0];
-        let outgoingTrackingNum = data.outgoingTrackingNum;
-        that.orderShowData = {};
-        that.orderShowData.supplierTenantName = data.supplierTenantName;
-        that.orderShowData.outgoingTrackingNum = data.outgoingTrackingNum;
-        that.orderShowData.orderId = data.orderId;
-        if(that.common.isBlank(outgoingTrackingNum)){
-           that.$message({"type":"success", message: "请选择存在中转单号数据"});   
-           return false;
-       }
-       that.$refs.trackScheduleDialog.showDialog(that.orderShowData);
+        that.dblclickItem(data);
+      //   let outgoingTrackingNum = data.outgoingTrackingNum;
+      //   that.orderShowData = {};
+      //   that.orderShowData.supplierTenantName = data.supplierTenantName;
+      //   that.orderShowData.outgoingTrackingNum = data.outgoingTrackingNum;
+      //   that.orderShowData.orderId = data.orderId;
+      //   if(that.common.isBlank(outgoingTrackingNum)){
+      //      that.$message({"type":"success", message: "请选择存在中转单号数据"});   
+      //      return false;
+      //  }
+      //  that.$refs.trackScheduleDialog.showDialog(that.orderShowData);
     },
     // 展示 分配供应商 （分配 供应商）
     saveAddOrModifyTransferView(type){
@@ -792,16 +793,49 @@ export default {
 
     },
     // 列表双击
-    dblclickItem(order){
+    dblclickItem(data){
         let that = this;
-        let item = {
-            urlName: "订单详情",
-            urlId: "48" + order.orderId,
-            urlPath: "/order/billing/order.vue",
-            urlPathName: "/order",
-            query:{order : {orderId: order.orderId, viewType: 1, view:1}},
-        }
-        that.$emit('openTab', item);
+        // let item = {
+        //     urlName: "订单详情",
+        //     urlId: "48" + order.orderId,
+        //     urlPath: "/order/billing/order.vue",
+        //     urlPathName: "/order",
+        //     query:{order : {orderId: order.orderId, viewType: 1, view:1}},
+        // }
+        // that.$emit('openTab', item);
+        let outgoingTrackingNum = data.outgoingTrackingNum;
+        that.orderShowData = {};
+        that.orderShowData.supplierTenantName = data.supplierTenantName;
+        that.orderShowData.outgoingTrackingNum = data.outgoingTrackingNum;
+        that.orderShowData.orderId = data.orderId;
+        if(that.common.isBlank(outgoingTrackingNum)){
+           that.$message({"type":"success", message: "请选择存在中转单号数据"});   
+           return false;
+       }
+       that.$refs.trackScheduleDialog.showDialog(that.orderShowData);
+    },
+    // 查看详情 
+    orderView(){
+      let that = this;
+      let orders = that.$refs.ordersManager.getSelectItem();
+     
+      if(that.common.isBlank(orders) || orders.length == 0){
+         that.$message({"type":"success", message: "请选择数据"});   
+         return false;
+      }
+      if (orders.length > 1  ) {
+        that.$message({"type":"success", message: "只能选择一条数据"});   
+        return false;
+      }
+      let order = orders[0];
+      let item = {
+        urlName: "订单详情",
+        urlId: "48" + order.orderId,
+        urlPath: "/order/billing/order.vue",
+        urlPathName: "/order",
+        query:{order : {orderId: order.orderId, viewType: 1, view:1}},
+      }
+      that.$emit('openTab', item);
     },
 
     // 清除

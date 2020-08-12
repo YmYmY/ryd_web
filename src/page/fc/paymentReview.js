@@ -8,7 +8,7 @@ export default {
             //table组件数据
             head :[
                 {"name":"申请时间","code":"payApplicationTime","width":"150","type" : "text"},
-                {"name":"申请单号","code":"payApplicationCode","width":"150","type" : "text"},
+                {"name":"申请单号","code":"flowId","width":"150","type" : "text"},
                 {"name":"申请人","code":"payApplicantName","width":"150","type" : "text"},
                 {"name":"中转时间","code":"outGoingDate","width":"150","type" : "text"},
                 {"name":"审核状态","code":"auditStatusName","width":"150","type" : "text"},

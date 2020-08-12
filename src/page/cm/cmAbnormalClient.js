@@ -114,7 +114,6 @@ export default {
             codeTypes.push("DEAL_TYPE");
             codeTypes.push("ORDER_TYPE");
             that.common.postUrl(url,{"codeTypes":codeTypes.join(",")},function(data){
-                debugger
                 that.abnormalTypeList = data.ABNORMAL_TYPE;
                 that.dealTypeList = data.DEAL_TYPE;
                 that.orderTypeList = data.ORDER_TYPE;

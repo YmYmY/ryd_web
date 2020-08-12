@@ -94,7 +94,8 @@
                 共<span class="total">{{totalNum}}</span>条数据，显示
                 <span class="num" :class="{'active':rows==50}" @click="changeRows(50)">50</span>
                 <span class="num" :class="{'active':rows==80}" @click="changeRows(80)">80</span>
-                <span class="num" :class="{'active':rows==100}" @click="changeRows(100)">100</span>条
+                <span class="num" :class="{'active':rows==100}" @click="changeRows(100)">100</span>
+                <span class="num" v-if="showMoreData" :class="{'active':rows==500}" @click="changeRows(500)">500</span>条
             </div>
             <div class="fr">
                 <span class="num" @click="prePage" v-show="page>1"> < </span>

@@ -24,7 +24,7 @@ export default {
             stepPrice:false,
             standardPrice:false,
             obj:{
-                supplierId:"-1",
+                supplierId:-1,
                 payType:"-1",
                 phoneTwo:null,
                 phoneOne:null,

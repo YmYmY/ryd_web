@@ -600,6 +600,8 @@ export default {
 
    // 已取消
    toCancalOrderNum(){
+    this.clear();
+    this.doQuery();
 
    },
    // 参数处理 -> 异常TAB 用到

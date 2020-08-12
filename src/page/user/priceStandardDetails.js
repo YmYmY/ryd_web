@@ -85,6 +85,7 @@ export default {
                     {"name":"计费方向","code":"cityTypeName","width":"100","type" : "text"},
                     {"name":"出发地","code":"startCityName","width":"100"},
                     {"name":"目的地","code":"endCityName","width":"100","type" : "text"},
+                    {"name":"价格名称","code":"priceName","width":"100","type" : "text"},
                     {"name":"计费方式","code":"billingTypeName","width":"100","type" : "text"},
                     {"name":"按大小箱计费","code":"boxTypeName","width":"100","type" : "text"},
                     {"name":"重货泡比","code":"priceWeightCost","width":"100","type" : "text"},

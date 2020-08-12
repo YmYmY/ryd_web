@@ -166,12 +166,13 @@
       <div class="table-title">
         <h3>
           <span>订单列表</span>
-          <el-tooltip effect="light" content="双击查看详情" placement="right">
+          <el-tooltip effect="light" content="双击查看轨迹" placement="right">
             <img class="tip" src="@/static/image/$tenantId$/tip.png" alt="">
           </el-tooltip>
         </h3>
         <div class="table-title-btn">
-          <el-button type="primary" plain size="mini" @click="dialogScheduleShowView()" v-show="currentTab.orderState =='-1' "  v-entity="565">轨迹查询</el-button>
+          <el-button type="primary" plain size="mini" @click="orderView()" >运单详情</el-button>
+          <el-button type="primary" plain size="mini" @click="dialogScheduleShowView()"   v-entity="565">轨迹查询</el-button>
           <el-button type="primary" plain size="mini" @click="addOrder()" v-show="currentTab.orderState =='-1' "  v-entity="192">运单录入</el-button>
           <el-button type="primary" plain size="mini" @click="modifyOrder()" v-show="currentTab.orderState =='-1'  || currentTab.orderState =='2'  || currentTab.orderState =='3'" v-entity="193" >运单修改</el-button>
           <el-button type="primary" plain size="mini" @click="printOrders()" v-show="currentTab.orderState =='-1' " v-entity="195">批量打印</el-button>

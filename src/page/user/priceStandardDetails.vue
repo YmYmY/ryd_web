@@ -127,7 +127,7 @@
                             </el-select>
                         </div>
                     </li>
-                    <li class="item"  v-show="attributionType==2 && tenantPriceList.length>0">
+                    <li class="item"  v-show="tenantPriceList.length>0">
                         <label class="label-term">价格名称</label>
                         <div class="input-text">
                             <el-select v-model="sysPrice.tenantPrice" placeholder="请选择" @change="forceUpdate">

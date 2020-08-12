@@ -1,6 +1,84 @@
 <template>
     <div id="supplierFreightSetting" class="supplierFreightSettingPage">
         <div class="common-info">
+            <h3 class="common-title mb_20" ><span class="title-name">计费产品</span></h3>
+            <div class="tenantPrice" >
+                <div v-for="(item,$index) in tenantPriceList" :key="$index" class="clearfix">
+                    <div class="title">产品{{$index+1}}
+                        <em v-show="item.isDefault==1" style="position: absolute;top: 25px;left: 0;width: 90px;">(默认)</em>
+                    </div>
+                    <div class="info">
+                        <ul class="content clearfix">
+                            <li class="item">
+                                <label class="label-term"><em>*</em>价格名称</label>
+                                <div class="input-text">
+                                    <el-input  v-model="item.priceName" placeholder="请输入价格名称" maxlength="50"></el-input>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <label class="label-term"><em>*</em>价格类型</label>
+                                <div class="input-text">
+                                    <el-select v-model="item.priceType"  v-bind:disabled='item.isDefault==1' placeholder="请选择" >
+                                        <el-option v-for="item in sysPriceList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="content clearfix">
+                            <li class="item item100">
+                                <label class="label-term"><em>*</em>选择类型</label>
+                                <div class="input-text" style="width:calc(48% - 84px)" v-show="item.selectType=='1'">
+                                    <el-input class="fl" style="width:30%" v-model="item.weightStart" placeholder="最小值"  maxlength="11" v-mydoubleval></el-input>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;"><</em>
+                                    <el-select class="fl" style="width:30%" v-model="item.selectType" placeholder="请选择">
+                                        <el-option v-for="item in selectType" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;">≤</em>
+                                    <el-input class="fl" style="width:30%"  v-model="item.weightEnd" placeholder="最大值" maxlength="11" v-mydoubleval></el-input>
+                                </div>
+                                <div class="input-text" style="width:calc(48% - 84px)" v-show="item.selectType=='2'">
+                                    <el-input class="fl" style="width:30%" v-model="item.volumeStart" placeholder="最小值"  maxlength="11" v-mydoubleval></el-input>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;"><</em>
+                                    <el-select class="fl" style="width:30%" v-model="item.selectType" placeholder="请选择">
+                                        <el-option v-for="item in selectType" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;">≤</em>
+                                    <el-input class="fl" style="width:30%"  v-model="item.volumeEnd" placeholder="最大值" maxlength="11" v-mydoubleval></el-input>
+                                </div>
+                                <div class="input-text" style="width:calc(48% - 84px)" v-show="item.selectType=='3'">
+                                    <el-input class="fl" style="width:30%" v-model="item.piecesStart" placeholder="最小值"  maxlength="11" v-mydoubleval></el-input>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;"><</em>
+                                    <el-select class="fl" style="width:30%" v-model="item.selectType" placeholder="请选择">
+                                        <el-option v-for="item in selectType" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                    <em class="fl" style="font-size:18px;width:5%;text-align: center;">≤</em>
+                                    <el-input class="fl" style="width:30%"  v-model="item.piecesEnd" placeholder="最大值" maxlength="11" v-mydoubleval></el-input>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="content clearfix">
+                            <li class="item">
+                                <label class="label-term"><em>*</em>订单类型</label>
+                                <div class="input-text">
+                                    <el-select v-model="item.orderType" placeholder="请选择" multiple collapse-tags>
+                                        <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <label class="label-term"><em>*</em>状态</label>
+                                <div class="input-text">
+                                    <el-select v-model="item.priceStatus" placeholder="请选择">
+                                        <el-option v-for="item in priceStatusList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                                    </el-select>
+                                </div>
+                            </li>
+                            <img class="addIcon" src="@/static/image/$tenantId$/u2584.png" title="删除" v-show="item.isDefault==2" @click="delTable($index)">
+                            <img class="delIcon" src="@/static/image/$tenantId$/u2582.png" title="增加" v-show="$index==tenantPriceList.length-1" @click="addTable()">
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <h3 class="common-title"><span class="title-name">计费设置</span></h3>
             <div class="tip">注：1.开启进阶后，系统将按进阶后的重量进行计算，
                         2.每个供应商只支持一种进阶方式，

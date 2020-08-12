@@ -257,6 +257,8 @@
           <el-button type="primary" plain size="mini" @click="cancelTransitBatchNum()" v-entity="561" >按批次取消</el-button>
           <el-button type="primary" plain size="mini" @click="updateOrderThreeSystem()" v-entity="578" >重新派单</el-button>
           <el-button type="primary" plain size="mini" @click="trackingOrderView()" v-entity="562">中转跟踪</el-button>
+          <el-button type="primary" plain size="mini" @click="bulkPayment()" v-entity="604">批量申请付款</el-button>
+          <el-button type="primary" plain size="mini" @click="showPay()" v-entity="605">申请付款</el-button>
           <el-button type="primary" plain size="mini" @click="exportOrders()" v-entity="563">导出</el-button>
         </div>
       </div>
@@ -281,6 +283,11 @@
       </div>
     </el-dialog>
     <!--- 取消运单 备注结束--->
+
+      <el-dialog title="付款申请" :visible.sync="makeUpShow" width="900px">
+          <makeTransitUp v-if="makeUpShow" :outgoingId="outgoingId" :orderId="orderId" @closeCallback="closeCallback" @doQueryFcIncomeExpenses="doQuery"></makeTransitUp>
+      </el-dialog>
+
   </div>
 </template>
 

@@ -11,6 +11,7 @@ export default {
         "singleSelect",     //是否单选
         "hideScale",        //隐藏放大表格按钮
         "doSum",            //是否做统计
+        "showMoreData",     //是否展示更多的数据
     ],
     data() {
         return {
@@ -67,6 +68,7 @@ export default {
                 }
             })
             this.headCache = this.common.copyObj(this.headList);
+            // console.log(JSON.stringify(this.headList));
             await this.initTableSet();    //初始化table设置
             this.calcWidth();   //重新计算表格宽度
         },

@@ -2,10 +2,11 @@ import {
 } from '@/static/json.js'
 import tableCommon from "@/components/table/tableCommon.vue"
 export default {
-    name: 'makeUp',
-    props:["orderId","queryType"],
+    name: 'makeTransitUp',
+    props:["outgoingId","orderId"],
     data() {
         return {
+            tenantFullName:"",
             insuranceCost:"",
             handlingFee:"",
             tenantPriceList:[],
@@ -15,14 +16,13 @@ export default {
                 packageWeight:"",
                 packageVolume:"",
                 freightDouble:"",
-                orderIncomeDouble:"",
+                outgoingFee:"",
                 goodsPriceDouble:"",
                 collectingMoneyDouble:"",
                 handingCostsDouble:"",
                 maxLowestCost:"",
                 maxCost:"",
             },
-            pushFee:false,
         }
     },
     mounted() {
@@ -48,36 +48,30 @@ export default {
         },
         sumFee:function(){
             let that = this;
-            that.objPrice.orderIncomeDouble = 0;
+            that.objPrice.outgoingFeeDouble = 0;
             if(that.common.isNotBlank(that.objPrice.freightDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.freightDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.freightDouble);
             }
             if(that.common.isNotBlank(that.objPrice.insureFeeDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.insureFeeDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.insureFeeDouble);
             }
             if(that.common.isNotBlank(that.objPrice.procedureFeeDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.procedureFeeDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.procedureFeeDouble);
             }
             if(that.common.isNotBlank(that.objPrice.deliveryCostsDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.deliveryCostsDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.deliveryCostsDouble);
             }
             if(that.common.isNotBlank(that.objPrice.pickingCostsDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.pickingCostsDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.pickingCostsDouble);
             }
             if(that.common.isNotBlank(that.objPrice.packingCostsDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.packingCostsDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.packingCostsDouble);
             }
             if(that.common.isNotBlank(that.objPrice.otherFeeDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.otherFeeDouble);
-            }
-            if(that.common.isNotBlank(that.objPrice.upstairFeeDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.upstairFeeDouble);
-            }
-            if(that.common.isNotBlank(that.objPrice.facelistFeeDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.facelistFeeDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.otherFeeDouble);
             }
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble)){
-                that.objPrice.orderIncomeDouble += Number(that.objPrice.handingCostsDouble);
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.handingCostsDouble);
             }
             that.$forceUpdate();
         },
@@ -99,36 +93,49 @@ export default {
                 if(that.common.isNotBlank(data)){
                     that.objPrice.calculateFeeParams = JSON.stringify(data);
                     that.objPrice.freightDouble = data.freightDouble;
-                    that.objPrice.orderIncomeDouble = data.sumCost;
+                    that.objPrice.outgoingFeeDouble = data.sumCost;
                     that.objPrice.insureFeeDouble = data.insurance;
                     that.objPrice.procedureFeeDouble = data.collectingMoneyHandlingFee;
                     that.objPrice.deliveryCostsDouble = data.deliveryCost;
                     that.objPrice.pickingCostsDouble = data.pickupCost;
                     that.objPrice.packingCostsDouble = data.publicCost;
                     that.objPrice.otherFeeDouble = data.otherCost;
-                    that.objPrice.upstairFeeDouble = data.upstairsCost;
-                    that.objPrice.facelistFeeDouble = data.facelistCost;
                     that.objPrice.handingCostsDouble = data.handingCost;
+                    if(that.common.isNotBlank(data.priceUtilName)){
+                        that.$refs.calcTip.innerHTML = data.priceUtilName;
+                    }
                     that.$forceUpdate();
                 }
             });
         },
-        async doSavePrice(){
+        async paymentRequest(){
             let that = this;
             if(that.common.isBlank(that.objPrice.packageNumber)){
-                that.$message.error('请输入打包件数！');
+                that.$message.error('请输入中转件数！');
                 return;
             }
             if(that.common.isBlank(that.objPrice.packageWeight)){
-                that.$message.error('请输入打包重量！');
+                that.$message.error('请输入中转重量！');
                 return;
             }
             if(that.common.isBlank(that.objPrice.packageVolume)){
-                that.$message.error('请输入打包体积！');
+                that.$message.error('请输入中转体积！');
                 return;
             }
             if(that.common.isBlank(that.objPrice.freightDouble)){
                 that.$message.error('请输入运费或点击费用计算！');
+                return;
+            }
+            if(that.common.isBlank(that.objPrice.bankPeople)){
+                that.$message.error('请输入开户名！');
+                return;
+            }
+            if(that.common.isBlank(that.objPrice.bankName)){
+                that.$message.error('请输入开户银行！');
+                return;
+            }
+            if(that.common.isBlank(that.objPrice.bankCard)){
+                that.$message.error('请输入银行卡号！');
                 return;
             }
             if(Number(that.maxLowestCost) < Number(that.objPrice.goodsPriceDouble)){
@@ -156,52 +163,42 @@ export default {
             if(that.common.isNotBlank(that.objPrice.otherFeeDouble) && Number(that.objPrice.otherFeeDouble) > 0){
                 that.prompt += "+其他费:" + that.objPrice.otherFeeDouble+"元";
             }
-            if(that.common.isNotBlank(that.objPrice.upstairFeeDouble) && Number(that.objPrice.upstairFeeDouble) > 0){
-                that.prompt += "+上楼费:" + that.objPrice.upstairFeeDouble+"元";
-            }
-            if(that.common.isNotBlank(that.objPrice.facelistFeeDouble) && Number(that.objPrice.facelistFeeDouble) > 0){
-                that.prompt += "+面单费:" + that.objPrice.facelistFeeDouble+"元";
-            }
             if(that.common.isNotBlank(that.objPrice.packingCostsDouble) && Number(that.objPrice.packingCostsDouble) > 0){
                 that.prompt += "+包装费:" + that.objPrice.packingCostsDouble+"元";
             }
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble) && Number(that.objPrice.handingCostsDouble) > 0){
                 that.prompt += "+装卸费:" + that.objPrice.handingCostsDouble+"元";
             }
-            that.objPrice.orderId = that.orderId;
-            that.prompt += "=收入合计:" + that.objPrice.orderIncomeDouble + "元";
-            that.prompt += "确认补录该信息？"
-            if(that.pushFee){
-                if(that.objPrice.payFlag !=1){
-                    that.$message.error('费用已推送！');
-                    return;
-                }
-                that.objPrice.pushFee=1;
-            }else {
-                that.objPrice.pushFee=2;
+            if(that.common.isBlank(that.objPrice.outgoingFeeDouble) || that.objPrice.outgoingFeeDouble <= 0){
+                that.$message.error('成本合计为零无法申请付款！');
+                return;
             }
+            that.objPrice.outgoingId = that.outgoingId;
+            that.prompt += "=成本合计:" + that.objPrice.outgoingFeeDouble + "元";
+            that.prompt += "确认付款申请？"
             that.$confirm("", that.prompt, {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                let url ="api/fcIncomeBO.ajax?cmd=makeUp";
+                let url ="api/fcIncomeBO.ajax?cmd=paymentRequest";
                 that.common.postUrl(url,that.objPrice,function (data) {
                     if(data != 'success'){
                         return;
                     }else {
                         that.$message({
                             type: 'success',
-                            message: "补录成功！"
+                            message: "付款申请成功！"
                         });
                         that.cancel();
-                        that.doQueryFcIncomeExpenses();
+                        that.doQuery();
                     }
                 });
             });
         },
         queryOrderInfoDetail:function(){
             let that = this;
+            that.objPrice = {};
             that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysSetup",{},function (data) {
                 if(!that.common.isBlank(data)){
                     that.maxLowestCost = (data.maxLowestCost /100).toFixed(2);
@@ -213,7 +210,6 @@ export default {
             that.common.postUrl("api/ordOrderInfoBO.ajax?cmd=queryOrderInfoDetail",{"orderId":this.orderId},function (data) {
                 that.order =data.order;
                 that.orderFee =data.orderFee;
-                that.objPrice = [];
                 that.objPrice.orderType = data.order.orderType;
                 that.objPrice.warehouseId = data.order.consignorId;
                 that.objPrice.receiveWarehouseId = data.order.consigneeId;
@@ -229,36 +225,52 @@ export default {
                 that.objPrice.endWarehouseAddress =that.order.destAddress;
                 that.objPrice.priceType = that.order.productType;
                 that.objPrice.trackingNum = that.order.trackingNum;
-                that.objPrice.tenantId = that.order.customerTenantId;
-                that.objPrice.packageNumber = that.order.packageNumber;
-                that.objPrice.packageWeight = that.order.packageWeight;
-                that.objPrice.packageVolume = that.order.packageVolume;
-                that.objPrice.freightDouble = that.orderFee.freightDouble;
-                that.objPrice.goodsPriceDouble = that.orderFee.goodsPriceDouble;
-                that.objPrice.collectingMoneyDouble = that.orderFee.collectingMoneyDouble;
-                that.objPrice.orderIncomeDouble = that.orderFee.orderIncomeDouble;
-                that.objPrice.deliveryCostsDouble = that.orderFee.deliveryCostsDouble;
-                that.objPrice.pickingCostsDouble = that.orderFee.pickingCostsDouble;
-                that.objPrice.packingCostsDouble = that.orderFee.packingCostsDouble;
-                that.objPrice.otherFeeDouble = that.orderFee.otherFeeDouble;
-                that.objPrice.upstairFeeDouble = that.orderFee.upstairFeeDouble;
-                that.objPrice.facelistFeeDouble = that.orderFee.facelistFeeDouble;
-                that.objPrice.handingCostsDouble = that.orderFee.handingCostsDouble;
-                that.objPrice.collectingMoneyDouble = that.orderFee.collectingMoneyDouble;
-                that.objPrice.insureFeeDouble = that.orderFee.insureFeeDouble;
-                that.objPrice.procedureFeeDouble = that.orderFee.procedureFeeDouble;
-                that.objPrice.payFlag = that.orderFee.payFlag;
                 that.objPrice.paymentType = that.orderFee.paymentType;
-                that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantPrice",{"tenantId":that.order.customerTenantId},function (data) {
+                that.$forceUpdate();
+            })
+            that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=queryOutgoingFeeDetail",{"outgoingId":this.outgoingId},function (data) {
+                that.ordTracking = data;
+                that.objPrice.packageNumber = that.ordTracking.packageNumber;
+                that.objPrice.packageWeight = that.ordTracking.packageWeight;
+                that.objPrice.packageVolume = that.ordTracking.packageVolume;
+                that.objPrice.freightDouble = that.ordTracking.freightDouble;
+                that.objPrice.goodsPriceDouble = that.ordTracking.goodsPriceDouble;
+                that.objPrice.collectingMoneyDouble = that.ordTracking.collectingMoneyDouble;
+                that.objPrice.outgoingFeeDouble = that.ordTracking.outgoingFeeDouble;
+                that.objPrice.deliveryCostsDouble = that.ordTracking.deliveryCostsDouble;
+                that.objPrice.pickingCostsDouble = that.ordTracking.pickingCostsDouble;
+                that.objPrice.packingCostsDouble = that.ordTracking.packingCostsDouble;
+                that.objPrice.otherFeeDouble = that.ordTracking.otherFeeDouble;
+                that.objPrice.handingCostsDouble = that.ordTracking.handingCostsDouble;
+                that.objPrice.collectingMoneyDouble = that.ordTracking.collectingMoneyDouble;
+                that.objPrice.insureFeeDouble = that.ordTracking.insureFeeDouble;
+                that.objPrice.procedureFeeDouble = that.ordTracking.procedureFeeDouble;
+                that.objPrice.tenantId = that.ordTracking.supplierTenantId;
+                that.$forceUpdate();
+                that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantPrice",{"tenantId":that.ordTracking.supplierTenantId},function (data) {
                     that.tenantPriceList = data.items;
                 })
+                that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysReconciliation",{"tenantId":that.ordTracking.supplierTenantId},function (data) {
+                    if(that.common.isNotBlank(data) && data.items.length > 0){
+                        that.objPrice.bankPeople = data.items[0].billingName;
+                        that.objPrice.bankName = data.items[0].bankName;
+                        that.objPrice.bankCard = data.items[0].bankNo;
+                        that.objPrice.bankAddress = data.items[0].bankAddress;
+                        that.$forceUpdate();
+                    }
+                })
+                that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefDetails",{"tenantId":that.ordTracking.supplierTenantId},function (data) {
+                    that.tenantFullName = data.tenantFullName;
+                    that.$forceUpdate();
+                })
+
             })
         },
         cancel(){
             this.$emit("closeCallback");
         },
         doQueryFcIncomeExpenses(){
-            this.$emit("doQueryFcIncomeExpenses");
+            this.$emit("doQuery");
         },
     },
 }

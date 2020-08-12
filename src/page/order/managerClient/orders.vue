@@ -153,7 +153,7 @@
           <el-button type="primary" plain size="mini" @click="exportOrders()" v-entity="267" >导出</el-button>
         </div>
       </div>
-      <tableCommon  ref="ordersManager" :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable"></tableCommon>
+      <tableCommon  ref="ordersManager" :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable" showMoreData="true"></tableCommon>
     </div>
    
 
