@@ -3,13 +3,14 @@ import {
 import tableCommon from "@/components/table/tableCommon.vue"
 export default {
     name: 'makeTransitUp',
-    props:["outgoingId","orderId"],
+    props:["outgoingId","orderId","combinedSts"],
     data() {
         return {
             tenantFullName:"",
             insuranceCost:"",
             handlingFee:"",
             tenantPriceList:[],
+            divideTypeList:[],
             objPrice:{
                 tenantPrice:"",
                 packageNumber:"",
@@ -22,6 +23,9 @@ export default {
                 handingCostsDouble:"",
                 maxLowestCost:"",
                 maxCost:"",
+                facelistFeeDouble:"",
+                divideType:"",
+                floatingPriceDouble:"",
             },
         }
     },
@@ -32,6 +36,11 @@ export default {
         tableCommon
     },
     methods: {
+        selectType:function(){
+            let that = this;
+            that.priceUtils();
+            that.$forceUpdate();
+        },
         isMax:function(){
             let that = this;
             if(Number(that.maxLowestCost) < Number(that.objPrice.goodsPriceDouble)){
@@ -73,6 +82,16 @@ export default {
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble)){
                 that.objPrice.outgoingFeeDouble += Number(that.objPrice.handingCostsDouble);
             }
+            if(that.common.isNotBlank(that.objPrice.facelistFeeDouble)){
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.facelistFeeDouble);
+            }
+            if(that.common.isNotBlank(that.objPrice.upstairFeeDouble)){
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.upstairFeeDouble);
+            }
+            if(that.common.isNotBlank(that.objPrice.floatingPriceDouble)){
+                that.objPrice.outgoingFeeDouble += Number(that.objPrice.floatingPriceDouble);
+            }
+            that.objPrice.outgoingFeeDouble = (that.objPrice.outgoingFeeDouble).toFixed(2);
             that.$forceUpdate();
         },
         //更新视图
@@ -88,6 +107,8 @@ export default {
             that.objPrice.collectingMoney = that.objPrice.collectingMoneyDouble;
             that.objPrice.priceId = that.objPrice.tenantPrice;
             that.objPrice.calculateFeeParams="";
+            that.objPrice.calculatePriceId="";
+            that.$refs.calcTip.innerHTML = "";
             that.url = "api/fcIncomeBO.ajax?cmd=priceUtils";
             that.common.postUrl( that.url, that.objPrice,function(data){
                 if(that.common.isNotBlank(data)){
@@ -101,8 +122,15 @@ export default {
                     that.objPrice.packingCostsDouble = data.publicCost;
                     that.objPrice.otherFeeDouble = data.otherCost;
                     that.objPrice.handingCostsDouble = data.handingCost;
+                    that.objPrice.facelistFeeDouble = data.facelistCost;
+                    that.objPrice.upstairFeeDouble = data.upstairsCost;
+                    that.objPrice.floatingPriceDouble = data.floatingPrice;
                     if(that.common.isNotBlank(data.priceUtilName)){
                         that.$refs.calcTip.innerHTML = data.priceUtilName;
+                    }
+                    if(that.common.isNotBlank(data.tenantPrice)){
+                        that.objPrice.calculatePriceId = data.tenantPrice;
+                        that.objPrice.tenantPrice = data.tenantPrice;
                     }
                     that.$forceUpdate();
                 }
@@ -146,6 +174,14 @@ export default {
                 that.$message.error('最大代收货款:' + that.maxLowestCost);
                 return;
             }
+            if(this.combinedSts == 2){
+                if(that.common.isBlank(that.objPrice.divideType)){
+                    that.$message.error('请选择分摊方式！');
+                    return;
+                }
+            }else {
+                that.objPrice.divideType = "";
+            }
             that.sumFee();
             that.prompt = "运费:" + that.objPrice.freightDouble + "元";
             if(that.common.isNotBlank(that.objPrice.insureFeeDouble) && Number(that.objPrice.insureFeeDouble) > 0){
@@ -169,11 +205,23 @@ export default {
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble) && Number(that.objPrice.handingCostsDouble) > 0){
                 that.prompt += "+装卸费:" + that.objPrice.handingCostsDouble+"元";
             }
+            if(that.common.isNotBlank(that.objPrice.facelistFeeDouble) && Number(that.objPrice.facelistFeeDouble) > 0){
+                that.prompt += "+面单费:" + that.objPrice.facelistFeeDouble+"元";
+            }
+            if(that.common.isNotBlank(that.objPrice.upstairFeeDouble) && Number(that.objPrice.upstairFeeDouble) > 0){
+                that.prompt += "+上楼费:" + that.objPrice.upstairFeeDouble+"元";
+            }
+            if(that.common.isNotBlank(that.objPrice.floatingPriceDouble) && Number(that.objPrice.floatingPriceDouble) > 0){
+                that.prompt += "+到付上浮:" + that.objPrice.floatingPriceDouble+"元";
+            }
             if(that.common.isBlank(that.objPrice.outgoingFeeDouble) || that.objPrice.outgoingFeeDouble <= 0){
                 that.$message.error('成本合计为零无法申请付款！');
                 return;
             }
             that.objPrice.outgoingId = that.outgoingId;
+            if(that.common.isNotBlank( that.objPrice.tenantPrice)){
+                that.objPrice.calculatePriceId = that.objPrice.tenantPrice;
+            }
             that.prompt += "=成本合计:" + that.objPrice.outgoingFeeDouble + "元";
             that.prompt += "确认付款申请？"
             that.$confirm("", that.prompt, {
@@ -199,6 +247,12 @@ export default {
         queryOrderInfoDetail:function(){
             let that = this;
             that.objPrice = {};
+            if(this.combinedSts == 2){
+                that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"DEPART_DIVIDE_TYPE"},function (data) {
+                    that.divideTypeList = data.items;
+                    that.divideTypeList.splice(5,1);
+                })
+            }
             that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysSetup",{},function (data) {
                 if(!that.common.isBlank(data)){
                     that.maxLowestCost = (data.maxLowestCost /100).toFixed(2);
@@ -225,11 +279,11 @@ export default {
                 that.objPrice.endWarehouseAddress =that.order.destAddress;
                 that.objPrice.priceType = that.order.productType;
                 that.objPrice.trackingNum = that.order.trackingNum;
-                that.objPrice.paymentType = that.orderFee.paymentType;
                 that.$forceUpdate();
             })
             that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=queryOutgoingFeeDetail",{"outgoingId":this.outgoingId},function (data) {
                 that.ordTracking = data;
+                that.objPrice.tenantId = that.ordTracking.supplierTenantId;
                 that.objPrice.packageNumber = that.ordTracking.packageNumber;
                 that.objPrice.packageWeight = that.ordTracking.packageWeight;
                 that.objPrice.packageVolume = that.ordTracking.packageVolume;
@@ -245,11 +299,25 @@ export default {
                 that.objPrice.collectingMoneyDouble = that.ordTracking.collectingMoneyDouble;
                 that.objPrice.insureFeeDouble = that.ordTracking.insureFeeDouble;
                 that.objPrice.procedureFeeDouble = that.ordTracking.procedureFeeDouble;
-                that.objPrice.tenantId = that.ordTracking.supplierTenantId;
+                that.objPrice.facelistFeeDouble = that.ordTracking.facelistFeeDouble;
+                that.objPrice.upstairFeeDouble = that.ordTracking.upstairFeeDouble;
+                that.objPrice.floatingPriceDouble = that.ordTracking.floatingPriceDouble;
+                that.objPrice.paymentType = that.ordTracking.paymentType;
+                if(that.common.isNotBlank(that.ordTracking.divideType)){
+                    if(that.ordTracking.divideType == 6 || that.ordTracking.divideType == 0){
+                        that.objPrice.divideType = "";
+                    }else {
+                        that.objPrice.divideType = that.ordTracking.divideType+"";
+                    }
+                }
                 that.$forceUpdate();
                 that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantPrice",{"tenantId":that.ordTracking.supplierTenantId},function (data) {
                     that.tenantPriceList = data.items;
+                    that.tenantPriceList.unshift({priceName:"自动选择",tenantPrice:""});
                 })
+                if(that.common.isNotBlank(that.ordTracking.calculatePriceId)){
+                    that.objPrice.tenantPrice = that.ordTracking.calculatePriceId;
+                }
                 that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysReconciliation",{"tenantId":that.ordTracking.supplierTenantId},function (data) {
                     if(that.common.isNotBlank(data) && data.items.length > 0){
                         that.objPrice.bankPeople = data.items[0].billingName;
@@ -263,13 +331,12 @@ export default {
                     that.tenantFullName = data.tenantFullName;
                     that.$forceUpdate();
                 })
-
             })
         },
         cancel(){
             this.$emit("closeCallback");
         },
-        doQueryFcIncomeExpenses(){
+        doQuery(){
             this.$emit("doQuery");
         },
     },

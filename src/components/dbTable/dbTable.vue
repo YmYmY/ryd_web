@@ -63,7 +63,7 @@
                         <tr>
                             <td :width="multi_w"><em style="font-weight:bold;">{{totalNum}}</em></td>
                             <td :width="num_w" v-if="isShowNum"></td>
-                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListFix" :key="hd.code"></td>
+                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListFix" :key="hd.code"><em class="fw">{{hd.sum}}</em></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -81,7 +81,7 @@
                     </tbody>
                     <tfoot class="fixed-tfoot tfoot" :style="{'top':_fixBottom+'px'}">
                         <tr>
-                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListShow" :key="hd.code"></td>
+                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListShow" :key="hd.code"><em class="fw">{{hd.sum}}</em></td>
                         </tr>
                     </tfoot>
                 </table>                
@@ -142,7 +142,7 @@
                         <tr>
                             <td :width="multi_w"><em style="font-weight:bold;">{{tableDataRight.length}}</em></td>
                             <td :width="num_w" v-if="isShowNum"></td>
-                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListRightFix" :key="hd.code"></td>
+                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListRightFix" :key="hd.code"><em class="fw">{{hd.sum}}</em></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -163,7 +163,7 @@
                     </tbody>
                     <tfoot class="fixed-tfoot tfoot" :style="{'top':_fixBottomRight+'px'}">
                         <tr>
-                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListRightShow" :key="hd.code"></td>
+                            <td :width="hd.width == undefined ? defaultW : hd.width" v-for="hd in headListRightShow" :key="hd.code"><em class="fw">{{hd.sum}}</em></td>
                         </tr>
                     </tfoot>
                 </table>                

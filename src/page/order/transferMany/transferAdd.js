@@ -23,6 +23,7 @@
         supplierTenantList:[],
         selectOrders:[], //选中订单
         selectOrdersView:false, // 标志位-展示已选中
+        outModify:false, //修改标识
       }
     },
     mounted() {
@@ -88,7 +89,7 @@
         let params = {};
         let that = this;
         // 区域部门
-        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
           if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
             that.regionList = data.items;
             that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -112,6 +113,7 @@
         });
         // 供应商
       params = {};
+      params.tenantStatus = 1;
       params.pTenantId = this.common.getCookie("tenantId");
       that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
@@ -126,8 +128,8 @@
         this.query.queryTimes=[];
         var bnow = new Date();
         bnow.setDate(bnow.getDate() -7);  
-        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm"));
-        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm"));
+        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
       },
       //下一步
       doNext(data){
@@ -142,12 +144,13 @@
         this.showTablePage = false;
       },
       // 返回本页
-      goback(data){
+      goback(data,outModify){
         // console.log(data);
         // this.$refs.table.setRightData(data);
         this.selectOrders = data;
         this.doQuery();
         this.showTablePage = true;
+        this.outModify = outModify;
         this.forceUpdate();
       },
      // 默认值 select BUG  @change="forceUpdate()"

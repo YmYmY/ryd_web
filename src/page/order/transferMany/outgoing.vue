@@ -126,7 +126,7 @@
 
         </div>
       </div>
-      <tableCommon ref="outgoingManager" :head="head" @dblclickItem="dblclickItem" tableName="outgoingTableTwo"></tableCommon>
+      <tableCommon ref="outgoingManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="outgoingTableTwo"></tableCommon>
     </div>
   </div>
 </template>

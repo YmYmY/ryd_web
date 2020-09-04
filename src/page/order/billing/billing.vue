@@ -272,6 +272,14 @@
                 </div>
             </div>
             <div class="item">
+                <label class="label_term">计费产品</label>
+                <div class="input-text">
+                    <el-select v-model="order.fee.calculatePriceName" filterable placeholder="请选择" @change="selectCalculatePrice" @click.native="getSysTenantPrice()">
+                      <el-option v-for="item in tenantPriceList" :key="item.priceId" :label="item.priceName" :value="item"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="item">
                 <label class="label_term">结算方式</label>
                 <div class="input-text">
                     <el-select v-model="order.fee.paymentType" filterable placeholder="请选择" @change="selectPaymentType()">

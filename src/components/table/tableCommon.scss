@@ -34,14 +34,15 @@
             background: #fff;
             border: $border;
             border-radius: 3px;
-            padding: 10px 20px;
+            padding: 10px 0 10PX 20px;
             margin-top: 10px !important;
             text-align: left;
             z-index: 9999;
-            min-width: 230px;
+            min-width: 350px;
             .listShow{
                 max-height: 300px;
                 overflow: auto;
+                padding-right: 20px;
             }
             .item{
                 cursor: pointer;

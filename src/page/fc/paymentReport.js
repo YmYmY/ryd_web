@@ -1,6 +1,7 @@
 import {
 } from '@/static/json.js'
 import tableCommon from "@/components/table/tableCommon.vue"
+import makeTransitShow from "@/page/fc/makeTransitShow.vue"
 export default {
     name: 'paymentReport',
     data() {
@@ -15,6 +16,7 @@ export default {
                 {"name":"开户名","code":"bankPeople","type" : "text","width":"200"},
                 {"name":"银行名称","code":"bankName","type" : "text","width":"200"},
                 {"name":"银行账号","code":"bankCard","type" : "text","width":"200"},
+                {"name":"外发单号","code":"outgoingTrackingNum","type" : "text","width":"200"},
                 {"name":"子单号","code":"transitTrackingNum","type" : "text","width":"200"},
                 {"name":"批次号","code":"batchNumAlias","type" : "text","width":"200"},
                 {"name":"所属区域","code":"regionName","type" : "text","width":"200"},
@@ -44,9 +46,13 @@ export default {
                 supplierTenantId:-1,
                 customerTenantId:-1,
             },
+            makeUpShow:false,
             customerTenantList:[],
             auditStatusList:[],
             supplierTenantList:[],
+            outgoingId:"",
+            orderId:"",
+            flowId:"",
         }
     },
     //进入页面
@@ -58,7 +64,8 @@ export default {
         });
     },
     components: {
-        tableCommon
+        tableCommon,
+        makeTransitShow
     },
     mounted(){
         this.initHtml();
@@ -78,6 +85,10 @@ export default {
                 customerTenantId:-1,
             }
             this.initHtml();
+        },
+        closeCallback(){
+            let that = this;
+            that.makeUpShow=false;
         },
         doQueryPaymentInfo:function () {
             let that = this;
@@ -99,20 +110,16 @@ export default {
         // 列表双击
         dblclickItem(order){
             let that = this;
-            let item = {
-                urlName: "订单详情",
-                urlId: "48" + order.orderId,
-                urlPath: "/order/billing/order.vue",
-                urlPathName: "/order",
-                query:{order : {orderId: order.orderId, viewType: 1, view:1}},
-            }
-            that.$emit('openTab', item);
+            that.makeUpShow = true;
+            that.flowId=order.flowId;
+            that.outgoingId = order.outgoingId;
+            that.orderId = order.orderId;
         },
         initHtml:function(){
             var bnow = new Date();
             bnow.setDate(bnow.getDate() -30);
-            this.obj.payTime.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-            this.obj.payTime.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            this.obj.payTime.push(this.common.formatTime(bnow,"yyyy-MM-dd ")+"00:00:00");
+            this.obj.payTime.push(this.common.formatTime(new Date(),"yyyy-MM-dd ")+"23:59:59");
         },
         downloadExcelFile:function(){
             this.$refs.table.downloadExcelFile();

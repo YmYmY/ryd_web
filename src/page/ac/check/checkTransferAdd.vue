@@ -29,6 +29,15 @@
             </el-select>
           </div>
         </div>
+       <div class="item">
+          <label class="label">结算方式</label>
+          <div class="input-text">
+            <el-select v-model="query.departPaymentType" placeholder="结算方式">
+               <el-option v-for="item in departPaymentTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+            </el-select>
+          </div>
+        </div>
+        
         <div class="item">
           <label class="label">配载类型</label>
           <div class="input-text">
@@ -72,7 +81,7 @@
       <div class="table-content">
         <div class="table-title">
         </div>
-        <dbTable tableName="checkTransferAddTable" ref="table"  :rightHead="headRightAdd"    nextBtnText="立即核销" :head="head" onlyId="outgoingId" @doNext="doNext"></dbTable>
+        <dbTable tableName="checkTransferAddTable" ref="table"  :rightHead="headRightAdd"    nextBtnText="立即核销" :head="head" onlyId="outgoingId" @doNext="doNext" :doSum="true"></dbTable>
       </div>
     </div>
      <el-dialog title="" :visible.sync="addVouchShow"  width="1100px">

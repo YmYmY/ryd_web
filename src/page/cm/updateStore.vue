@@ -6,7 +6,7 @@
                 <li class="item" >
                     <label class="label-term"><em>*</em>门店编码</label>
                     <div class="input-text">
-                        <el-input v-model="obj.warehouseCode"   maxlength="20" v-bind:disabled=true></el-input>
+                        <el-input v-model="obj.warehouseCode"   maxlength="20"></el-input>
                     </div>
                 </li>
                 <li class="item">

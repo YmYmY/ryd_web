@@ -21,6 +21,7 @@ export default {
                 handingCostsDouble:"",
                 maxLowestCost:"",
                 maxCost:"",
+                floatingPriceDouble:"",
             },
             pushFee:false,
         }
@@ -32,6 +33,11 @@ export default {
         tableCommon
     },
     methods: {
+        selectType:function(){
+            let that = this;
+            that.priceUtils();
+            that.$forceUpdate();
+        },
         isMax:function(){
             let that = this;
             if(Number(that.maxLowestCost) < Number(that.objPrice.goodsPriceDouble)){
@@ -79,6 +85,10 @@ export default {
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble)){
                 that.objPrice.orderIncomeDouble += Number(that.objPrice.handingCostsDouble);
             }
+            if(that.common.isNotBlank(that.objPrice.floatingPriceDouble)){
+                that.objPrice.orderIncomeDouble += Number(that.objPrice.floatingPriceDouble);
+            }
+            that.objPrice.orderIncomeDouble = (that.objPrice.orderIncomeDouble).toFixed(2);
             that.$forceUpdate();
         },
         //更新视图
@@ -109,6 +119,11 @@ export default {
                     that.objPrice.upstairFeeDouble = data.upstairsCost;
                     that.objPrice.facelistFeeDouble = data.facelistCost;
                     that.objPrice.handingCostsDouble = data.handingCost;
+                    that.objPrice.floatingPriceDouble = data.floatingPrice;
+                    if(that.common.isNotBlank(data.tenantPrice)){
+                        that.objPrice.calculatePriceId = data.tenantPrice;
+                        that.objPrice.tenantPrice = data.tenantPrice;
+                    }
                     that.$forceUpdate();
                 }
             });
@@ -168,7 +183,13 @@ export default {
             if(that.common.isNotBlank(that.objPrice.handingCostsDouble) && Number(that.objPrice.handingCostsDouble) > 0){
                 that.prompt += "+装卸费:" + that.objPrice.handingCostsDouble+"元";
             }
+            if(that.common.isNotBlank(that.objPrice.floatingPriceDouble) && Number(that.objPrice.floatingPriceDouble) > 0){
+                that.prompt += "+到付上浮:" + that.objPrice.floatingPriceDouble+"元";
+            }
             that.objPrice.orderId = that.orderId;
+            if(that.common.isNotBlank( that.objPrice.tenantPrice)){
+                that.objPrice.calculatePriceId = that.objPrice.tenantPrice;
+            }
             that.prompt += "=收入合计:" + that.objPrice.orderIncomeDouble + "元";
             that.prompt += "确认补录该信息？"
             if(that.pushFee){
@@ -247,11 +268,16 @@ export default {
                 that.objPrice.collectingMoneyDouble = that.orderFee.collectingMoneyDouble;
                 that.objPrice.insureFeeDouble = that.orderFee.insureFeeDouble;
                 that.objPrice.procedureFeeDouble = that.orderFee.procedureFeeDouble;
+                that.objPrice.floatingPriceDouble = that.orderFee.floatingPriceDouble;
                 that.objPrice.payFlag = that.orderFee.payFlag;
                 that.objPrice.paymentType = that.orderFee.paymentType;
                 that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantPrice",{"tenantId":that.order.customerTenantId},function (data) {
                     that.tenantPriceList = data.items;
+                    that.tenantPriceList.unshift({priceName:"自动选择",tenantPrice:""});
                 })
+                if(that.common.isNotBlank(that.orderFee.calculatePriceId)){
+                    that.objPrice.tenantPrice = that.orderFee.calculatePriceId;
+                }
             })
         },
         cancel(){

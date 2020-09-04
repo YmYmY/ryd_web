@@ -102,7 +102,7 @@ export default {
       let params = {};
       let that = this;
       // 区域部门
-      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
           that.regionList = data.items;
           that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -144,8 +144,8 @@ export default {
       this.query.queryTimes=[];
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -30);  
-      this.query.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
       this.query.queryTimes.push("");
       this.query.queryTimes.push("");
     },
@@ -206,6 +206,7 @@ export default {
       let orderIds = [];
       let omap = {};
       let arrsTem = [];
+      let flag = false;
       for(let i in arrs){
           let d = arrs[i];
           orderIds.push(d.orderId);
@@ -213,30 +214,50 @@ export default {
             arrsTem.push(d.batchNum);
           }
           omap[d.batchNum] = d.batchNum;
+          if(d.combinedSts == 2){
+            that.$message({"type":"success", message: "合单数据不允许取消单个单，请取操作批次取消 或者 修改配载里面移除相关单"});   
+            flag = true;
+            return;
+          }
       }
-  
-      if(arrsTem.length > 1){
-        that.$message({"type":"success", message: "按单取消需要选择相同批次信息"});   
+      if(flag){
+         return;
+      }
+      // if(arrsTem.length > 1){
+      //   that.$message({"type":"success", message: "按单取消需要选择相同批次信息"});   
+      //   return;
+      // }
+      
+      let tsize = orderIds.length;
+      if(tsize > 20){
+        that.$message({"type":"success", message: "按单取消每次最多选择20条"});   
         return;
       }
-      let params = {};
-      params.batchNum = arrs[0].batchNum;
-      params.batchNumAlias = arrs[0].batchNumAlias;
-      params.orderIdsStr = orderIds.join(",");
-      let tsize = orderIds.length;
       that.$confirm('确认取消'+tsize+"单中转信息?", '提示', {
          confirmButtonText: '确定',
          cancelButtonText: '取消',
          type: 'warning'
-      }).then(() => {
-          that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=cancelTransit", params,function(data){
-             that.$message({"type":"success", message: "取消批次【"+arrs[0].batchNumAlias+"】【"+orderIds.length+"】单成功"});   
-             that.$refs.outgoingManager.load();
-          },null,null,true);
+      }).then(async () => {
+        for(let i in arrs){
+          let order = arrs[i];
+          let params = {};
+          params.batchNum = order.batchNum;
+          params.batchNumAlias = order.batchNumAlias;
+          params.orderIdsStr = order.orderId;
+          params.trackingNum = order.trackingNum;
+          let d = await that.cancelTransit(params)
+        }
+        that.$refs.outgoingManager.load();
       }).catch(() => {
              
       });
-     
+    },
+    // 循环单个取消
+   async cancelTransit(params){
+      let that = this;
+      let data = await that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=cancelTransit", params);
+      that.$message({"type":"success", message: "批次【"+params.batchNumAlias+"】,运单号【"+params.trackingNum+"】取消成功"});   
+      return data;
     },
     // 按批次取消
     cancelTransitBatchNum(){
@@ -265,9 +286,11 @@ export default {
      }).catch(() => {
             
      });
-
-    
     },
+
+
+
+
     // 中转跟踪
     trackingOrderView(){
       let item = {

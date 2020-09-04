@@ -47,6 +47,14 @@
                     </div>
                 </div>
                 <div class="item">
+                    <label class="label">结算方式</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.paymentType" placeholder="请选择">
+                            <el-option v-for="item in paymentTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="item">
                     <label class="label">
                         <el-select v-model="obj.oragnizeType">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>

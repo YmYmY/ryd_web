@@ -104,7 +104,7 @@ export default {
       let params = {};
       let that = this;
       // 区域部门
-      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
           that.regionList = data.items;
           that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -146,8 +146,8 @@ export default {
       this.query.queryTimes=[];
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -30);  
-      this.query.queryFeeTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryFeeTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryFeeTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryFeeTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
       this.query.queryTimes.push("");
       this.query.queryTimes.push("");
     },

@@ -90,14 +90,15 @@
           </h3>
           <div class="table-title-btn">
             <el-button type="primary" plain size="mini" @click="showOrderView()">已选中{{selectOrders.length <= 0 ? '' : selectOrders.length}}单</el-button>
-            <el-button type="primary" plain size="mini" @click="doNext()">二次中转</el-button>
+            <el-button type="primary" plain size="mini" @click="doNext()" v-show="!outModify" >二次中转</el-button>
+            <el-button type="primary" plain size="mini" @click="doNext()" v-show="outModify" >二次修改</el-button>
             <el-button type="primary" plain size="mini" @click="exportOrders()">导出</el-button>
           </div>
       </div>
         <tableCommon ref="table" :head="head" @selectAll='selectAll'  @dblclickItem="dblclickItem"  @clickItem="clickItem"  tableName="transferAddTable"></tableCommon>
       </div>
     </div>
-    <transferAddDetail :parentTableData="tableRightData" :headList="headAddList" v-if="!showTablePage" @goback="goback" @closeTab="closeTab"></transferAddDetail>
+    <transferAddDetail  :parentTableData="tableRightData" :headList="headAddList" v-if="!showTablePage" @goback="goback" @closeTab="closeTab"></transferAddDetail>
   
     <!-- 已选单开始 -->
     <el-dialog title="已选中单" :visible.sync="selectOrdersView" center width="1000px">

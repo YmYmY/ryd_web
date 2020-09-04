@@ -66,6 +66,7 @@ export default {
         },
         
         onDragEndRightCallback(item,index){
+            // debugger
             //结束移动判断位置，不在模板内则还原位置
             if(item.leftOffset+this.distance>0){
                 //drag内部watch监听，所以需要改变值才能触发改变
@@ -88,11 +89,12 @@ export default {
                     _this.dragRightList = _this.common.copyObj(dragRightList);
                     _this.initDragRightList();
                     clearTimeout(timer);
-                },10)                
+                },10)
             }
             this.$forceUpdate();
         },
         onDragEndLeftCallback(item,index){
+            // debugger
             // 当移动距离超出印单盒子，侧放到右侧工具栏
             if(item.leftOffset>this.dragBgW){
                 this.dragList.splice(index,1);

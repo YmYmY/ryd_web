@@ -147,7 +147,7 @@
           <!-- v-show="currentTab.queryCombinedSts == 2" -->
         </div>
       </div>
-      <tableCommon ref="ordersMatchManager" :head="head" @dblclickItem="dblclickItem" :tableName="ordersMatchTable"></tableCommon>
+      <tableCommon ref="ordersMatchManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" :tableName="ordersMatchTable"></tableCommon>
     </div>
      <!--- 供应商 合单 开始--->
     <el-dialog title="一键合单中转" :visible.sync="showSelectCombinedView" center width="500px">

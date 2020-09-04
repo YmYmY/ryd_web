@@ -100,7 +100,7 @@
           <el-button type="primary" v-entity="258" plain size="mini" @click="confirmOrder()">代客确认运单</el-button>
         </div>
       </div>
-      <tableCommon ref="ordersAuditManager" :head="head" @dblclickItem="dblclickItem" tableName="ordersAuditTable"></tableCommon>
+      <tableCommon ref="ordersAuditManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="ordersAuditTable"></tableCommon>
     </div>
    
     <!--- 取消运单 备注开始--->

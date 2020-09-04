@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label class="label">中转单号</label>
+                    <label class="label">外发单号</label>
                     <div class="input-text">
                         <el-input v-model="obj.outgoingTrackingNum"  placeholder="请输入" ></el-input>
                     </div>
@@ -66,6 +66,9 @@
             </div>
             <tableCommon tableName="paymentReportTable" @dblclickItem="dblclickItem" ref="table" :head="head" :showNum="true"></tableCommon>
         </div>
+        <el-dialog title="成本明细" :visible.sync="makeUpShow" width="900px">
+            <makeTransitShow v-if="makeUpShow" :outgoingId="outgoingId" :orderId="orderId" :flowId="flowId" @closeCallback="closeCallback" @doQueryFcIncomeExpenses="doQueryPaymentInfo"></makeTransitShow>
+        </el-dialog>
     </div>
 </template>
 

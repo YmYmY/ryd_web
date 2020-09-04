@@ -9,7 +9,6 @@ export default {
             selectType:3,
             brandList:[],
             obj:{
-                clientCode:"",
                 warehouseCode:null,
                 warehouseType:"",
                 warehouseFullName:null,
@@ -50,7 +49,6 @@ export default {
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=queryNumAlias",{"type":3},function (data) {
                 that.obj.warehouseCode = data;
-                that.obj.clientCode = data;
             })
             that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysBrand",{},function (data) {
                 that.brandList = data.items;
@@ -60,10 +58,6 @@ export default {
         doSave:function () {
             let that = this;
             if(that.common.isBlank(that.obj.warehouseCode)){
-                that.$message.error('请填写仓库编码！');
-                return;
-            }
-            if(that.common.isBlank(that.obj.clientCode)){
                 that.$message.error('请填写仓库编码！');
                 return;
             }

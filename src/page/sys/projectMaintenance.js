@@ -144,6 +144,9 @@ export default {
             }
             this.$forceUpdate();
         },
+        forceUpdate:function(){
+            this.$forceUpdate();
+        },
         updateProject:function () {
             let that = this;
             let selectData = that.$refs.table.getSelectItem();

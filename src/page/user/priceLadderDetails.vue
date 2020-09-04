@@ -42,6 +42,14 @@
                         <mycity  ref="endCity"  selectType="3"  class="city" placeholder="选择地址"></mycity>
                     </div>
                 </div>
+                <div class="item" v-show="attributionType==2">
+                    <label class="label">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderType" value-key="codeValue" placeholder="请选择">
+                            <el-option v-for="(item,index) in orderTypeList"  :key="index" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="item">
                     <label class="label">创建人</label>
                     <div class="input-text">

@@ -23,9 +23,11 @@ export default {
             payTo:false,
             stepPrice:false,
             standardPrice:false,
+            contractSubjectList:[],
             obj:{
+                contractSubject:"-1",
                 supplierId:-1,
-                payType:"-1",
+                payType:"",
                 phoneTwo:null,
                 phoneOne:null,
                 supplierNature:null,
@@ -119,13 +121,16 @@ export default {
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"USER_STATUS"},function (data) {
                 that.tenantStatusList = data.items;
             })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"CONTRACT_SUBJECT","hasAll":true},function (data) {
+                that.contractSubjectList = data.items;
+            })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"BANK_TYPE","hasAll":true},function (data) {
                 that.bankTypeList = data.items;
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PERIOD_TYPE","hasAll":true},function (data) {
                 that.periodTypeList = data.items;
             })
-            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE","hasAll":true},function (data) {
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE"},function (data) {
                 that.payTypeList = data.items;
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"WHETHER_PLATFORM","hasAll":true},function (data) {
@@ -231,6 +236,10 @@ export default {
             }
             if(that.common.isBlank(that.obj.settlementType)){
                 that.$message.error('请选择结算日！');
+                return;
+            }
+            if(that.common.isBlank(that.obj.payType)){
+                that.$message.error('请选择结算方式！');
                 return;
             }
             if(that.collectionType){

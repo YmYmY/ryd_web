@@ -17,7 +17,7 @@
                     </div>
                 </li>
             </ul>
-            <h3 class="common-title mb_20"><span class="title-name">数据权限</span></h3>
+          <!--  <h3 class="common-title mb_20"><span class="title-name">数据权限</span></h3>
             <ul class="content clearfix">
                 <li class="item item100">
                     <div class="input-text">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </li>
-            </ul>
+            </ul>-->
             <h3 class="common-title mb_20" ><span class="title-name">默认配置</span></h3>
             <ul class="content clearfix">
                 <li class="item">

@@ -34,7 +34,7 @@
                 <li class="item">
                     <label class="label-term"><em>*</em>关联店仓</label>
                     <div class="input-text">
-                        <el-select v-model="obj.warehouseIds" placeholder="请选择" multiple collapse-tags>
+                        <el-select v-model="obj.warehouseIds" placeholder="请选择" multiple collapse-tags @change="forceUpdate">
                             <el-option v-for="item in warehouseList" :key="item.id" :label="item.storeFullName" :value="item.id"></el-option>
                         </el-select>
                     </div>

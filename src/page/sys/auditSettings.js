@@ -102,7 +102,7 @@ export default {
         doSave:function(){
             let that = this;
             that.obj ={};
-            that.obj.id = that.id;
+            //that.obj.id = that.id;
             that.obj.orderAudit = that.orderAudit;
             that.obj.orderType = that.orderType;
             //来源接口对接运单

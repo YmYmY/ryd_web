@@ -23,6 +23,7 @@ export default {
                 {"name":"联系手机","code":"tenantPhone","width":"100","type" : "text"},
                 {"name":"代收货款","code":"collectionTypeName","width":"150","type" : "text"},
                 {"name":"到付款","code":"payToName","width":"80","type" : "text"},
+                {"name":"结算方式","code":"payTypeName","width":"80","type" : "text"},
                 {"name":"状态","code":"tenantStatusName","width":"80","type" : "text"}
             ],
             selectType:3,
@@ -31,7 +32,9 @@ export default {
                 tenantName:null,
                 tenantType:"-1",
                 tenantStatus:"-1",
+                payType:"-1",
             },
+            payTypeList:[],
             supplierTenantList:[],
             tenantStatusList:[],
             tenantTypeList: [],
@@ -91,6 +94,7 @@ export default {
                 tenantName:null,
                 tenantType:"-1",
                 tenantStatus:"-1",
+                payType:"-1",
             }
         },
         doQuerySysTenantDefSupplier:function () {
@@ -111,6 +115,9 @@ export default {
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"SUPPLIER_TYPE","hasAll":true},function (data) {
                 that.tenantTypeList = data.items;
+            })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE","hasAll":true},function (data) {
+                that.payTypeList = data.items;
             })
             let tenantId=that.common.getCookie("tenantId");
             that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", {"pTenantId":tenantId},function(data){

@@ -149,8 +149,8 @@ export default {
       this.query.checkType = this.currentCheckTypeMap.checkType; // 默认进来类型 TODO
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -30);  
-      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
     },
     // 新增核销
     checkView(){

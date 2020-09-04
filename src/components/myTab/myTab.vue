@@ -3,7 +3,7 @@
       <div class="scorllBox">
         <ul ref="scrollTab">
             <li :class="{'active':item.active}" v-for="(item,index) in tabs" :key="index" :ref="'tab'+index" @click="changeTab(index)">
-                <i class="refresh" @click.stop="refresh(item)"></i>
+                <i class="refresh" @click.stop="refresh(item.urlId)"></i>
                 <span>{{item.urlName}}</span>
                 <i class="close" @click.stop="close(item.urlId)">×</i>
             </li>

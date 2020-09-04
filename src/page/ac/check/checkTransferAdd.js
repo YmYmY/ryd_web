@@ -21,6 +21,7 @@
         selectTransitOrderTimeList :[],//中转 时间
         regionList :[],// 区域列表
         supplierTenantList:[],// 供应商
+        departPaymentTypeList:[],
         transitFlagList:[],
         checkStsList:[],
         query:{
@@ -77,9 +78,14 @@
       codeTypes.push("CHECK_STS");
       codeTypes.push("SELECT_ORDER_CHECK_TRANSIT_TIME");
       codeTypes.push("TRANSIT_FLAG");
+      codeTypes.push("DEPART_PAYMENT_TYPE");
       that.common.postUrl(url,{"codeTypes":codeTypes.join(",")},function(data){
          that.checkStsList = data.CHECK_STS;
+         that.checkStsList.unshift({codeName:"所有",codeValue:"-1"});
          that.transitFlagList = data.TRANSIT_FLAG;
+         that.transitFlagList.unshift({codeName:"所有",codeValue:"-1"});
+         that.departPaymentTypeList = data.DEPART_PAYMENT_TYPE;
+         that.departPaymentTypeList.unshift({codeName:"所有",codeValue:"-1"});
          that.selectTransitOrderTimeList = data.SELECT_ORDER_CHECK_TRANSIT_TIME;
       });
     },
@@ -112,8 +118,8 @@
         var bnow = new Date();
         bnow.setDate(bnow.getDate() -30);  
         this.query.queryTransitTimes=[];
-        this.query.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-        this.query.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm")+":00");
+        this.query.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+        this.query.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
         console.log(this.query);
         this.forceUpdate();
       },

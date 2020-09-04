@@ -41,6 +41,7 @@ export default {
       oragnizeList :[],// 客服部门
       regionList :[],// 区域列表
       supplierTenantList:[],// 供应商
+      supplierTenantAddList:[],//分配
       customerTenantList:[],// 下单客户
       orderSignExceptionList:[],//签收类型
       query:{
@@ -68,6 +69,7 @@ export default {
          {codeName:"重复",codeValue:"1"},
          {codeName:"不重复",codeValue:"2"}
       ], 
+      refreshTable:true,  //表格切换重载
     }
   },
   mounted() {
@@ -82,8 +84,8 @@ export default {
     //分页查询
     doQuery() {
       let that = this;
-      if(that.common.isNotBlank(this.currentTab) && this.currentTab.orderState > 0 ){
-         that.query.orderOutState = this.currentTab.orderState; //  运单状态
+      if(that.common.isNotBlank(this.currentTab) && (this.currentTab.orderState > 0 || this.currentTab.orderState.split(",")[0] > 0) ){
+         that.query.orderOutStates = this.currentTab.orderState; //  运单状态
       }
       that.query.queryOrderOutStateTab = this.currentTab.orderState; //  切换tab状态
       that.query.auditSts = 2;// 只查询已审核运单（平台）
@@ -184,7 +186,6 @@ export default {
         that.selectOrderTimeList = data.SELECT_ORDER_TIME;
 
         that.selectOrderConsignorList = data.SELECT_CONSGINOR_ORDERS;
-        debugger;
         that.selectOrderConsigneeList = data.SELECT_CONSGINEE_ORDERS;
 
         that.initHtml();
@@ -203,8 +204,17 @@ export default {
             that.oragnizeList.unshift({oragnizeName:"所有",oragnizeId:"-1"});
         }
       });
+    
+
+      // that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+      //   if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
+      //     that.regionList = data.items;
+      //     that.regionList.unshift({regionName:"所有",regionId:"-1"});
+      //   }
+      
+      // });
       // 区域部门
-      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
           that.regionList = data.items;
           that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -220,6 +230,19 @@ export default {
           that.supplierTenantList.unshift({tenantFullName:"所有",tenantId:"-1"});
         }
       });
+
+   // 供应商-分配供应商
+    params = {};
+    params.tenantStatus = 1;
+    params.pTenantId = this.common.getCookie("tenantId");
+    that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", params,function(data){
+      if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
+        that.supplierTenantAddList = data.items;
+        that.supplierTenantAddList.unshift({tenantFullName:"所有",tenantId:"-1"});
+      }
+    });
+
+      
 
       // 下单客户
       params = {};
@@ -241,8 +264,8 @@ export default {
       this.query.queryTimes=[];
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -30);  
-      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
     },
     // 初始化打印机
     initDevices(){
@@ -409,20 +432,19 @@ export default {
           that.$message({"type":"success", message: "请先选择一条取消运单信息"});   
           return;
         }
-        if(arrs.length > 1 ){
-          that.$message({"type":"success", message: "只能选择一条运单恢复"});   
-          return;
+        let params = {};
+        let orderIds = [];
+        for(let i in arrs){
+           orderIds.push(arrs[i].orderId);
         }
-        let trackingNum = arrs[0].trackingNum;
-        that.$confirm('确认恢复运单：'+trackingNum+"？", '提示', {
+        params.orderIds = orderIds.join(",");
+        that.$confirm("确认恢复"+orderIds.length+"运单信息？", '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           let params = {};
-           params.orderId = arrs[0].orderId;
-           that.common.postUrl("api/ordOrderInfoBO.ajax?cmd=recoveryOrder", params,function(data){
-              that.$message({"type":"success", message: "运单:"+ trackingNum+"恢复成功"});   
+           that.common.postUrl("api/ordOrderInfoBO.ajax?cmd=recoveryOrders", params,function(data){
+              that.$message({"type":"success", message: "恢复运单成功"});   
               that.$refs.ordersManager.load();
           });
         }).catch(() => {
@@ -856,19 +878,25 @@ export default {
       this.currentTab = tab;
       console.log("切换到::::::"+tab.name);
       this.$refs.ordersManager.clean();
+      this.refreshTable = false;
       if(this.common.isNotBlank(tab.head) ){
-         this.head = tab.head;
+         this.head = this.common.copyObj(tab.head);
          console.log(this.head);
          this.ordersTable = tab.ordersTable;
       }else{
-        this.head = this.headTem;
+        this.head = this.common.copyObj(this.headTem);
         this.ordersTable = this.ordersTableTem;
       }
-      if(tab.itemType == "function"){
-        this[tab.item](tab);
-      }else{
-        this.$emit('openTab', tab.item);
-      }
+      this.$nextTick(()=>{  //表头变动后重载表格(解决多tab切换code重复问题)
+        this.refreshTable = true;
+        this.$nextTick(()=>{  //重载后渲染成功再查询数据
+          if(tab.itemType == "function"){
+            this[tab.item](tab);
+          }else{
+            this.$emit('openTab', tab.item);
+          }
+        })
+      })
     },
     // 所有订单
     toOrdersNumTem(){

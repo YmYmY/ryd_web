@@ -26,6 +26,14 @@
                         </el-select>
                     </div>
                 </div>
+                <div class="item">
+                    <label class="label">结算方式</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.payType" placeholder="请选择">
+                            <el-option v-for="item in payTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </div>
             </div>
             <div class="search-btn clearfix">
                 <div class="btn">

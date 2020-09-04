@@ -112,7 +112,7 @@
         <li class="item">
           <label class="label-term">配载方式</label>
           <div class="input-text">
-             <el-select v-model="order.combinedSts" placeholder="请选择">
+             <el-select v-model="order.combinedSts" placeholder="请选择" @change="selectCombinedSts()">
                <el-option v-for="item in selectCombinedStsList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
             </el-select>
           </div>

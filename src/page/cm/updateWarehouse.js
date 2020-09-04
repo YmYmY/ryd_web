@@ -10,7 +10,6 @@ export default {
             warehouseId:this.$route.query.warehouseId,
             selectType:3,
             obj:{
-                clientCode:"",
                 warehouseCode:null,
                 warehouseType:"",
                 warehouseFullName:null,
@@ -68,10 +67,6 @@ export default {
         doSave:function () {
             let that = this;
             if(that.common.isBlank(that.obj.warehouseCode)){
-                that.$message.error('请填写仓库编码！');
-                return;
-            }
-            if(that.common.isBlank(that.obj.clientCode)){
                 that.$message.error('请填写仓库编码！');
                 return;
             }

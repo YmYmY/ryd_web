@@ -1,6 +1,7 @@
 import {
 } from '@/static/json.js'
 import tableCommon from "@/components/table/tableCommon.vue"
+import makeTransitShow from "@/page/fc/makeTransitShow.vue"
 export default {
     name: 'pendingPayment',
     data() {
@@ -16,6 +17,7 @@ export default {
                 {"name":"申请总额","code":"applicationAmount","type" : "text","width":"200"},
                 {"name":"审核总额","code":"auditAmount","type" : "text","width":"200"},
                 {"name":"审核日期","code":"auditTime","type" : "text","width":"200"},
+                {"name":"外发单号","code":"outgoingTrackingNum","type" : "text","width":"200"},
                 {"name":"子单号","code":"transitTrackingNum","type" : "text","width":"200"},
                 {"name":"批次号","code":"batchNumAlias","type" : "text","width":"200"},
                 {"name":"供应商名称","code":"supplierTenantName","type" : "text","width":"200"},
@@ -47,6 +49,10 @@ export default {
                 auditTime:[],
                 supplierTenantId:-1,
             },
+            outgoingId:"",
+            orderId:"",
+            flowId:"",
+            makeUpShow:false,
             desItem:"",
             payNotes:"",
             payTime:"",
@@ -66,12 +72,17 @@ export default {
         });
     },
     components: {
-        tableCommon
+        tableCommon,
+        makeTransitShow
     },
     mounted(){
         this.initHtml();
     },
     methods: {
+        closeCallback(){
+            let that = this;
+            that.makeUpShow=false;
+        },
         selectPay:function(obj){
             let that = this;
             that.payType = obj.id;
@@ -110,14 +121,10 @@ export default {
         // 列表双击
         dblclickItem(order){
             let that = this;
-            let item = {
-                urlName: "订单详情",
-                urlId: "48" + order.orderId,
-                urlPath: "/order/billing/order.vue",
-                urlPathName: "/order",
-                query:{order : {orderId: order.orderId, viewType: 1, view:1}},
-            }
-            that.$emit('openTab', item);
+            that.makeUpShow = true;
+            that.flowId=order.flowId;
+            that.outgoingId = order.outgoingId;
+            that.orderId = order.orderId;
         },
         showPay:function(){
             let that = this;
@@ -137,6 +144,8 @@ export default {
             that.desItem="";
             that.payType="";
             that.payTypeName="";
+            that.payNotes = "";
+            that.payTime = this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss");
             that.flowId = selectData[0].flowId;
             that.dialogFormVisible=true;
         },
@@ -150,17 +159,17 @@ export default {
                 that.$message.error('请选择付款方式！');
                 return;
             }
-            if(that.common.isBlank(that.payNotes)){
+            /*if(that.common.isBlank(that.payNotes)){
                 that.$message.error('请填写付款备注！');
                 return;
-            }
+            }*/
             that.$confirm("", "确认登记付款？", {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 let url ="api/fcIncomeBO.ajax?cmd=payRegister";
-                that.common.postUrl(url,{"payTime":that.payTime,"payType":that.payType,"payNotes":that.payNotes,"payTypeName":that.payType,"flowId":that.flowId},function (data) {
+                that.common.postUrl(url,{"payTime":that.payTime,"payType":that.payType,"payNotes":that.payNotes,"payTypeName":that.payTypeName,"flowId":that.flowId},function (data) {
                     if(data != 'success'){
                         return;
                     }else {
@@ -177,8 +186,8 @@ export default {
         initHtml:function(){
             var bnow = new Date();
             bnow.setDate(bnow.getDate() -30);
-            this.obj.payApplicationTime.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-            this.obj.payApplicationTime.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            this.obj.payApplicationTime.push(this.common.formatTime(bnow,"yyyy-MM-dd ")+"00:00:00");
+            this.obj.payApplicationTime.push(this.common.formatTime(new Date(),"yyyy-MM-dd ")+"23:59:59");
         },
         downloadExcelFile:function(){
             this.$refs.table.downloadExcelFile();

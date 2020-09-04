@@ -66,7 +66,11 @@ let head = [
     {"name":"备注","code":"customerRemarks","width":"200","type" : "text"},
     {"name":"取消人","code":"cancelOpName","width":"150","type" : "text"},
     {"name":"取消时间","code":"cancelTime","width":"150","type" : "text"},
-    {"name":"取消备注","code":"cancelRemark","width":"200","type" : "text"}
+    {"name":"取消备注","code":"cancelRemark","width":"200","type" : "text"},
+    {"name":"确认取消状态","code":"cancelConfirmStsName","width":"100","type" : "text"},
+    {"name":"确认取消人","code":"cancelConfirmOpName","width":"150","type" : "text"},
+    {"name":"确认取消时间","code":"cancelConfirmTime","width":"150","type" : "text"},
+    {"name":"确认取消备注","code":"cancelConfirmRemark","width":"200","type" : "text"}
 ];
 // 揽件异常 待揽件  TAB
 let head4 = [ 
@@ -131,6 +135,10 @@ let head88 = [
     {"name":"取消人","code":"cancelOpName","width":"150","type" : "text"},
     {"name":"取消时间","code":"cancelTime","width":"150","type" : "text"},
     {"name":"取消备注","code":"cancelRemark","width":"200","type" : "text"},
+    {"name":"确认取消状态","code":"cancelConfirmStsName","width":"100","type" : "text"},
+    {"name":"确认取消人","code":"cancelConfirmOpName","width":"150","type" : "text"},
+    {"name":"确认取消时间","code":"cancelConfirmTime","width":"150","type" : "text"},
+    {"name":"确认取消备注","code":"cancelConfirmRemark","width":"200","type" : "text"},
     {"name":"下单时间","code":"createDate","type" : "text","width":"150"},
     {"name":"审核时间","code":"auditDate","type" : "text","width":"150"},
     {"name":"运单号","code":"trackingNum","type" : "text","width":"120"},

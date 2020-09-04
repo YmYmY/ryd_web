@@ -1,8 +1,79 @@
 <template>
     <div id="freightSetting" class="freightSettingPage">
         <div class="common-info">
-            <h3 class="common-title mb_20"><span class="title-name">计费产品</span></h3>
-            <div class="tenantPrice">
+            <h3 class="common-title"><span class="title-name">计费设置</span></h3>
+            <div class="tip">注：1.开启进阶后，系统将按进阶后的重量进行计算，
+                        2.每个客户只支持一种进阶方式，
+                        3.0.5进阶指的是计费时重量都是0.5的整数倍，1进阶就是计费时重量为1的整数倍，
+                        4.到付上浮指的是结算方式选择到付时，运价按所选择比例对总收入进行上浮计算</div>
+            <ul class="content clearfix">
+                <li class="item item100">
+                    <label class="label-term"><em>*</em>进阶数据</label>
+                    <div class="input-text">
+                        <el-checkbox v-model="stepPrice">阶梯价</el-checkbox>
+                        <el-checkbox v-model="standardPrice">标准价</el-checkbox>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term"><em>*</em>重量进阶</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.weightAdvanced" placeholder="请选择">
+                            <el-option v-for="item in weightAdvancedList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term"><em>*</em>到付上浮</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.collectAdvanced" placeholder="请选择">
+                            <el-option v-for="item in collectAdvancedList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term"><em>*</em>折扣方式</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.discountType" placeholder="请选择">
+                            <el-option v-for="item in discountTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <h3 class="common-title" ><span class="title-name">折扣配置</span></h3>
+            <div class="tip">注：1.总运费折扣指的是按每个自然月对账时，对该客户发送运费总额达到一定金额时做出的运费折扣优惠
+                        2.多重优惠，只享受其中运费总额最大值的优惠
+                        3.折扣录入原则，总运费越高折扣享受的折扣越大；
+                        4.总运费折扣/总单量折扣只能选其中一种。</div>
+            <ul class="content clearfix">
+                <li class="item w_auto">
+                    <label class="label-term">一般折扣</label>
+                    <div class="input-text input-range">
+                        <el-input placeholder="总额" v-model="obj.discountOne"  maxlength="11" v-mydoubleval></el-input>
+                        <span>-</span>
+                        <el-input placeholder="折扣（%）" v-model="obj.rateOne"  maxlength="11" v-mydoubleval></el-input>
+                    </div>
+                </li>
+                <li class="item w_auto">
+                    <label class="label-term">次优折扣</label>
+                    <div class="input-text input-range">
+                        <el-input placeholder="总额" v-model="obj.discountTwo" maxlength="11" v-mydoubleval></el-input>
+                        <span>-</span>
+                        <el-input  placeholder="折扣（%）" v-model="obj.rateTwo" maxlength="11" v-mydoubleval></el-input>
+                    </div>
+                </li>
+                <li class="item w_auto">
+                    <label class="label-term">最优折扣</label>
+                    <div class="input-text input-range">
+                        <el-input placeholder="总额" v-model="obj.discountThree" maxlength="11" v-mydoubleval></el-input>
+                        <span>-</span>
+                        <el-input  placeholder="折扣（%）" v-model="obj.rateThree" maxlength="11" v-mydoubleval></el-input>
+                    </div>
+                </li>
+            </ul>
+            <h3 class="common-title mb_20"><span class="title-name">计费产品    <el-checkbox v-model="setPrice"></el-checkbox></span></h3>
+            <div class="tenantPrice" v-show="setPrice">
                 <div v-for="(item,$index) in tenantPriceList" :key="$index" class="clearfix">
                     <div class="title">产品{{$index+1}}
                         <em v-show="item.isDefault==1" style="position: absolute;top: 25px;left: 0;width: 90px;">(默认)</em>
@@ -79,77 +150,6 @@
                     </div>
                 </div>
             </div>
-            <h3 class="common-title"><span class="title-name">计费设置</span></h3>
-            <div class="tip">注：1.开启进阶后，系统将按进阶后的重量进行计算，
-                        2.每个客户只支持一种进阶方式，
-                        3.0.5进阶指的是计费时重量都是0.5的整数倍，1进阶就是计费时重量为1的整数倍，
-                        4.到付上浮指的是结算方式选择到付时，运价按所选择比例对总收入进行上浮计算</div>
-            <ul class="content clearfix">
-                <li class="item item100">
-                    <label class="label-term"><em>*</em>进阶数据</label>
-                    <div class="input-text">
-                        <el-checkbox v-model="stepPrice">阶梯价</el-checkbox>
-                        <el-checkbox v-model="standardPrice">标准价</el-checkbox>
-                    </div>
-                </li>
-            </ul>
-            <ul class="content clearfix">
-                <li class="item">
-                    <label class="label-term"><em>*</em>重量进阶</label>
-                    <div class="input-text">
-                        <el-select v-model="obj.weightAdvanced" placeholder="请选择">
-                            <el-option v-for="item in weightAdvancedList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
-                        </el-select>
-                    </div>
-                </li>
-                <li class="item">
-                    <label class="label-term"><em>*</em>到付上浮</label>
-                    <div class="input-text">
-                        <el-select v-model="obj.collectAdvanced" placeholder="请选择">
-                            <el-option v-for="item in collectAdvancedList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
-                        </el-select>
-                    </div>
-                </li>
-                <li class="item">
-                    <label class="label-term"><em>*</em>折扣方式</label>
-                    <div class="input-text">
-                        <el-select v-model="obj.discountType" placeholder="请选择">
-                            <el-option v-for="item in discountTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
-                        </el-select>
-                    </div>
-                </li>
-            </ul>
-            <h3 class="common-title" ><span class="title-name">折扣配置</span></h3>
-            <div class="tip">注：1.总运费折扣指的是按每个自然月对账时，对该客户发送运费总额达到一定金额时做出的运费折扣优惠
-                        2.多重优惠，只享受其中运费总额最大值的优惠
-                        3.折扣录入原则，总运费越高折扣享受的折扣越大；
-                        4.总运费折扣/总单量折扣只能选其中一种。</div>
-            <ul class="content clearfix">
-                <li class="item w_auto">
-                    <label class="label-term">一般折扣</label>
-                    <div class="input-text input-range">
-                        <el-input placeholder="总额" v-model="obj.discountOne"  maxlength="11" v-mydoubleval></el-input>
-                        <span>-</span>
-                        <el-input placeholder="折扣（%）" v-model="obj.rateOne"  maxlength="11" v-mydoubleval></el-input>
-                    </div>
-                </li>
-                <li class="item w_auto">
-                    <label class="label-term">次优折扣</label>
-                    <div class="input-text input-range">
-                        <el-input placeholder="总额" v-model="obj.discountTwo" maxlength="11" v-mydoubleval></el-input>
-                        <span>-</span>
-                        <el-input  placeholder="折扣（%）" v-model="obj.rateTwo" maxlength="11" v-mydoubleval></el-input>
-                    </div>
-                </li>
-                <li class="item w_auto">
-                    <label class="label-term">最优折扣</label>
-                    <div class="input-text input-range">
-                        <el-input placeholder="总额" v-model="obj.discountThree" maxlength="11" v-mydoubleval></el-input>
-                        <span>-</span>
-                        <el-input  placeholder="折扣（%）" v-model="obj.rateThree" maxlength="11" v-mydoubleval></el-input>
-                    </div>
-                </li>
-            </ul>
             <div class="bot-btn">
                 <el-button type="primary" @click="doSave()">保存</el-button>
                 <el-button type="info" @click="cancel()">取消</el-button>

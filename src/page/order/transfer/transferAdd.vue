@@ -157,8 +157,9 @@
           </h3>
           <div class="table-title-btn">
             <el-button type="primary" plain size="mini" @click="showOrderView()">已选中{{selectOrders.length <= 0 ? '' : selectOrders.length}}单</el-button>
-            <el-button type="primary" plain size="mini" @click="doNext()">中转</el-button>
-            <el-button type="primary" plain size="mini" @click="doDispatch()">一键中转</el-button>
+            <el-button type="primary" plain size="mini" @click="doNext()" v-show="outModify">修改中转</el-button>
+            <el-button type="primary" plain size="mini" @click="doNext()" v-show="!outModify">中转</el-button>
+            <el-button type="primary" plain size="mini" @click="doDispatch()"  v-show="!outModify">一键中转</el-button>
             <el-button type="primary" plain size="mini" @click="exportOrders()">导出</el-button>
           </div>
           <!-- <dbTable tableName="transferAddTable" ref="table" :head="head"  :rightHead="headAddRight" onlyId="orderId" @doNext="doNext"  showDispatchBtn="true" @doDispatch="doDispatch"></dbTable> -->
@@ -166,7 +167,7 @@
         <tableCommon ref="table" :head="head" @selectAll='selectAll'  @dblclickItem="dblclickItem"  @clickItem="clickItem"  tableName="transferAddTable"></tableCommon>
       </div>
     </div>
-    <transferAddDetail :parentTableData="tableRightData" :headList="headAddList" v-if="!showTablePage" @goback="goback" @closeTab="closeTab"></transferAddDetail>
+    <transferAddDetail  :parentTableData="tableRightData" :headList="headAddList" v-if="!showTablePage" @goback="goback" @closeTab="closeTab"></transferAddDetail>
    <!--- 供应商  开始--->
    <el-dialog :title="supplierTenantTitle" :visible.sync="showSelectSupplierView" center width="500px">
       <div class="common-info" style="border:none;padding:0;">

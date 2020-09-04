@@ -43,6 +43,7 @@ export default {
         customerList :[], // 收货人/发货人信息 集合
         customerTenantList : [], // 下单客户集合
         supplierTenantList : [],
+        tenantPriceList:[],// 计费产品
         order : {
           sourceType : "",
           productType : "",
@@ -109,6 +110,7 @@ export default {
             goodsPriceDouble : "",//	申明价值
             insureFeeDouble : "",//	保险费
             otherFeeDouble : "",//	其他费
+            floatingPriceDouble:"",//提付上浮费
             otherFeeName : "",//	其他费名称
             cashPaymentDouble : "",//	现付
             freightCollectDouble : "",//	提付
@@ -159,6 +161,7 @@ export default {
                 insureFeeDouble : "",//	保险费
                 otherFeeDouble : "",//	其他费
                 otherFeeName : "",//	其他费名称
+                floatingPriceDouble:"",//提付上浮费
                 goodsName : "",//	货品名称
                 goodsCount : "",//	内物件数
                 goodsWeight : "",//	重量
@@ -334,7 +337,7 @@ export default {
             that.order.fee.paymentType = that.defaultOrderMap.paymentType+"";
             that.selectPaymentType();
         }
-        if(that.common.isNotBlank(that.defaultOrderMap.intervalType) && that.order.beginDeliveryType == 1 ){
+        if(that.common.isNotBlank(that.defaultOrderMap.intervalType)  && that.defaultOrderMap.intervalType > 0 && that.order.beginDeliveryType == 1 ){
             let intervalTime =  that.driveryTypeMap[that.defaultOrderMap.intervalType+""];
             let dayTime = that.common.formatTime(new Date(),"yyyy-MM-dd");
             that.order.prePickupDateTem.push(dayTime);
@@ -532,6 +535,7 @@ export default {
         let url = "api/sysTenantDefBO.ajax?cmd=getSysTenantDefPName";
         let params = {};
         params.pTenantId = this.common.getCookie("tenantId");
+        params.tenantStatus = 1;
         params.tenantFullName = ""; // 企业名称（客户名称）
         let that = this;
         this.common.postUrl(url, params,function(data){
@@ -540,6 +544,21 @@ export default {
             that.customerTenantList = data.items;
           }
        });
+      },
+       // 获取客户价格
+     getSysTenantPrice(){
+       let that = this;
+       let tenantId =  that.order.customerTenantId;
+       if(that.common.isBlank(tenantId)){
+          that.$message({"type":"success", message: "请先选择下单客户"});
+          return;
+       }
+       that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantPrice",{"tenantId":tenantId,"priceType":""},function (data) {
+          that.tenantPriceList = data.items;
+          if(that.common.isBlank( that.tenantPriceList) || that.tenantPriceList.length == 0){
+           that.$message({"type":"success", message: "未找到计费产品信息"});
+          }
+        });
       },
       // 选择下单客户
       selectCustomerTenant(selectObj){
@@ -553,6 +572,11 @@ export default {
              this.selectPaymentType();
           }
           this.shopSettlementApi(selectObj.tenantId);
+      },
+          // 选择价格产品
+      selectCalculatePrice(obj){
+         this.order.fee.calculatePriceName = obj.priceName;
+         this.order.fee.calculatePriceId = obj.priceId+"";
       },
        // 获取是否 选择下单客户需要三方结算流程 标志
       shopSettlementApi(tenantId){
@@ -690,6 +714,7 @@ export default {
         let url = "api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName";
         let params = {};
         params.pTenantId = this.common.getCookie("tenantId");
+        params.tenantStatus = 1;
         params.tenantFullName = ""; // 供应商名称
         // params.provinceId = this.order.sourceProvince;  
         // params.cityId = this.order.sourceCity;  

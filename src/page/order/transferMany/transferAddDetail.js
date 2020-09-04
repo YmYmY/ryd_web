@@ -65,6 +65,9 @@
             procedureFeeDouble:"",
             insureFeeDouble:"",
             otherFeeDouble:"",
+            upstairFeeDouble:"", // 上楼费
+            facelistFeeDouble:"", // 面单费
+            floatingPriceDouble:"", // 到付上浮费
             otherFeeName:"其他费",
            },
            details:[
@@ -85,6 +88,9 @@
             "packingCostsDouble",
             "deliveryCostsDouble",
             "insureFeeDouble",
+            "upstairFeeDouble", // 上楼费
+            "facelistFeeDouble",// 面单费
+            "floatingPriceDouble",// 到付上浮费
             "otherFeeDouble"
           ],
       }
@@ -98,7 +104,11 @@
       let batchNum = this.$route.query.batchNum;
       let batchNumAlias = this.$route.query.batchNumAlias;
       let type = this.$route.query.type; // 0 物流 1 快递专线
-      let view = this.$route.query.view;
+      let viewFlag = this.$route.query.view ;
+      let view = true;
+      if((viewFlag + "") == "false"){
+        view = false;
+      }
       // console.log(this.tabs);
       if(this.common.isNotBlank(batchNum)){
         this.outView = view;
@@ -171,6 +181,7 @@
         });
       // 供应商
       params = {};
+      params.tenantStatus = 1;
       params.pTenantId = this.common.getCookie("tenantId");
       that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
@@ -243,10 +254,17 @@
       initOut(type,batchNum){
         let params = {};
         let that = this;
+        // 修改再次进入
+        let modifyFlag = false;
+        if(that.common.isNotBlank(this.tableData) && this.tableData.length > 0){
+          modifyFlag = true
+        }
         params.batchNum = batchNum
         that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=queryTransitDetail", params,function(data){
             // console.log(data);
-            that.tableData = data.details;
+            if(!modifyFlag){
+               that.tableData = data.details;
+            }
             that.order = Object.assign({}, that.order, data.depart);
             that.order.fee = Object.assign({}, that.order.fee, data.fee);
             if(that.currentTab.selectType == 1){
@@ -307,7 +325,7 @@
                that.order.fee.otherFeeName = "其它费";
             }
             if(that.currentTab.selectType == 1){
-              that.order.outgoingTrackingNum = items[0].outgoingTrackingNum;// 设置默认单号
+               that.order.outgoingTrackingNum = items[0].outgoingTrackingNum;// 设置默认单号
             }
            
         },null,null,true);
@@ -493,6 +511,15 @@
           }
           this.forceUpdate();
       },
+       // 选择 配载方式
+      selectCombinedSts(){
+        let combinedSts = this.order.combinedSts;
+        if(combinedSts == 1){
+            this.initHead(3);
+        }else{
+            this.initHead(5);
+        }
+      },
       // 分摊费用 
       calFee(moneys,divideValue,filedName){
         // 计算公式：{[（配载件数/开单件数）*收入合计] / 批次总收入合计 }* 该批次配载大车费（或其他费总和）
@@ -622,7 +649,7 @@
                   type: 'warning'
                 }).then(() => {
                   // 上一步
-                  that.goback([]);
+                  that.goback([],that.outModify);
                 }).catch(() => {
                   // 关闭
                   that.closeTab();
@@ -656,7 +683,11 @@
             let o = orders[i];
             let d = {};
             d.orderId = o.orderId;
-            d.outgoingTrackingNum = o.outgoingTrackingNum;
+            if(this.order.combinedSts == 2){
+              d.outgoingTrackingNum = this.order.outgoingTrackingNum;
+            }else{
+              d.outgoingTrackingNum = o.outgoingTrackingNum;
+            }
             d.outgoingFeeDouble = o.divideFeeDouble;
             d.packageVolume = o.transferPackageVolume;
             d.packageWeight = o.transferPackageWeight;
@@ -679,7 +710,7 @@
         return true;
       },
       // 初始化-表头 （专线物流） 1 默认进来 （新增字段不可填）-> 或者选择非自定义分摊类型 或者切换回来
-      // 初始化-表头 （快递快运） 3 默认   4 、费用自定义输入
+      // 初始化-表头 （快递快运） 3 默认   4 、费用自定义输入 5、合单选择
       initHead(type){
         this.head = this.common.copyObj(this.headList);
         if(type == 1){
@@ -710,12 +741,19 @@
           this.head.splice(6,0,obj4);
           let obj5 = {"name":"中转重量（公斤）","code":"transferPackageWeight","type" : "text","width":"120","isEdit":true}
           this.head.splice(7,0,obj5);
+        }else if(type == 5){
+          // 合单进入
+          let obj2 = {"name":"中转费用(分摊)","code":"divideFeeDouble","type" : "text","width":"120","isEdit":true}
+          this.head.splice(5,0,obj2); 
         }
 
       },
 
       // 选择 TAB
       selectCallback(data) {
+        if(this.outModify || this.outView){
+            return;
+        }
         this.currentTab = data;
         this.tableData = [];
         this.tableData = this.common.copyObj(this.tableDataTem);
@@ -741,9 +779,9 @@
       goback(data){ //返回上一页
         debugger
         if(this.common.isBlank(data)){
-          this.$emit("goback",this.tableData)
+          this.$emit("goback",this.tableData,this.outModify)
         }else{
-          this.$emit("goback",data)
+          this.$emit("goback",data,this.outModify)
         }
       },
       closeTab(){

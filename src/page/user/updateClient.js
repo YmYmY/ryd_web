@@ -6,6 +6,9 @@ export default {
         return {
             customerUserName:"",
             disabled:true,
+            customerList:[],
+            operationList:[],
+            orderTypeList:[],
             tenantTypeList:[],
             tenantStatusList:[],
             disableTypeList:[],
@@ -18,6 +21,7 @@ export default {
             quotaTypeList:[],
             ordNumTypeList:[],
             datTypeList:[],
+            contractSubjectList:[],
             regionList:[],
             showDisable:false,
             monPay:false,
@@ -27,6 +31,7 @@ export default {
             showQuotaType:false,
             tenantId:this.$route.query.tenantId,
             obj:{
+                contractSubject:"-1",
                 customerUserPhone:"",
                 customerUserName:"",
                 customerUserId:"",
@@ -74,6 +79,21 @@ export default {
                 settlementType:"",
                 reconciliationType:"",
                 createRegion:"",
+                orderTypeOne:"1",
+                orderTypeTwo:"2",
+                orderTypeThree:"3",
+                orderTypeFour:"4",
+                orderTypeFives:"5",
+                customerIdOne:"-1",
+                operationIdOne:"-1",
+                customerIdTwo:"-1",
+                operationIdTwo:"-1",
+                customerIdThree:"-1",
+                operationIdThree:"-1",
+                customerIdFour:"-1",
+                operationIdFour:"-1",
+                customerIdFives:"-1",
+                operationIdFives:"-1",
             },
             accountObj:{
                 billingName:null,
@@ -127,6 +147,9 @@ export default {
             that.obj.customerUserName = obj.userName;
             this.$forceUpdate();
         },
+        forceUpdate:function(){
+            this.$forceUpdate();
+        },
         handleAvatarSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
         },
@@ -170,6 +193,9 @@ export default {
             if(that.common.isNotBlank(data.periodType)){
                 that.obj.periodType= data.periodType+"";
             }
+            if(that.common.isNotBlank(data.contractSubject)){
+                that.obj.contractSubject= data.contractSubject+"";
+            }
             if(that.obj.tenantStatus == "1"){
                 that.showDisable=false;
             }else {
@@ -210,11 +236,73 @@ export default {
                     that.accountList[2].name = "开票信息3";
                 }
             })
+            that.common.postUrl("api/sysUserBO.ajax?cmd=getSysOrderOragnizeList",{"tenantId":that.tenantId},function (data) {
+                that.obj.orderTypeOne= "1";
+                that.obj.orderTypeTwo= "2";
+                that.obj.orderTypeThree= "3";
+                that.obj.orderTypeFour= "4";
+                that.obj.orderTypeFives= "5";
+                that.obj.customerIdOne= "-1";
+                that.obj.operationIdOne= "-1";
+                that.obj.customerIdTwo= "-1";
+                that.obj.operationIdTwo= "-1";
+                that.obj.customerIdThree= "-1";
+                that.obj.operationIdThree= "-1";
+                that.obj.customerIdFour= "-1";
+                that.obj.operationIdFour= "-1";
+                that.obj.customerIdFives= "-1";
+                that.obj.operationIdFives= "-1";
+                for (let  i=0;i<data.items.length ;i++){
+                    if(data.items[i].orderType == that.obj.orderTypeOne){
+                        if(data.items[i].customerId > 0){
+                            that.obj.customerIdOne= data.items[i].customerId;
+                        }
+                        if(data.items[i].operationId > 0){
+                            that.obj.operationIdOne= data.items[i].operationId;
+                        }
+                    }
+                    if(data.items[i].orderType == that.obj.orderTypeTwo){
+                        if(data.items[i].customerId > 0){
+                            that.obj.customerIdTwo= data.items[i].customerId;
+                        }
+                        if(data.items[i].operationId > 0){
+                            that.obj.operationIdTwo= data.items[i].operationId;
+                        }
+                    }
+                    if(data.items[i].orderType == that.obj.orderTypeThree){
+                        if(data.items[i].customerId > 0){
+                            that.obj.customerIdThree= data.items[i].customerId;
+                        }
+                        if(data.items[i].operationId > 0){
+                            that.obj.operationIdThree= data.items[i].operationId;
+                        }
+                    }
+                    if(data.items[i].orderType == that.obj.orderTypeFour){
+                        if(data.items[i].customerId > 0){
+                            that.obj.customerIdFour= data.items[i].customerId;
+                        }
+                        if(data.items[i].operationId > 0){
+                            that.obj.operationIdFour= data.items[i].operationId;
+                        }
+                    }
+                    if(data.items[i].orderType == that.obj.orderTypeFives){
+                        if(data.items[i].customerId > 0){
+                            that.obj.customerIdFives= data.items[i].customerId;
+                        }
+                        if(data.items[i].operationId > 0){
+                            that.obj.operationIdFives= data.items[i].operationId;
+                        }
+                    }
+                }
+            })
             that.common.postUrl("api/sysOragnizeBO.ajax?cmd=getUserDepartment",{"oragnizeType":4},function(data){
                 if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
                     that.userOragnize = data.items;
                 }
             });
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"CONTRACT_SUBJECT","hasAll":true},function (data) {
+                that.contractSubjectList = data.items;
+            })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"TENANT_TYPE_CLIENT"},function (data) {
                 that.tenantTypeList = data.items;
             })
@@ -245,6 +333,17 @@ export default {
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"DAT_TYPE"},function (data) {
                 that.datTypeList = data.items;
             })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"ORDER_TYPE"},function (data) {
+                that.orderTypeList = data.items;
+            })
+            that.common.postUrl("api/sysOragnizeBO.ajax?cmd=getUserOragnizeListChild",{"oragnizeType":4},function(data){
+                that.customerList = data.items;
+                that.customerList.unshift({oragnizeName:"全部",oragnizeId:"-1"});
+            });
+            that.common.postUrl("api/sysOragnizeBO.ajax?cmd=getUserOragnizeListChild",{"oragnizeType":6},function(data){
+                that.operationList = data.items;
+                that.operationList.unshift({oragnizeName:"全部",oragnizeId:"-1"});
+            });
             that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",{},function(data){
                 if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
                     that.regionList = data.items;

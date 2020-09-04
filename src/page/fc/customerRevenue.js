@@ -30,6 +30,7 @@ export default {
                 {"name":"上楼费","code":"upstairFeeDouble","width":"120","type" : "text","isSum":true},
                 {"name":"面单费","code":"facelistFeeDouble","width":"120","type" : "text","isSum":true},
                 {"name":"装卸费","code":"handingCostsDouble","width":"120","type" : "text","isSum":true},
+                {"name":"到付上浮费","code":"floatingPriceDouble","width":"120","type" : "text","isSum":true},
                 {"name":"付款状态","code":"payStsName","width":"100","type" : "text"},
                 {"name":"付款方式","code":"payWayName","width":"150","type" : "text"},
                 {"name":"付款时间","code":"payDate","width":"120","type" : "text"},
@@ -236,6 +237,10 @@ export default {
                     that.$message.error('推送状态是待推送状态才能推送费用！');
                     return;
                 }
+                if(el.orderIncomeDouble == 0 || that.common.isBlank(el.orderIncomeDouble)){
+                    that.$message.error('费用为零不能推送！');
+                    return;
+                }
                 if(el.orderOutState==88){
                     that.$message.error('订单已取消！');
                     return;
@@ -294,8 +299,8 @@ export default {
         initHtml:function(){
             var bnow = new Date();
             bnow.setDate(bnow.getDate() -30);
-            this.obj.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-            this.obj.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            this.obj.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd ")+"00:00:00");
+            this.obj.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd ")+"23:59:59");
         },
         downloadExcelFile:function(){
             this.$refs.table.downloadExcelFile();
@@ -355,7 +360,7 @@ export default {
                     that.customerTenantList.unshift({tenantFullName:"所有",tenantId:"-1"});
                 }
             });
-            that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",{},function(data){
+            that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",{},function(data){
                 that.regionList = data.items;
                 that.regionList.unshift({regionName:"所有",regionId:"-1"});
             });

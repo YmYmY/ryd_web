@@ -20,7 +20,7 @@
                     <li class="item">
                         <label class="label-term"><em>*</em>中转体积</label>
                         <div class="input-text">
-                            <el-input v-model="objPrice.packageVolume"  maxlength="11"  v-mydoubleval @input="forceUpdate"></el-input>
+                            <el-input v-model="objPrice.packageVolume"  maxlength="11"  v-mydouble4val @input="forceUpdate"></el-input>
                         </div>
                     </li>
                     <li class="item">
@@ -94,6 +94,36 @@
                         </div>
                     </li>
                     <li class="item">
+                        <label class="label-term">面单费</label>
+                        <div class="input-text">
+                            <el-input   v-model="objPrice.facelistFeeDouble"  @input="forceUpdate" maxlength="11" v-mydoubleval></el-input>
+                        </div>
+                    </li>
+                </ul>
+                 <ul class="content clearfix">
+                     <li class="item">
+                         <label class="label-term">上楼费</label>
+                         <div class="input-text">
+                             <el-input   v-model="objPrice.upstairFeeDouble"  @input="forceUpdate" maxlength="11" v-mydoubleval></el-input>
+                         </div>
+                     </li>
+                     <li class="item">
+                         <label class="label-term">到付上浮</label>
+                         <div class="input-text">
+                             <el-input  v-model="objPrice.floatingPriceDouble"  @input="forceUpdate" maxlength="11" v-mydoubleval></el-input>
+                         </div>
+                     </li>
+                </ul>
+                <ul class="content clearfix">
+                    <li class="item">
+                        <label class="label-term">价格名称</label>
+                        <div class="input-text">
+                            <el-select v-model="objPrice.tenantPrice" placeholder="请选择" @change="selectType">
+                                <el-option v-for="item in tenantPriceList" :key="item.priceName" :label="item.priceName" :value="item.priceId"></el-option>
+                            </el-select>
+                        </div>
+                    </li>
+                    <li class="item">
                         <label class="label-term">成本合计</label>
                         <div class="input-text">
                             <el-input v-model="objPrice.outgoingFeeDouble"  @input="forceUpdate" v-bind:disabled=true maxlength="11"  v-mydoubleval></el-input>
@@ -101,12 +131,12 @@
                         </div>
                     </li>
                 </ul>
-                 <ul class="content clearfix">
+                <ul class="content clearfix" v-show="combinedSts==2">
                     <li class="item">
-                        <label class="label-term">价格名称</label>
+                        <label class="label-term"><em>*</em>分摊方式</label>
                         <div class="input-text">
-                            <el-select v-model="objPrice.tenantPrice" placeholder="请选择" @change="forceUpdate">
-                                <el-option v-for="item in tenantPriceList" :key="item.priceName" :label="item.priceName" :value="item.priceId"></el-option>
+                            <el-select v-model="objPrice.divideType" placeholder="请选择" @change="forceUpdate">
+                                <el-option v-for="item in divideTypeList" :key="item.codeName" :label="item.codeName" :value="item.codeValue"></el-option>
                             </el-select>
                         </div>
                     </li>
@@ -138,7 +168,7 @@
                     <li class="item">
                         <label class="label-term"><em>*</em>银行账号</label>
                         <div class="input-text">
-                            <el-input v-model="objPrice.bankCard" @input="forceUpdate" maxlength="50"  ></el-input>
+                            <el-input v-model="objPrice.bankCard" @input="forceUpdate" maxlength="50" v-mynumval ></el-input>
                         </div>
                     </li>
                 </ul>

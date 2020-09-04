@@ -107,6 +107,7 @@ export default {
             goodsPriceDouble : "",//	申明价值
             insureFeeDouble : "",//	保险费
             otherFeeDouble : "",//	其他费
+            floatingPriceDouble:"",//提付上浮费
             otherFeeName : "",//	其他费名称
             cashPaymentDouble : "",//	现付
             freightCollectDouble : "",//	提付
@@ -158,6 +159,7 @@ export default {
                 goodsPriceDouble : "",//	申明价值
                 insureFeeDouble : "",//	保险费
                 otherFeeDouble : "",//	其他费
+                floatingPriceDouble:"",//提付上浮费
                 otherFeeName : "",//	其他费名称
                 goodsName : "",//	货品名称
                 goodsCount : "",//	内物件数

@@ -299,7 +299,7 @@ export default {
             list.forEach((item,index) => {
                 if(item.urlId==id){
                     this.isHaveMenuThree = true;
-                }else{
+                }else if(this.common.isNotBlank(item.children)){
                     this.haveMenuThree(item.children,id);
                 }
             })

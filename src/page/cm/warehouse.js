@@ -8,7 +8,7 @@ export default {
         return {
             //table组件数据
             head :[
-                {"name":"仓库编码","code":"clientCode","width":"150","type" : "text"},
+                {"name":"仓库编码","code":"warehouseCode","width":"150","type" : "text"},
                 {"name":"仓库名称","code":"warehouseFullName","width":"100","type" : "text"},
                 {"name":"仓库类型","code":"warehouseTypeName","width":"100","type" : "text"},
                 {"name":"联系人","code":"warehousePeople","width":"100","type" : "text"},

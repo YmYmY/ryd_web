@@ -101,7 +101,7 @@
           <el-button type="primary" plain size="mini" @click="exportOrders()" v-entity="352"  >导出</el-button>
         </div>
       </div>
-      <tableCommon ref="vouchDetailManager" :head="head" @dblclickItem="dblclickItem" tableName="vouchDetailManagerTable"></tableCommon>
+      <tableCommon ref="vouchDetailManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="vouchDetailManagerTable"></tableCommon>
     </div>
   </div>
 </template>

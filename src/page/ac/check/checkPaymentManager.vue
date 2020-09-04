@@ -135,7 +135,7 @@
         </div>
         </div>
       </div>
-      <tableCommon ref="checkPaymentManager" :head="head" @dblclickItem="dblclickItem" :tableName="currentCheckTypeMap.checkPaymentManagerTable"></tableCommon>
+      <tableCommon ref="checkPaymentManager" :head="head" :doSum="true" @dblclickItem="dblclickItem" :tableName="currentCheckTypeMap.checkPaymentManagerTable"></tableCommon>
       <el-dialog title="核销日志" :visible.sync="showLogView" center width="800px">
           <table class="tableCommon" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: auto;">
             <thead>

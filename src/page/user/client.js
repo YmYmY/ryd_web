@@ -18,6 +18,7 @@ export default {
                 {"name":"状态","code":"tenantStatusName","width":"80","type" : "text"},
                 {"name":"禁用时间","code":"disableDate","width":"80","type" : "text"},
                 {"name":"禁用原因","code":"disableRemarks","width":"100","type" : "text"},
+                {"name":"结算方式","code":"paymentTypeName","width":"150","type" : "text"},
                 {"name":"销售部门","code":"oragnizeName","width":"150","type" : "text"},
                 {"name":"销售专员","code":"userName","width":"80","type" : "text"},
                 {"name":"客服专员","code":"kfUserName","width":"80","type" : "text"},
@@ -33,7 +34,9 @@ export default {
                 tenantType:"-1",
                 oragnizeType:"2",
                 userName:null,
+                paymentType:"-1",
             },
+            paymentTypeList:[],
             customerTenantList:[],
             tenantStatusList:[],
             tenantTypeList: [],
@@ -93,6 +96,7 @@ export default {
                 tenantType:"-1",
                 oragnizeType:"2",
                 userName:null,
+                paymentType:"-1",
             }
         },
         doQuerySysTenantDefClient:function () {
@@ -113,6 +117,9 @@ export default {
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"TENANT_TYPE_CLIENT","hasAll":true},function (data) {
                 that.tenantTypeList = data.items;
+            })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"ORDER_PAYMENT_TYPE","hasAll":true},function (data) {
+                that.paymentTypeList = data.items;
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=getSysOragnizeList",{"oragnizeType":"2","hasAll":true},function (data) {
                 that.salesList = data.items;

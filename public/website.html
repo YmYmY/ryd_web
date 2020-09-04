@@ -4,15 +4,33 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <!-- <link rel="icon" href="<%= BASE_URL %>logo.ico"> -->
+  <link rel="icon" href="./logo.ico">
   <title>任易调</title>
   <link rel="stylesheet" href="./website.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 </head>
 <body>
   <!-- <img src="./static/image/gw.jpg" style="width: 100%;" alt=""> -->
   <div class="spire">
     <div class="contain">
-      <a href="#">总控平台</a> | <a href="#">客户系统</a> | <a href="#">供应商TMS管理系统</a> | <a href="#">师傅APP下载</a>
+      <a href="https://pt.ryd98.com/" target="_blank">运营平台</a> | <a href="http://kh.ryd98.com/" target="_blank">客户ERP系统</a> | <a href="http://gys.ryd98.com/" target="_blank">供应商TMS管理系统</a> | 
+      <a href="javascript:;" class="xcx">小程序
+        <ul class="clearfix">
+          <li>
+            <img src="./static/image/spzy.jpg" alt="">
+            <span>任易调</span> 
+          </li>
+          <li>
+            <img src="./static/image/sphy.jpg" alt="">
+            <span>尚品慧眼</span>
+          </li>
+          <li>
+            <img src="./static/image/gxe.jpg" alt="">
+            <span>裹小二</span>
+          </li>
+        </ul>
+      
+      </a>
     </div>
   </div>
   <div class="header">
@@ -29,7 +47,15 @@
     </div>
   </div>
   <div class="banner">
-
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+          <div class="swiper-slide banner1"></div>
+          <div class="swiper-slide banner2"></div>
+          <div class="swiper-slide banner3"></div>
+      </div>
+      <!-- 如果需要分页器 -->
+      <div class="swiper-pagination"></div>
+  </div>
   </div>
   <div class="page1">
     <div class="contain clearfix">
@@ -40,16 +66,16 @@
         <p>仓储、物流、客服、后顾无忧。</p>
       </div>
       <div class="item">
-        <h5>价格透明</h5>
+        <h5>创新产品</h5>
         <img src="./static/image/b2_icon2.png" alt="">
-        <p>一站搞定全年的福利采购、</p>
-        <p>仓储、物流、客服、后顾无忧。</p>
+        <p>任意调拨产品+全渠道物流产品，</p>
+        <p>满足各类型企业特殊化需求。</p>
       </div>
       <div class="item">
-        <h5>专人服务</h5>
+        <h5>API服务        </h5>
         <img src="./static/image/b2_icon3.png" alt="">
-        <p>一站搞定全年的福利采购、</p>
-        <p>仓储、物流、客服、后顾无忧。</p>
+        <p>订单实时推送/接收，</p>
+        <p>物流轨迹实时查询，智能算费。</p>
       </div>
     </div>
   </div>
@@ -100,32 +126,34 @@
       <div class="content clearfix">
         <div class="item">
           <img src="./static/image/people.png" alt="">
-          <p>致力于通过强大和深度融合的智慧物流技术，</p>
-          <p>为企业或个人提供任意调拨，整车运输，零担快运，快递，</p>
-          <p>仓储及落地配送等综合一站式物流服务。</p>
+          <div class="evaluate">
+            <p>使用尚品物流后，企业人效提高很多，除了成本降低，各项数据指标都有显著提高，值得信赖。</p>
+          </div>
           <div class="name">
-            <div class="chinese">王海超</div>
-            <div class="english">Mr.wang</div>
+            <div class="chinese">郭经理</div>
+            <div class="english">Mr.guo</div>
           </div>
         </div>
         <div class="item">
-          <img src="./static/image/people.png" alt="">
-          <p>致力于通过强大和深度融合的智慧物流技术，</p>
-          <p>为企业或个人提供任意调拨，整车运输，零担快运，快递，</p>
-          <p>仓储及落地配送等综合一站式物流服务。</p>
+          <img src="./static/image/people3.jpg" alt="">
+          <div class="evaluate">
+            <p>尚品智慧物流，能显著提高企业供应链管理绩效，和综合采购成本。</p>
+          </div>
           <div class="name">
-            <div class="chinese">刘文静</div>
-            <div class="english">Mrs.liu</div>
+            <div class="chinese">高总</div>
+            <div class="english">Mr.gao</div>
           </div>
         </div>
         <div class="item">
-          <img src="./static/image/people.png" alt="">
-          <p>致力于通过强大和深度融合的智慧物流技术，</p>
-          <p>为企业或个人提供任意调拨，整车运输，零担快运，快递，</p>
-          <p>仓储及落地配送等综合一站式物流服务。</p>
+          <img src="./static/image/people2.jpg" alt="">
+          <div class="evaluate">
+            <p>尚品物流不得了，美女做事懂技巧，</p>
+            <p>天天追着数据跑，仓库正把差异找，</p>
+            <p>明天准能整理好。</p>
+          </div>
           <div class="name">
-            <div class="chinese">川建国</div>
-            <div class="english">Mr.te</div>
+            <div class="chinese">王总</div>
+            <div class="english">Mrs.wang</div>
           </div>
         </div>
       </div>
@@ -142,9 +170,9 @@
     <div class="contain clearfix">
       <div class="content">
         <div class="title">联系我们</div>
-        <p>邮箱：2090889120@qq.com</p>
-        <p>联系电话：18142827803</p>
-        <p>地址：广州市花都区卡丹路工业园</p>
+        <p>邮箱：vip0001@vip56.cc</p>
+        <p>联系电话：020-23831583</p>
+        <p>地址：广州市花都区镜湖大道卡丹路工业园内综合办公楼6楼</p>
         <img src="./static/image/map.png" class="map" alt="">
       </div>
       <div class="info clearfix">
@@ -186,7 +214,7 @@
             <a href="#">热门问题</a>
           </div>
         </div>
-        <div class="copyright">Copyright©2020 任易调CP备8888888号</div>
+        <div class="copyright">Copyright©2020 粤ICP备19141128号-1</div>
       </div>
       <div class="attention">
         <h5>关注我们</h5>
@@ -199,5 +227,17 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+  <script>
+    var mySwiper = new Swiper ('.swiper-container', {
+      loop: true, // 循环模式选项
+      loopAdditionalSlides : 3,      
+      autoplay:true,
+      pagination: {
+        el: '.swiper-pagination',
+        paginationClickable: true,
+      },
+    }) 
+  </script>
 </body>
 </html>

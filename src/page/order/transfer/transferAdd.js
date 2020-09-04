@@ -30,6 +30,7 @@
         supplierTenantTitle:"一键派单",
         selectOrders:[], //选中订单
         selectOrdersView:false, // 标志位-展示已选中
+        outModify : false, // 修改标识
         supplierList : [
                         {codeValue:"supplierTenantIdByCarrier",codeName:"承运关系"},
                         {codeValue:"supplierTenantIdByCustomer",codeName:"客户优先"},
@@ -115,7 +116,7 @@
         let params = {};
         let that = this;
         // 区域部门
-        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
           if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
             that.regionList = data.items;
             that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -139,6 +140,7 @@
         });
         // 供应商
       params = {};
+      params.tenantStatus = 1;
       params.pTenantId = this.common.getCookie("tenantId");
       that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
@@ -153,8 +155,8 @@
         this.query.queryTimes=[];
         var bnow = new Date();
         bnow.setDate(bnow.getDate() -7);  
-        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm"));
-        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm"));
+        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
         this.query.selectSupplierTenant = "supplierTenantIdByCarrier";
         
       },
@@ -167,12 +169,16 @@
         }
         for(let i in this.tableRightData){
               let o = this.tableRightData[i];
-              if(this.common.isBlank(o.checkNumber) || isNaN(o.checkNumber) || o.checkNumber <= 0){
-                this.$message({"type":"success", message: "请输入正确本次中转配载件数"});   
-                return;
+              if(!this.outModify){
+                if(this.common.isBlank(o.checkNumber) || isNaN(o.checkNumber) || o.checkNumber <= 0){
+                  this.$message({"type":"success", message: "请输入正确本次中转配载件数"});   
+                  return;
+                }
               }
+             
         }
         this.showTablePage = false;
+        this.forceUpdate();
       },
         // 查询系统项目
       queryProject(callback){
@@ -265,12 +271,13 @@
         this.$refs.table.downloadExcelFile();
     },
       // 返回本页
-      goback(data){
-        console.log(data);
+      goback(data,outModify){
+        // console.log(data);
         // this.$refs.table.setRightData(data);
         this.selectOrders = data;
         this.doQuery();
         this.showTablePage = true;
+        this.outModify = outModify ? true : false;
         this.forceUpdate();
       },
      // 默认值 select BUG  @change="forceUpdate()"
@@ -291,7 +298,7 @@
      },
      // 单击 
      clickItem(data){
-      console.log(data);
+      // console.log(data);
       if(data.isSelect){
         let orderFlag = false;
         for(let i in this.selectOrders){

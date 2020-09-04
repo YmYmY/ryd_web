@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label class="label">中转单号</label>
+                    <label class="label">外发单号</label>
                     <div class="input-text">
                         <el-input v-model="obj.outgoingTrackingNum"  placeholder="请输入" ></el-input>
                     </div>
@@ -81,7 +81,7 @@
                 </ul>
                 <ul class="content clearfix">
                     <li class="item w_auto">
-                        <label class="label-term">审核状态</label>
+                        <label class="label-term"><em>*</em>审核状态</label>
                         <div class="input-text">
                             <el-select v-model="auditStatus" placeholder="请选择">
                                 <el-option v-for="item in auditStatusList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
@@ -99,7 +99,7 @@
                 </ul>
                 <ul class="content clearfix">
                     <li class="item w_auto">
-                        <label class="label-term"><em>*</em>审核备注</label>
+                        <label class="label-term">审核备注</label>
                         <div class="input-text">
                             <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" placeholder="请输入内容" maxlength="150" v-model="auditNotes"></el-input>
                         </div>
@@ -112,8 +112,9 @@
             </div>
         </el-dialog>
 
-
-
+        <el-dialog title="成本明细" :visible.sync="makeUpShow" width="900px">
+            <makeTransitShow v-if="makeUpShow" :outgoingId="outgoingId" :orderId="orderId" :flowId="flowId" @closeCallback="closeCallback" @doQueryFcIncomeExpenses="doQueryPaymentInfo"></makeTransitShow>
+        </el-dialog>
     </div>
 </template>
 

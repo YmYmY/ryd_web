@@ -97,6 +97,7 @@
           <label class="label">打印状态</label>
           <div class="input-text">
             <el-select v-model="query.printStatus" placeholder="打印状态">
+               <el-option label="所有" value="-1">所有</el-option>
               <el-option label="未打印" value="1">未打印</el-option>
               <el-option label="已打印" value="2">已打印</el-option>
             </el-select>
@@ -106,6 +107,7 @@
           <label class="label">打印数据</label>
           <div class="input-text">
             <el-select v-model="query.printDataFlag" placeholder="打印数据准备">
+               <el-option label="所有" value="-1">所有</el-option>
               <el-option label="未准备" value="1">未准备</el-option>
               <el-option label="已准备" value="2">已准备</el-option>
             </el-select>
@@ -116,6 +118,14 @@
           <div class="input-text">
             <el-select v-model="query.purchaseNumFlag" filterable placeholder="采购单号重复选择">
               <el-option v-for="item in purchaseNumList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+            </el-select>
+          </div>
+        </div>
+         <div class="item"  v-show="currentTab.queryOrderOutStateTab == '6'">
+          <label class="label">确认取消</label>
+          <div class="input-text">
+            <el-select v-model="query.cancelConfirmSts" placeholder="确认取消">
+              <el-option v-for="item in cancelConfirmStsList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
             </el-select>
           </div>
         </div>
@@ -149,11 +159,11 @@
           <el-button type="primary" plain size="mini" @click="printerViewHtml()" v-entity="265" v-show="currentTab.queryOrderOutStateTab == '1' || currentTab.queryOrderOutStateTab == '2'" >设置打印机</el-button>
           <!-- <el-button type="primary" plain size="mini" @click="" v-show="currentTab.queryOrderOutStateTab == '5'" >我要评价</el-button> -->
           <el-button type="primary" plain size="mini" @click="recoveryOrder()" v-entity="266" v-show="currentTab.queryOrderOutStateTab == '6'" >恢复运单</el-button>
-       
+       <el-button type="primary" plain size="mini" @click="showCancelConfirmOrder()" v-entity="612" v-show="currentTab.queryOrderOutStateTab == '6'" >确认取消</el-button>
           <el-button type="primary" plain size="mini" @click="exportOrders()" v-entity="267" >导出</el-button>
         </div>
       </div>
-      <tableCommon  ref="ordersManager" :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable" showMoreData="true"></tableCommon>
+      <tableCommon :doSum="true" v-if="refreshTable" ref="ordersManager" :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable" showMoreData="true"></tableCommon>
     </div>
    
 
@@ -175,6 +185,25 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="showCancelRemark = false;cancelRemark=''">取 消</el-button>
         <el-button type="primary" @click="cancelOrder()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--- 取消运单 备注结束--->
+
+     <!--- 取消运单 备注开始--->
+    <el-dialog title="确认取消运单提示" :visible.sync="showCancelConfirmRemark" center width="350px">
+      <div class="common-info" style="border:none;">
+        <ul class="content clearfix">
+          <li class="item item100">
+            <label class="label-term">原因</label>
+            <div class="input-text">
+              <el-input v-model="cancelConfirmRemark" maxlength="255" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showCancelConfirmRemark = false;cancelConfirmRemark=''">取 消</el-button>
+        <el-button type="primary" @click="cancelConfirmOrders()">确 定</el-button>
       </div>
     </el-dialog>
     <!--- 取消运单 备注结束--->

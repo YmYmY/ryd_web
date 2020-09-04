@@ -130,7 +130,7 @@
 
         </div>
       </div>
-      <tableCommon ref="outgoingImportFeeManager" :head="head" @dblclickItem="dblclickItem" tableName="outgoingImportFeeManager"></tableCommon>
+      <tableCommon ref="outgoingImportFeeManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="outgoingImportFeeManager"></tableCommon>
     </div>
   </div>
 </template>

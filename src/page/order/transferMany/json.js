@@ -11,7 +11,7 @@ let head = [
     {"name":"中转类型","code":"transitTypeName","type" : "text","width":"120"},
     {"name":"供应商类型","code":"supplierTenantTypeName","type" : "text"},
     {"name":"供应商名称","code":"supplierTenantName","type" : "text","width":"150"},
-    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true"},
+    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true","entityId":"636"},
     {"name":"中转结算方式","code":"paymentTypeName","type" : "text"},
     {"name":"中转时间","code":"outGoingDate","type" : "text","width":"150"},
     {"name":"中转创建时间","code":"transferCreateDate","type" : "text","width":"150"},

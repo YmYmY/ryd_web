@@ -115,8 +115,8 @@
         this.query.queryTimes=[];
         var bnow = new Date();
         bnow.setDate(bnow.getDate() -30);  
-        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm"));
-        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm"));
+        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
       },
       //下一步
       doNext(orders){

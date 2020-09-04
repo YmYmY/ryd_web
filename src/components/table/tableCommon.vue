@@ -11,7 +11,8 @@
                         <transition-group :name="'flip-list'" type="transition">
                             <div class="item clearfix" v-for="(hd,index) in headList" :key="hd.code">
                                 <el-checkbox class="fl" v-model="hd.isShow" @change="hideRow(hd)">{{hd.name}}</el-checkbox>
-                                <el-switch class="fr" v-model="hd.isFix" @change="fixRow(hd,index)" active-text="固定"></el-switch>
+                                <el-switch class="fr" style="margin-left:10px" v-model="hd.isFix" @change="fixRow(hd,index)" active-text="固定"></el-switch>
+                                <el-switch class="fr" v-model="hd.isExport" :disabled="hd.isDisabledExport" active-text="导出"></el-switch>
                             </div>
                         </transition-group>
                     </vuedraggable>
@@ -28,9 +29,12 @@
                 hd.width    页面配置的列宽
                 hd.isShow   页面配置的是否展示列
                 hd.isFix    页面配置的是否固定列
+                hd.isExport 页面配置的是否导出列
+                hd.isDisabledExport 页面配置的是否禁用导出列
                 hd.haveFlag 页面配置，该列是否有标签
                 hd.type     页面配置的单元格类型，type：input时为输入框
                 hd.isSum    页面配置该列是否统计
+                hd.entityId 页面配置导出权限
                 data.class  后台配置的样式类名，前端提供样式（bg_yellow,bg_orange）
                 data.flag   后台配置的属性，支持属性：pickerOvertime、dispatchOvertime
             -->

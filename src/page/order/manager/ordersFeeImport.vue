@@ -83,7 +83,7 @@
           <el-button type="primary" plain size="mini" @click="exportOrders()"  v-entity="575">导出</el-button>
         </div>
       </div>
-      <tableCommon ref="ordersFeeImportManager" :head="head" @dblclickItem="dblclickItem" tableName="ordersFeeImportTable"></tableCommon>
+      <tableCommon ref="ordersFeeImportManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="ordersFeeImportTable"></tableCommon>
     </div>
   </div>
 </template>

@@ -100,7 +100,7 @@
 
         </div>
       </div>
-      <tableCommon ref="outgoingTrackingManager" :head="head" @dblclickItem="dblclickItem" tableName="outgoingTrackingTable"></tableCommon>
+      <tableCommon ref="outgoingTrackingManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="outgoingTrackingTable"></tableCommon>
     </div>
     <el-dialog title="跟踪日志" :visible.sync="showTrackingDetailView" center width="500px">
       <div class="mb_20">

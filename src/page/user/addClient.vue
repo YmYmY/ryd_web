@@ -317,6 +317,14 @@
             </ul>
             <ul class="content clearfix">
                 <li class="item">
+                    <label class="label-term">合同主体</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.contractSubject" placeholder="请选择">
+                            <el-option v-for="item in contractSubjectList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
                     <label class="label-term">归属区域</label>
                     <div class="input-text">
                         <el-select v-model="obj.createRegion" filterable placeholder="请选择">
@@ -338,6 +346,137 @@
                     <label class="label-term">备注</label>
                     <div class="input-text">
                         <el-input  maxlength="200" type="textarea" :autosize="{ minRows: 3, maxRows: 4}" placeholder="请输入内容"  v-model="obj.remark"></el-input>
+                    </div>
+                </li>
+            </ul>
+            <h3 class="common-title mb_20"><span class="title-name">订单权限划分</span></h3>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderTypeOne" placeholder="请选择" v-bind:disabled="true">
+                            <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">客户部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.customerIdOne" placeholder="请选择">
+                            <el-option v-for="item in customerList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">运营部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.operationIdOne" placeholder="请选择">
+                            <el-option v-for="item in operationList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderTypeTwo" placeholder="请选择" v-bind:disabled="true">
+                            <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">客户部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.customerIdTwo" placeholder="请选择">
+                            <el-option v-for="item in customerList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">运营部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.operationIdTwo" placeholder="请选择">
+                            <el-option v-for="item in operationList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderTypeThree" placeholder="请选择" v-bind:disabled="true">
+                            <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">客户部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.customerIdThree" placeholder="请选择">
+                            <el-option v-for="item in customerList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">运营部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.operationIdThree" placeholder="请选择">
+                            <el-option v-for="item in operationList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderTypeFour" placeholder="请选择" v-bind:disabled="true">
+                            <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">客户部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.customerIdFour" placeholder="请选择">
+                            <el-option v-for="item in customerList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">运营部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.operationIdFour" placeholder="请选择">
+                            <el-option v-for="item in operationList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">订单类型</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.orderTypeFives" placeholder="请选择" v-bind:disabled="true">
+                            <el-option v-for="item in orderTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">客户部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.customerIdFives" placeholder="请选择">
+                            <el-option v-for="item in customerList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li class="item">
+                    <label class="label-term">运营部门</label>
+                    <div class="input-text">
+                        <el-select v-model="obj.operationIdFives" placeholder="请选择">
+                            <el-option v-for="item in operationList" :key="item.oragnizeId" :label="item.oragnizeName" :value="item.oragnizeId"></el-option>
+                        </el-select>
                     </div>
                 </li>
             </ul>

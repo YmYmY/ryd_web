@@ -32,8 +32,8 @@
         <div class="dragBox" ref="dragBox">
             <div class="dragBg" ref="dragBg">                
                 <drag :resizable="true" v-for="(item,index) in dragList" :key="index" 
-                    :leftOffset="item.leftOffset" :topOffset="item.topOffset" 
-                    :itemWidth="item.itemWidth" :itemHeight="item.itemHeight"
+                    :x="item.leftOffset" :y="item.topOffset" 
+                    :w="item.itemWidth" :h="item.itemHeight"
                     @mousedown.native="onDragStartCallback(item,index)" 
                     @mouseup.native="onDragEndLeftCallback(item,index)" 
                     :on-drag="onDragCallback" 
@@ -48,8 +48,8 @@
                     @mousedown.native="onDragStartCallback(item,index)" 
                     @mouseup.native="onDragEndRightCallback(item,index)" 
                     :on-drag="onDragCallback" 
-                    :leftOffset="item.leftOffset" :topOffset="item.topOffset"
-                    :itemWidth="item.itemWidth" :itemHeight="item.itemHeight"
+                    :x="item.leftOffset" :y="item.topOffset"
+                    :w="item.itemWidth" :h="item.itemHeight"
                 >
                     <p>{{item.name}}</p>
                 </drag>

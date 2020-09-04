@@ -18,6 +18,7 @@ export default {
             supplierTenantList:[],
             weightAdvancedList:[],
             collectAdvancedList:[],
+            contractSubjectList:[],
             weightUnitList:[],
             discountTypeList:[],
             showPlatform:false,
@@ -27,9 +28,10 @@ export default {
             stepPrice:false,
             standardPrice:false,
             obj:{
-                supplierId:"",
+                contractSubject:"-1",
+                supplierId:"-1",
                 mergeType:"-1",
-                payType:"-1",
+                payType:"",
                 phoneTwo:null,
                 phoneOne:null,
                 supplierNature:null,
@@ -137,6 +139,9 @@ export default {
             if(that.common.isNotBlank(data.supplierId)){
                 that.obj.supplierId=data.supplierId;
             }
+            if(that.common.isNotBlank(data.contractSubject)){
+                that.obj.contractSubject=data.contractSubject+"";
+            }
             that.obj.settlementType=data.settlementType+"";
             that.obj.supplierNature=data.supplierNature+"";
             that.obj.tenantStatus=data.tenantStatus+"";
@@ -174,6 +179,9 @@ export default {
                     that.accountList[1].name = "开票信息2";
                 }
             })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"CONTRACT_SUBJECT","hasAll":true},function (data) {
+                that.contractSubjectList = data.items;
+            })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"SUPPLIER_TYPE"},function (data) {
                 that.tenantTypeList = data.items;
             })
@@ -192,7 +200,7 @@ export default {
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PERIOD_TYPE","hasAll":true},function (data) {
                 that.periodTypeList = data.items;
             })
-            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE","hasAll":true},function (data) {
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE"},function (data) {
                 that.payTypeList = data.items;
             })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PLATFORM_TYPE","hasAll":true},function (data) {
@@ -302,6 +310,10 @@ export default {
             }
             if(that.common.isBlank(that.obj.settlementType)){
                 that.$message.error('请选择结算日！');
+                return;
+            }
+            if(that.common.isBlank(that.obj.payType)){
+                that.$message.error('请选择结算方式！');
                 return;
             }
             if(that.collectionType){

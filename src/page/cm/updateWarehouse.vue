@@ -3,16 +3,10 @@
         <div class="common-info">
             <h3 class="common-title mb_20"><span class="title-name">仓库信息</span></h3>
             <ul class="content clearfix">
-                <li class="item" v-show="false">
-                    <label class="label-term"><em>*</em>仓库编码</label>
-                    <div class="input-text">
-                        <el-input v-model="obj.warehouseCode" v-bind:disabled=true  maxlength="20"></el-input>
-                    </div>
-                </li>
                 <li class="item">
                     <label class="label-term"><em>*</em>仓库编码</label>
                     <div class="input-text">
-                        <el-input v-model="obj.clientCode" @input="forceUpdate"  maxlength="30"></el-input>
+                        <el-input v-model="obj.warehouseCode"   maxlength="20"></el-input>
                     </div>
                 </li>
                 <li class="item">

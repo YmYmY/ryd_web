@@ -15,6 +15,7 @@ export default {
                 distinguishType:"-1",
                 takeEffectDate:null,
                 userName:"",
+                orderType:"",
                 createDate:null,
             },
             sysTenant:{},
@@ -319,6 +320,7 @@ export default {
                 takeEffectDate:null,
                 userName:"",
                 createDate:null,
+                orderType:"",
             }
         },
         doQuerySysPriceLadder: function () {

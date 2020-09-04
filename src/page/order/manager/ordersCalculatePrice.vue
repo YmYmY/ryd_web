@@ -126,7 +126,7 @@
           <el-button type="primary" plain size="mini" @click="exportOrders()"  v-entity="582">导出</el-button>
         </div>
       </div>
-      <tableCommon ref="ordersCalculatePriceManager" :head="head" @dblclickItem="dblclickItem" tableName="ordersCalculatePriceTable"></tableCommon>
+      <tableCommon ref="ordersCalculatePriceManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="ordersCalculatePriceTable"></tableCommon>
     </div>
       <!--- 价格产品 修改新增 开始--->
     <el-dialog :title="priceTitle" :visible.sync="showSaveOrUpdatePriceView" center width="350px">

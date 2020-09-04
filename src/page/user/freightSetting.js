@@ -41,6 +41,7 @@ export default {
             sysPriceList:[],
             stepPrice:false,
             standardPrice:false,
+            setPrice:false,
         }
     },
     mounted() {
@@ -88,6 +89,9 @@ export default {
                     data.items[i].piecesEnd = (data.items[i].piecesEnd/100).toFixed(2);
                     if(that.common.isNotBlank(data.items[i].orderType)){
                         data.items[i].orderType = data.items[i].orderType.split(",");
+                    }
+                    if(data.items[i].initializationType == 2){
+                        that.setPrice=true;
                     }
                     that.tenantPriceList.push(data.items[i]);
                 }
@@ -141,89 +145,6 @@ export default {
         },
         doSave:function () {
             let that = this;
-            for(let i=0;i<that.tenantPriceList.length;i++){
-                let item = that.tenantPriceList[i];
-                if(that.common.isBlank(item.priceName)){
-                    that.$message.error('请输入价格名称');
-                    return;
-                }
-                if(that.common.isBlank(item.priceType)){
-                    that.$message.error('请选择价格类型');
-                    return;
-                }
-                if(that.common.isBlank(item.selectType)){
-                    that.$message.error('请选择类型');
-                    return;
-                }
-                if(item.selectType == '1'){
-                    if(that.common.isBlank(item.weightStart)){
-                        that.$message.error('最小值不能为空');
-                        return;
-                    }
-                    if(that.common.isBlank(item.weightEnd) || Number(item.weightEnd) <=0){
-                        that.$message.error('最大值不能为空并且必须大于0');
-                        return;
-                    }
-                    if(Number(item.weightEnd) < Number(item.weightStart)){
-                        that.$message.error('最大值不能小于最小值');
-                        return;
-                    }
-                }else if(item.selectType == '2'){
-                    if(that.common.isBlank(item.volumeStart)){
-                        that.$message.error('最小值不能为空');
-                        return;
-                    }
-                    if(that.common.isBlank(item.volumeEnd) || Number(item.volumeEnd) <=0){
-                        that.$message.error('最大值不能为空并且必须大于0');
-                        return;
-                    }
-                    if(Number(item.volumeEnd) < Number(item.volumeStart)){
-                        that.$message.error('最大值不能小于最小值');
-                        return;
-                    }
-                }else {
-                    if(that.common.isBlank(item.piecesStart)){
-                        that.$message.error('最小值不能为空');
-                        return;
-                    }
-                    if(that.common.isBlank(item.piecesEnd)  || Number(item.piecesEnd) <=0){
-                        that.$message.error('最大值不能为空并且必须大于0');
-                        return;
-                    }
-                    if(Number(item.piecesEnd) < Number(item.piecesStart)){
-                        that.$message.error('最大值不能小于最小值');
-                        return;
-                    }
-                }
-                if(that.common.isBlank(item.orderType) || item.orderType.length == 0){
-                    that.$message.error('请选择订单类型');
-                    return;
-                }
-                if(that.common.isBlank(item.priceStatus)){
-                    that.$message.error('请选择状态');
-                    return;
-                }
-                item.orderTypeList = item.orderType.toString();
-                for(let j=0;j<that.tenantPriceList.length;j++){
-                    if(j == i){
-                        continue;
-                    }
-                    let itemJ = that.tenantPriceList[j];
-                    if(itemJ.isDefault==1 && item.isDefault==1 && itemJ.priceType == item.priceType){
-                        that.$message.error('默认产品价格类型必须不同！');
-                        return;
-                    }
-                    let orderTypeJ = itemJ.orderType;
-                    let orderTypeI = item.orderType;
-                    let arr = [...orderTypeJ,...orderTypeI];
-                    if(new Set(arr).size!==orderTypeJ.length+orderTypeI.length){
-                        if(item.priceType == itemJ.priceType && item.selectType != itemJ.selectType){
-                            that.$message.error('订单类型相同的产品选择类型也必须相同！');
-                            return;
-                        }
-                    }
-                }
-            }
             if(that.common.isBlank(that.obj.weightAdvanced)){
                 that.$message.error('请选择重量进阶！');
                 return;
@@ -252,6 +173,91 @@ export default {
                 that.$message.error('最优折扣必须比次优折扣大！');
                 return;
             }
+            if(that.setPrice){
+                for(let i=0;i<that.tenantPriceList.length;i++){
+                    let item = that.tenantPriceList[i];
+                    if(that.common.isBlank(item.priceName)){
+                        that.$message.error('请输入价格名称');
+                        return;
+                    }
+                    if(that.common.isBlank(item.priceType)){
+                        that.$message.error('请选择价格类型');
+                        return;
+                    }
+                    if(that.common.isBlank(item.selectType)){
+                        that.$message.error('请选择类型');
+                        return;
+                    }
+                    if(item.selectType == '1'){
+                        if(that.common.isBlank(item.weightStart)){
+                            that.$message.error('最小值不能为空');
+                            return;
+                        }
+                        if(that.common.isBlank(item.weightEnd) || Number(item.weightEnd) <=0){
+                            that.$message.error('最大值不能为空并且必须大于0');
+                            return;
+                        }
+                        if(Number(item.weightEnd) < Number(item.weightStart)){
+                            that.$message.error('最大值不能小于最小值');
+                            return;
+                        }
+                    }else if(item.selectType == '2'){
+                        if(that.common.isBlank(item.volumeStart)){
+                            that.$message.error('最小值不能为空');
+                            return;
+                        }
+                        if(that.common.isBlank(item.volumeEnd) || Number(item.volumeEnd) <=0){
+                            that.$message.error('最大值不能为空并且必须大于0');
+                            return;
+                        }
+                        if(Number(item.volumeEnd) < Number(item.volumeStart)){
+                            that.$message.error('最大值不能小于最小值');
+                            return;
+                        }
+                    }else {
+                        if(that.common.isBlank(item.piecesStart)){
+                            that.$message.error('最小值不能为空');
+                            return;
+                        }
+                        if(that.common.isBlank(item.piecesEnd)  || Number(item.piecesEnd) <=0){
+                            that.$message.error('最大值不能为空并且必须大于0');
+                            return;
+                        }
+                        if(Number(item.piecesEnd) < Number(item.piecesStart)){
+                            that.$message.error('最大值不能小于最小值');
+                            return;
+                        }
+                    }
+                    if(that.common.isBlank(item.orderType) || item.orderType.length == 0){
+                        that.$message.error('请选择订单类型');
+                        return;
+                    }
+                    if(that.common.isBlank(item.priceStatus)){
+                        that.$message.error('请选择状态');
+                        return;
+                    }
+                    item.orderTypeList = item.orderType.toString();
+                    for(let j=0;j<that.tenantPriceList.length;j++){
+                        if(j == i){
+                            continue;
+                        }
+                        let itemJ = that.tenantPriceList[j];
+                        if(itemJ.isDefault==1 && item.isDefault==1 && itemJ.priceType == item.priceType){
+                            that.$message.error('默认产品价格类型必须不同！');
+                            return;
+                        }
+                        let orderTypeJ = itemJ.orderType;
+                        let orderTypeI = item.orderType;
+                        let arr = [...orderTypeJ,...orderTypeI];
+                        if(new Set(arr).size!==orderTypeJ.length+orderTypeI.length){
+                            if(item.priceType == itemJ.priceType && item.selectType != itemJ.selectType){
+                                that.$message.error('订单类型相同的产品选择类型也必须相同！');
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
             that.obj.advancedType= "";
             if(that.stepPrice){
                 that.obj.advancedType = "1";
@@ -268,7 +274,9 @@ export default {
             }).then(() => {
                 let url ="api/sysTenantDefBO.ajax?cmd=freightSetting";
                 that.obj.tenantId = that.tenantId;
-                that.obj.tenantPriceList = JSON.stringify(that.tenantPriceList);
+                if(that.setPrice){
+                    that.obj.tenantPriceList = JSON.stringify(that.tenantPriceList);
+                }
                 that.common.postUrl(url,that.obj,function (data) {
                     if(data != 'success'){
                         return;

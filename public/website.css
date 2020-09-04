@@ -39,6 +39,36 @@ body{
 .spire a:hover{
     text-decoration: underline;
 }
+.spire .xcx{
+    position: relative;
+}
+.spire .xcx:hover ul{
+    display: block;
+}
+.spire .xcx ul{
+    display: none;
+    position: absolute;
+    z-index: 9;
+    top: 30px;
+    left: -300px;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 3px;
+    width: 400px;
+}
+.spire .xcx ul li{
+    float: left;
+    text-align: center;
+    width: 33.33%;
+    font-size: 18px;
+    font-weight: bold;
+}
+.spire .xcx ul li img{
+    width: 100px;
+    display: block;
+    margin:0 auto;
+}
 .header{
     height: 106px;
     overflow: hidden;
@@ -72,12 +102,6 @@ body{
     left: 50%;
     margin-left: -40px;
     background: #1c67b0;
-}
-.banner{
-    background: url("./static/image/baner.jpg") no-repeat;
-    background-size: cover;
-    background-position: center center;
-    height: 530px;
 }
 .page1{
     background: #fff;
@@ -225,10 +249,14 @@ body{
     margin: 0 auto 30px;
     display: block;
 }
+.page3 .item .evaluate{
+    height: 150px;
+}
 .page3 .item p{
     line-height: 30px;
     font-size: 14px;
     text-align: left;
+    text-align: justify;
 }
 .page3 .item .chinese{
     color: #1d68b0;
@@ -386,3 +414,21 @@ body{
     color: #fff;
     width: 530px;
 }
+.banner{
+    height: 530px;
+}
+.banner1,.banner2,.banner3{
+    background: url("./static/image/baner.jpg") no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.banner2{
+    background-image:  url("./static/image/u1.jpg");
+}
+.banner3{
+    background-image:  url("./static/image/u3.jpg");
+}
+.swiper-container {
+    width: 100%;
+    height: 530px;
+}  

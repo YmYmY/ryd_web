@@ -28,6 +28,14 @@
             </el-select>
           </div>
         </div>
+         <div class="item">
+          <label class="label">结算方式</label>
+          <div class="input-text">
+            <el-select v-model="query.departPaymentType" placeholder="结算方式">
+               <el-option v-for="item in departPaymentTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+            </el-select>
+          </div>
+        </div>
         <div class="item">
           <label class="label">配载类型</label>
           <div class="input-text">
@@ -83,7 +91,7 @@
         </div>
         </div>
       </div>
-      <tableCommon ref="checkTransferManager" :head="head" @dblclickItem="dblclickItem" tableName="checkTransferManagerTable"></tableCommon>
+      <tableCommon ref="checkTransferManager" :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="checkTransferManagerTable"></tableCommon>
       <el-dialog title="核销日志" :visible.sync="showLogView" center width="800px">
           <table class="tableCommon" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: auto;">
             <thead>

@@ -13,7 +13,7 @@ export default {
                 {"name":"客户简称","code":"tenantName","width":"80","type" : "text"},
                 {"name":"是否维护运价","code":"freightTypeName","width":"80","type" : "text"},
                 {"name":"运价类型","code":"priceName","width":"80","type" : "text"},
-                {"name":"结算方式","code":"payTypeName","width":"80","type" : "text"},
+                {"name":"结算方式","code":"paymentTypeName","width":"80","type" : "text"},
                 {"name":"账期","code":"periodTypeName","width":"80","type" : "text"},
                 {"name":"备注","code":"remark","width":"80","type" : "text"}
             ],
@@ -21,7 +21,9 @@ export default {
                 regionId:null,
                 freightType:null,
                 tenantName:null,
+                paymentType:"-1",
             },
+            paymentTypeList:[],
             customerTenantList:[],
             regionList:[],
             freightTypeList:[],
@@ -66,6 +68,7 @@ export default {
                 regionId:null,
                 freightType:null,
                 tenantName:null,
+                paymentType:"-1",
             }
         },
         doQuerySysTenantDefClient:function () {
@@ -78,6 +81,9 @@ export default {
             let that = this;
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"WHETHER_PLATFORM","hasAll":true},function (data) {
                 that.freightTypeList = data.items;
+            })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"ORDER_PAYMENT_TYPE","hasAll":true},function (data) {
+                that.paymentTypeList = data.items;
             })
             that.common.postUrl("api/sysRegionBO.ajax?cmd=getPSysRegionList",{},function (data) {
                 that.regionList = data.items;

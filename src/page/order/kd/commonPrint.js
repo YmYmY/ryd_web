@@ -84,14 +84,25 @@ const printMethods = {  // 打印方法集合
       for(let i in orderPrints ){
           let o = orderPrints[i];
           let printJsMethod = o.printJsMethod;
-          printMethods[printJsMethod](o.prints,currentPrinter.printerName,false,function(){
-             successPrintOrder.push(o);
-          });
+          timeOutPrints(o,printJsMethod,currentPrinter,successPrintOrder,parseInt(i)+1);
       }
-      updateOrdersPrintStatus(successPrintOrder)
+      setTimeout(function(){
+        updateOrdersPrintStatus(successPrintOrder);
+      },50 * orderPrints.length);
+      
     }).catch(() => {
            
     });
+  }
+  // 延迟打印 TODO 大批量
+  const timeOutPrints = function(o,printJsMethod,currentPrinter,successPrintOrder,index) {
+    let time = index * 50;
+    setTimeout(function(){
+        console.log("执行延迟时间time="+time);
+        printMethods[printJsMethod](o.prints,currentPrinter.printerName,false,function(){
+          successPrintOrder.push(o);
+       });
+    },time)
   }
   // 获取打印信息
    const queryPrintOrderDatas = async function(params){

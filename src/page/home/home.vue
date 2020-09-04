@@ -12,7 +12,7 @@
             class="inline-input"
             v-model="trackingNum"
             :fetch-suggestions="getOrderInfo"
-            placeholder="请输入单号"
+            placeholder="快速查单"
             :trigger-on-focus="false"
             valueKey="orderNo"
             @select="selectOrder"

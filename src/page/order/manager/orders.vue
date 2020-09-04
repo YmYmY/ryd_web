@@ -60,12 +60,7 @@
             </el-select>
           </div>
         </div>
-       <div class="item"  v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
-          <label class="label">中转单号</label>
-          <div class="input-text">
-             <el-input v-model="query.outgoingTrackingNum"  placeholder="完整中转单号" type="text"></el-input>
-          </div>
-        </div>
+      
        <div class="item">
           <label class="label">产品类型</label>
           <div class="input-text">
@@ -116,14 +111,6 @@
             </el-select>
           </div>
         </div>
-        <div class="item"  v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
-          <label class="label">供应商</label>
-          <div class="input-text">
-            <el-select v-model="query.supplierTenantId" filterable placeholder="供应商">
-              <el-option v-for="item in supplierTenantList" :key="item.tenantId" :label="item.tenantFullName" :value="item.tenantId"></el-option>
-            </el-select>
-          </div>
-        </div>
          <div class="item"  v-show="currentTab.orderState == '-1' ">
           <label class="label">采购单号</label>
           <div class="input-text">
@@ -132,6 +119,33 @@
             </el-select>
           </div>
         </div>
+        <div class="item"  v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
+          <label class="label">供应商</label>
+          <div class="input-text">
+            <el-select v-model="query.supplierTenantId" filterable placeholder="供应商">
+              <el-option v-for="item in supplierTenantList" :key="item.tenantId" :label="item.tenantFullName" :value="item.tenantId"></el-option>
+            </el-select>
+          </div>
+        </div>
+         <div class="item"  v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
+          <label class="label">中转单号</label>
+          <div class="input-text">
+             <el-input v-model="query.outgoingTrackingNum"  placeholder="完整中转单号" type="text"></el-input>
+          </div>
+        </div>
+       <div class="item item2row have-label"  v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
+          <label class="label">中转时间</label>
+          <div class="input-text">
+            <dataPicker :model="query.queryOutgoingDate" @callback="data=>{query.queryOutgoingDate=data}"></dataPicker>
+          </div>
+      </div>
+      <div  class="item item2row have-label" v-show="currentTab.orderState != '2' && currentTab.orderState != '88'">
+          <label class="label">上次跟踪时间</label>
+          <div class="input-text">
+            <dataPicker :model="query.queryTrackingDateLast" @callback="data=>{query.queryTrackingDateLast=data}"></dataPicker>
+          </div>
+      </div>
+   
          <div class="item  have-label item2row">
           <label class="label">            
             <el-select v-model="query.queryOrderConsignorType" @change="forceUpdate()">
@@ -193,7 +207,7 @@
           <el-button type="primary" plain size="mini" @click="exportOrders()" v-entity="198" >导出</el-button>
         </div>
       </div>
-      <tableCommon ref="ordersManager"  :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable"></tableCommon>
+      <tableCommon ref="ordersManager" v-if="refreshTable" :doSum="true" :head="head" @dblclickItem="dblclickItem" :tableName="ordersTable"></tableCommon>
     </div>
     <cmAbnormal   ref="ordersException"   @openTab="openTab"  v-show="!currentTab.showOrderTab"  ></cmAbnormal> 
 
@@ -226,7 +240,7 @@
             <label class="label-term">供应商</label>
             <div class="input-text">
               <el-select v-model="outgoing.supplierTenantId" filterable  placeholder="请选择">
-                <el-option v-for="item in supplierTenantList" :key="item.tenantId" :label="item.tenantFullName" :value="item.tenantId"></el-option>
+                <el-option v-for="item in supplierTenantAddList" :key="item.tenantId" :label="item.tenantFullName" :value="item.tenantId"></el-option>
               </el-select>
             </div>
           </li>
@@ -350,25 +364,4 @@ export default orders
   //       width:16.666%;
   //       &.no-label{
   //         .label{
-  //           display: none;
-  //         }
-  //         .input-text{
-  //           width: 100%;
-  //         }
-  //       }
-  //     }
-  //     .item2row{
-  //       width: 33.332%;
-  //     }
-  //   }
-  // }
-  .el-dialog {
-    .el-dialog__body{
-      padding:0;
-      .common-info{
-        padding:20px 20px 10px;
-      }
-    }
-  }
-}
-</style>
+ 

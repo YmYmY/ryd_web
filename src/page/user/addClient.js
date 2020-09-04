@@ -6,10 +6,13 @@ export default {
         return {
             customerUserName:"",
             disabled:true,
+            customerList:[],
+            operationList:[],
             tenantTypeList:[],
             tenantStatusList:[],
             disableTypeList:[],
             periodTypeList:[],
+            orderTypeList:[],
             salesList:[],
             bankTypeList:[],
             salesPersonList:[],
@@ -19,6 +22,7 @@ export default {
             datTypeList:[],
             regionList:[],
             userOragnize:[],
+            contractSubjectList:[],
             showDisable:false,
             monPay:false,
             nowPay:false,
@@ -26,6 +30,7 @@ export default {
             recPay:false,
             showQuotaType:false,
             obj:{
+                contractSubject:"-1",
                 customerUserPhone:"",
                 customerUserName:"",
                 customerUserId:"",
@@ -73,6 +78,21 @@ export default {
                 settlementType:"",
                 reconciliationType:"",
                 createRegion:"",
+                orderTypeOne:"1",
+                orderTypeTwo:"2",
+                orderTypeThree:"3",
+                orderTypeFour:"4",
+                orderTypeFives:"5",
+                customerIdOne:"-1",
+                operationIdOne:"-1",
+                customerIdTwo:"-1",
+                operationIdTwo:"-1",
+                customerIdThree:"-1",
+                operationIdThree:"-1",
+                customerIdFour:"-1",
+                operationIdFour:"-1",
+                customerIdFives:"-1",
+                operationIdFives:"-1",
             },
             accountObj:{
                 billingName:null,
@@ -154,6 +174,9 @@ export default {
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PERIOD_TYPE","hasAll":true},function (data) {
                 that.periodTypeList = data.items;
             })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"CONTRACT_SUBJECT","hasAll":true},function (data) {
+                that.contractSubjectList = data.items;
+            })
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=getSysOragnizeList",{"oragnizeType":"2"},function (data) {
                 that.salesList = data.items;
             })
@@ -172,6 +195,18 @@ export default {
             that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"DAT_TYPE"},function (data) {
                 that.datTypeList = data.items;
             })
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"ORDER_TYPE"},function (data) {
+                that.orderTypeList = data.items;
+            })
+            that.common.postUrl("api/sysOragnizeBO.ajax?cmd=getUserOragnizeListChild",{"oragnizeType":4},function(data){
+                that.customerList = data.items;
+                that.customerList.unshift({oragnizeName:"全部",oragnizeId:"-1"});
+            });
+            that.common.postUrl("api/sysOragnizeBO.ajax?cmd=getUserOragnizeListChild",{"oragnizeType":6},function(data){
+                that.operationList = data.items;
+                that.operationList.unshift({oragnizeName:"全部",oragnizeId:"-1"});
+            });
+
         },
         //企业信息保存
         doSave:function () {

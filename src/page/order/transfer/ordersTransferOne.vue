@@ -143,7 +143,7 @@
           <!-- v-show="currentTab.queryCombinedSts == 2" -->
         </div>
       </div>
-      <tableCommon ref="ordersTransferOneManager" :head="head" @dblclickItem="dblclickItem" tableName="ordersTransferOneTable"></tableCommon>
+      <tableCommon ref="ordersTransferOneManager"  :doSum="true" :head="head" @dblclickItem="dblclickItem" tableName="ordersTransferOneTable"></tableCommon>
     </div>
      <!--- 修改供应商   开始--->
    <el-dialog title="修改供应商" :visible.sync="modifySupplierOneViewFlag" center width="400px">

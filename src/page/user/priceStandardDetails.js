@@ -14,6 +14,7 @@ export default {
                 createDate:null,
                 cityType:"-1",
                 tenantPrice:"",
+                orderType:"",
             },
             sysTenant:{},
             attributionType:this.$route.query.attributionType,
@@ -345,6 +346,7 @@ export default {
                 userName:"",
                 createDate:null,
                 cityType:"-1",
+                orderType:"",
             }
         },
         doQuerySysPriceStandard: function () {

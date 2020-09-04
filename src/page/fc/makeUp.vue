@@ -19,7 +19,7 @@
                     <li class="item">
                         <label class="label-term"><em>*</em>打包体积</label>
                         <div class="input-text">
-                            <el-input v-model="objPrice.packageVolume"  maxlength="11"  v-mydoubleval @input="forceUpdate"></el-input>
+                            <el-input v-model="objPrice.packageVolume"  maxlength="11"  v-mydouble4val @input="forceUpdate"></el-input>
                         </div>
                     </li>
                     <li class="item">
@@ -107,6 +107,20 @@
                         </div>
                     </li>
                     <li class="item">
+                        <label class="label-term">到付上浮</label>
+                        <div class="input-text">
+                            <el-input   v-model="objPrice.floatingPriceDouble"  @input="forceUpdate" maxlength="11" v-mydoubleval></el-input>
+                        </div>
+                    </li>
+                    <li class="item" v-show="queryType=='B'">
+                        <label class="label-term">价格名称</label>
+                        <div class="input-text">
+                            <el-select v-model="objPrice.tenantPrice" placeholder="请选择" @change="selectType">
+                                <el-option v-for="item in tenantPriceList" :key="item.priceName" :label="item.priceName" :value="item.priceId"></el-option>
+                            </el-select>
+                        </div>
+                    </li>
+                    <li class="item">
                         <label class="label-term">收人合计</label>
                         <div class="input-text">
                             <el-input v-model="objPrice.orderIncomeDouble" v-bind:disabled=true maxlength="11"  v-mydoubleval></el-input>
@@ -115,14 +129,6 @@
                     </li>
                 </ul>
                 <ul class="content clearfix">
-                    <li class="item" v-show="queryType=='B'">
-                        <label class="label-term">价格名称</label>
-                        <div class="input-text">
-                            <el-select v-model="objPrice.tenantPrice" placeholder="请选择" @change="forceUpdate">
-                                <el-option v-for="item in tenantPriceList" :key="item.priceName" :label="item.priceName" :value="item.priceId"></el-option>
-                            </el-select>
-                        </div>
-                    </li>
                     <li class="item">
                         <label class="label-term">推送费用</label>
                         <div class="input-text">

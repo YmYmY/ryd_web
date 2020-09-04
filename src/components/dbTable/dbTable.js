@@ -12,7 +12,8 @@ export default {
         "onlyId",        //数据唯一ID,用于左右切换时识别数据
         "nextBtnText",      //下一步操作文本，默认文本为"下一步"
         "showDispatchBtn",  //是否展示一键派单
-        "dispatchBtnText"      //一键派单操作文本，默认文本为"一键派单"
+        "dispatchBtnText",      //一键派单操作文本，默认文本为"一键派单"
+        "doSum",            //是否做统计
     ],
     data() {
         return {
@@ -179,9 +180,30 @@ export default {
             this.filterLeftData();  //过滤表格已有数据
             if(this.common.isNotBlank(this.loadFn)) this.loadFn(data);
             this.initTableHeight(); //计算表格高度
+            if(this.doSum){
+                this.calcFootSum();
+            }
             this.$nextTick(()=>{
                 this.changeTop(this.$refs.table_height_left.scrollTop);
             })
+        },
+        //汇总
+        calcFootSum(){
+            this.headList.forEach(hd => {
+                let sum = 0;
+                if(hd.isSum){
+                    this.tableData.forEach(item => {
+                        sum += Number(item[hd.code]);
+                    })
+                    if(!isNaN(sum)){
+                        if(Math.floor(sum) !== sum){
+                            sum = sum.toFixed(2);
+                        }
+                        hd.sum = sum;
+                    }
+                }
+            })
+            this.$forceUpdate();
         },
         //重新查询的时候过滤右边的数据
         filterLeftData(){
@@ -259,7 +281,7 @@ export default {
             param.tableName = this.tableName;
             param.paramStr = JSON.stringify(sysTableHeadConfigList);
             let url = "api/sysTableHeadConfigBO.ajax?cmd=saveSysTableHeadConfigs";
-            await this.common.postUrl(url,param);
+            await this.common.postUrl(url,param,"","","",true);
             this.setTabelShow = false;
             this.$message({
                 message: '保存成功！',
@@ -467,6 +489,7 @@ export default {
         },        
         // 列排序
         doSort(code,tableData){
+            if(this.move) return;
             this.justSort = this.justSort?false:true;
             let that = this;
             let compare = function(property) {
@@ -551,6 +574,7 @@ export default {
                                 (function(tTD){
                                     let timer = setTimeout(function(){
                                         tTD.setAttribute("data-mouse","false");
+                                        _this.move = false;
                                         clearTimeout(timer);	
                                     }, 500)
                                 })(tTD);
@@ -566,6 +590,7 @@ export default {
                             if (tTD == undefined) tTD = this;   
                             //调整宽度   
                             if (tTD.mouseDown != null && tTD.mouseDown == true) { 
+                                _this.move = true;
                                 tTD.setAttribute("data-mouse","true");
                                 
                                 tTD.style.cursor = 'default';   

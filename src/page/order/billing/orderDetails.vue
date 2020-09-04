@@ -213,6 +213,12 @@
                     </div>
                 </div>
                 <div class="item">
+                <label class="label_term">计费产品</label>
+                <div class="input-text">
+                    <el-input v-model="order.fee.calculatePriceName" v-bind:disabled="true" ></el-input>
+                </div>
+               </div>
+                <div class="item">
                     <label class="label_term">结算方式</label>
                     <div class="input-text">
                         <el-select v-model="order.fee.paymentType" filterable placeholder="请选择" @change="selectPaymentType()" v-bind:disabled="true">

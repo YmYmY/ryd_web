@@ -6,7 +6,7 @@
                 <li class="item">
                     <label class="label-term"><em>*</em>跟踪时间</label>
                     <div class="input-text">
-                        <dataPicker :model="tracking.trackingDate" @callback="data=>{tracking.trackingDate=data}"></dataPicker>
+                        <el-date-picker v-model="tracking.trackingDate" value-format="yyyy-MM-dd HH:mm:ss"  type="datetime" placeholder="选择日期"></el-date-picker>
                     </div>
                 </li>
             </ul>
@@ -74,3 +74,18 @@ export default outgoingTrackingAdd
         }
         .selectAlertBox{
             left: 431px;
+            top: 10px;
+        }
+        .delorder{
+            text-align: right;
+            padding: 20px 0 12px;
+        }
+        .tableCommon{
+            border-left: $border;
+            border-right: $border;
+        }
+        .table_height{
+            overflow-x:auto;
+        }
+    }
+</style>

@@ -38,6 +38,7 @@ export default {
       orderSourceTypeList :[], 
       orderCallStsList :[],
       supplierTenantList:[],// 供应商
+      cancelConfirmStsList:[],
       query:{
         queryTimeClientType:"1",
         queryOrderClientType:"1",
@@ -62,7 +63,9 @@ export default {
         {codeName:"重复",codeValue:"1"},
         {codeName:"不重复",codeValue:"2"}
       ], 
-
+      showCancelConfirmRemark:false,
+      cancelConfirmRemark:"",
+      refreshTable:true,  //表格切换重载
     }
   },
   mounted() {
@@ -179,8 +182,11 @@ export default {
       codeTypes.push("SELECT_CLIENT_ORDERS");
       codeTypes.push("ORDER_SOURCE_TYPE");
       codeTypes.push("ORDER_CALL_STS");
-       
+      codeTypes.push("CANCEL_CONFIRM_STS");
       that.common.postUrl(url,{"codeTypes":codeTypes.join(",")},function(data){
+        that.cancelConfirmStsList = data.CANCEL_CONFIRM_STS;
+        that.cancelConfirmStsList.unshift({codeName:"所有",codeValue:"-1"});
+
         that.paymentTypeList = data.ORDER_CLIENT_PAYMENT_TYPE;
         that.paymentTypeList.unshift({codeName:"所有",codeValue:"-1"});
 
@@ -241,8 +247,8 @@ export default {
       this.query.queryTimes = [];
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -30);  
-      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
     },
     // 初始化打印机
     initDevices(){
@@ -396,6 +402,56 @@ export default {
         that.$refs.ordersManager.load();
       });
     },
+ // 确认-取消运单
+ showCancelConfirmOrder(){
+  let that = this;
+  let arrs = that.$refs.ordersManager.getSelectItem();
+  if(that.common.isBlank(arrs) || arrs.length == 0){
+      that.$message({"type":"success", message: "请先选择待确认取消运单信息"});   
+      return;
+  }
+  let flag = false;
+  for(let i in arrs){
+    let o = arrs[i];
+    if(o.orderOutState != 88){
+      that.$message({"type":"success", message: "请选择取消运单信息"});   
+      flag = true;
+      return;
+    }
+    if(o.cancelConfirmSts == 2){
+      that.$message({"type":"success", message: "请选择待确认取消运单信息"});   
+      flag = true;
+      return;
+    }
+  }
+  if(flag){
+    return;
+  }
+  this.showCancelConfirmRemark = true;
+
+},
+// 确认-取消运单
+cancelConfirmOrders(){
+  let that = this;
+  let arrs = that.$refs.ordersManager.getSelectItem();
+  if(that.common.isBlank(arrs) || arrs.length == 0){
+     that.$message({"type":"success", message: "请先选择取消运单信息"});   
+     return;
+  }
+  let params = {};
+  let orderIds = [];
+  for(let i in arrs){
+    let o = arrs[i];
+    orderIds.push(o.orderId);
+  }
+  params.orderIds = orderIds.join(",");
+  params.cancelConfirmRemark = this.cancelConfirmRemark;
+  that.common.postUrl("api/ordOrderInfoBO.ajax?cmd=cancelConfirmOrdersClient", params,function(data){
+    that.$message({"type":"success", message: "确认取消成功"});   
+    that.showCancelConfirmRemark = false;
+    that.$refs.ordersManager.load();
+  });
+},
     // 恢复运单信息
     recoveryOrder(){
         let that = this;
@@ -551,6 +607,7 @@ export default {
       this.currentTab = tab;
       console.log("切换到::::::"+tab.name);
       this.$refs.ordersManager.clean();
+      this.refreshTable = false;
       if(this.common.isNotBlank(tab.head) ){
          this.head = tab.head;
          console.log(this.head);
@@ -559,11 +616,16 @@ export default {
         this.head = this.headTem;
         this.ordersTable = this.ordersTableTem;
       }
-      if(tab.itemType == "function"){
-        this[tab.item]();
-      }else{
-        this.$emit('openTab', tab.item);
-      }
+      this.$nextTick(()=>{  //表头变动后重载表格(解决多tab切换code重复问题)
+        this.refreshTable = true;
+        this.$nextTick(()=>{  //重载后渲染成功再查询数据
+          if(tab.itemType == "function"){
+            this[tab.item](tab);
+          }else{
+            this.$emit('openTab', tab.item);
+          }
+        })
+      })
     },
     // 所有订单
     toOrdersNumTem(){

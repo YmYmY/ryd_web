@@ -57,6 +57,7 @@ export default {
             }
         },
         async initHead() {
+            let entityIds = window.localStorage.getItem("entityIds").split(",");
             if(this.common.isNotBlank(this.head)){
                 this.headList = this.common.copyObj(this.head);
             }
@@ -65,10 +66,23 @@ export default {
                 this.$set(item, "isFix", false);
                 if(this.common.isBlank(item.width)){
                     this.$set(item, "width", this.defaultW);
+                }  
+                if(this.common.isBlank(item.entityId)){
+                    this.$set(item, "isExport", true);
+                }else{
+                    this.$set(item, "isExport", false);
+                    this.$set(item, "isDisabledExport", true);
+                    //没有实体权限则禁用导出功能
+                    for(let id of entityIds){
+                        if(item.entityId == id){
+                            this.$set(item, "isExport", true);
+                            this.$set(item, "isDisabledExport", false);
+                            break;
+                        }
+                    }
                 }
             })
             this.headCache = this.common.copyObj(this.headList);
-            // console.log(JSON.stringify(this.headList));
             await this.initTableSet();    //初始化table设置
             this.calcWidth();   //重新计算表格宽度
         },
@@ -83,12 +97,17 @@ export default {
                 item.isShow = false;
                 table.forEach(data => {
                     if(item.code == data.headCode){ //后台保存则展示
-                        item.isShow = true;
                         if(this.common.isNotBlank(data.width)){
                             item.width = data.width;
                         }
+                        if(data.showFlag==1){  //为1时侧展示
+                            item.isShow = true;
+                        }
                         if(data.fixedFlag==1){  //为1时侧固定
                             item.isFix = true;
+                        }
+                        if(data.exportFlag==2){  //为2时侧关闭导出
+                            item.isExport = false;
                         }
                     }
                 })
@@ -200,6 +219,7 @@ export default {
         },
         // 列排序
         doSort(code){
+            if(this.move) return;
             this.justSort = this.justSort?false:true;
             let that = this;
             let compare = function(property) {
@@ -294,21 +314,21 @@ export default {
             //组装要保存的table，目前保存需要显示的
             for(let i in this.headList){
                 let hd = this.headList[i];
-                if(hd.isShow){
-                    let tableHeadConfig = {};
-                    tableHeadConfig.headName = hd.name;
-                    tableHeadConfig.headCode = hd.code;
-                    tableHeadConfig.width = hd.width;
-                    tableHeadConfig.headIndex = i;
-                    tableHeadConfig.fixedFlag = hd.isFix?1:2;
-                    sysTableHeadConfigList.push(tableHeadConfig);
-                }
+                let tableHeadConfig = {};
+                tableHeadConfig.headName = hd.name;
+                tableHeadConfig.headCode = hd.code;
+                tableHeadConfig.width = hd.width;
+                tableHeadConfig.headIndex = i;
+                tableHeadConfig.fixedFlag = hd.isFix?1:2;
+                tableHeadConfig.exportFlag = hd.isExport?1:2;
+                tableHeadConfig.showFlag = hd.isShow?1:2;                    
+                sysTableHeadConfigList.push(tableHeadConfig);
             }
             let param = {};
             param.tableName = this.tableName;
             param.paramStr = JSON.stringify(sysTableHeadConfigList);
             let url = "api/sysTableHeadConfigBO.ajax?cmd=saveSysTableHeadConfigs";
-            await this.common.postUrl(url,param);
+            await this.common.postUrl(url,param,"","","",true);
             this.setTabelShow = false;
             this.$message({
                 message: '保存成功！',
@@ -329,7 +349,7 @@ export default {
             this.pageList = [];
         },
         hideRow(hd) {
-
+            this.calcWidth();
         },
         //固定列逻辑
         fixRow(hd, index) {
@@ -383,7 +403,7 @@ export default {
             let excelLables=new Array();
             
             for(let el of this.headList){
-                if(el.isShow){
+                if(el.isExport){
                     excelKeys.push(el.code);
                     excelLables.push(el.name);
                 }
@@ -432,12 +452,13 @@ export default {
                                 (function(tTD){
                                     let timer = setTimeout(function(){
                                         tTD.setAttribute("data-mouse","false");
+                                        _this.move = false;
                                         clearTimeout(timer);	
                                     }, 500)
                                 })(tTD);
                             }
                         };   
-                        myTAbId.rows[0].cells[j].onmousemove = function (event,m) {   
+                        myTAbId.rows[0].cells[j].onmousemove = function (event,m) { 
                             //更改鼠标样式   
                             if (event.offsetX > this.offsetWidth - 10)   
                             this.style.cursor = 'col-resize';      
@@ -446,7 +467,8 @@ export default {
                             //取出暂存的Table Cell   
                             if (tTD == undefined) tTD = this;   
                             //调整宽度   
-                            if (tTD.mouseDown != null && tTD.mouseDown == true) { 
+                            if (tTD.mouseDown != null && tTD.mouseDown == true) {   
+                                _this.move = true;
                                 tTD.setAttribute("data-mouse","true");
                                 
                                 tTD.style.cursor = 'default';   

@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="item">
-                    <label class="label">中转单号</label>
+                    <label class="label">外发单号</label>
                     <div class="input-text">
                         <el-input v-model="obj.outgoingTrackingNum"  placeholder="请输入" ></el-input>
                     </div>
@@ -60,7 +60,7 @@
             <tableCommon tableName="pendingPaymentTable" @dblclickItem="dblclickItem" ref="table" :head="head" :showNum="true"></tableCommon>
         </div>
 
-        <el-dialog title="审核" :visible.sync="dialogFormVisible" center width="350px">
+        <el-dialog title="付款登记" :visible.sync="dialogFormVisible" center width="350px">
             <div class="common-info" style="border:none;padding:0;">
                 <ul class="content clearfix">
                     <li class="item w_auto">
@@ -82,7 +82,7 @@
                 </ul>
                 <ul class="content clearfix">
                     <li class="item w_auto">
-                        <label class="label-term"><em>*</em>付款备注</label>
+                        <label class="label-term">付款备注</label>
                         <div class="input-text">
                             <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" placeholder="请输入内容" maxlength="150" v-model="payNotes"></el-input>
                         </div>
@@ -94,9 +94,9 @@
                 <el-button type="primary" @click="pay()">确 定</el-button>
             </div>
         </el-dialog>
-
-
-
+        <el-dialog title="成本明细" :visible.sync="makeUpShow" width="900px">
+            <makeTransitShow v-if="makeUpShow" :outgoingId="outgoingId" :orderId="orderId" :flowId="flowId" @closeCallback="closeCallback" @doQueryFcIncomeExpenses="doQueryPaymentInfo"></makeTransitShow>
+        </el-dialog>
     </div>
 </template>
 

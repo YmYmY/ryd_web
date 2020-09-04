@@ -235,7 +235,7 @@ let headTracking = [
     {"name":"供应商类型","code":"supplierTenantTypeName","type" : "text"},
     {"name":"供应商名称","code":"supplierTenantName","type" : "text","width":"150"},
     {"name":"中转单号","code":"outgoingTrackingNum","type" : "text","width":"150"},
-    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true"},
+    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true","entityId":"634"},
     {"name":"中转结算方式","code":"paymentTypeName","type" : "text"},
     {"name":"运单号","code":"trackingNum","type" : "text","width":"120"},
     {"name":"子单号","code":"transitTrackingNum","type" : "text","width":"150"},
@@ -285,11 +285,11 @@ let headOneTranfer = [
     {"name":"期待上门时间","code":"prePickupDate","type" : "text","width":"200"},
     {"name":"下单客户","code":"customerTenantName","type" : "text","width":"200"},
     {"name":"品牌","code":"brandName","type" : "text","width":"120"},
-    {"name":"客户联系人","code":"customerTenantPrincipal","type" : "text","width":"120"},
-    {"name":"客户联系手机","code":"customerTenantPhone","type" : "text","width":"120"},
+    // {"name":"客户联系人","code":"customerTenantPrincipal","type" : "text","width":"120"},
+    // {"name":"客户联系手机","code":"customerTenantPhone","type" : "text","width":"120"},
     {"name":"匹配逻辑","code":"carrierTypeName","type" : "text","width":"150"},
     {"name":"匹配供应商","code":"costCompanyCarrierOneName","type" : "text","width":"150"},
-    {"name":"预计中转费用","code":"costFeeCarrierOneDouble","type" : "text","isSum":"true","width":"150"},
+    {"name":"预计中转费用","code":"costFeeCarrierOneDouble","type" : "text","isSum":"true","width":"150","entityId":"625"},
     {"name":"运单状态","code":"orderOutStateName","type" : "text","width":"120"},
     {"name":"运单类型","code":"orderTypeName","type" : "text","width":"120"},
     {"name":"运单来源","code":"sourceTypeName","type" : "text","width":"120"},
@@ -369,6 +369,9 @@ let headAlreadyTransfer = [
     {"name":"批次号","code":"batchNumAlias","type" : "text","width":"150"},
     {"name":"是否合单","code":"combinedStsName","type" : "text","width":"120"},
     {"name":"供应商名称","code":"supplierTenantName","type" : "text","width":"150"},
+    {"name":"付款申请","code":"transitPayStsName","type" : "text","width":"100"},
+    //{"name":"申请金额","code":"applicationAmountDouble","type" : "text","width":"100","isSum":"true"},
+    
     {"name":"中转单号","code":"outgoingTrackingNum","type" : "text","width":"150"},
     {"name":"中转类型","code":"transitTypeName","type" : "text","width":"120"},
     {"name":"中转时间","code":"outGoingDate","type" : "text","width":"150"},
@@ -377,12 +380,14 @@ let headAlreadyTransfer = [
     {"name":"物流状态","code":"systemKdStatusName","type" : "text","width":"100"},
     {"name":"对接系统商家单号","code":"systemBusiNum","type" : "text","width":"150"},
     {"name":"三方系统对接备注","code":"systemRemark","type" : "text","width":"150"},
+    {"name":"打印数据","code":"printDataFlagName","type" : "text","width":"120"},
+    {"name":"打印状态","code":"printStatusName","type" : "text","width":"100"},
     {"name":"揽收业务人员","code":"takingUserName","type" : "text","width":"120"},
     {"name":"揽收业务电话","code":"takingUserPhone","type" : "text","width":"120"},
     {"name":"揽收件数","code":"takingPackageNumber","type" : "text","isSum":"true"},
     {"name":"揽收体积（方）","code":"takingPackageVolume","type" : "text","isSum":"true","width":"150"},
     {"name":"揽收重量（公斤）","code":"takingPackageWeight","type" : "text","isSum":"true","width":"150"},
-    {"name":"揽收费用","code":"takingOutgoingFeeDouble","type" : "text","isSum":"true"},
+    {"name":"揽收费用","code":"takingOutgoingFeeDouble","type" : "text","isSum":"true","entityId":"611"},
     {"name":"客户类型","code":"customerTypeName","type" : "text","width":"120"},
     {"name":"下单客户","code":"customerTenantName","type" : "text","width":"200"},
     {"name":"品牌","code":"brandName","type" : "text","width":"120"},
@@ -411,16 +416,66 @@ let headAlreadyTransfer = [
     {"name":"打包体积（方）","code":"packageVolume","type" : "text","isSum":"true","width":"150"},
     {"name":"打包重量（公斤）","code":"packageWeight","type" : "text","isSum":"true","width":"150"},
     {"name":"供应商类型","code":"supplierTenantTypeName","type" : "text"},
-    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true"},
+    {"name":"中转费用","code":"outgoingFeeDouble","type" : "text","isSum":"true","entityId":"610"},
     {"name":"中转结算方式","code":"paymentTypeName","type" : "text"},
     {"name":"配送员姓名","code":"deliveryUserName","type" : "text"},
     {"name":"配送员电话","code":"deliveryUserPhone","type" : "text"},
     {"name":"中转备注","code":"remarks","width":"200","type" : "text"}
    
 ];
+let headAlreadyDispatch = [ 
+    {"name":"所属区域","code":"sourceRegionName","type" : "text","width":"120"},
+    {"name":"运单号","code":"trackingNum","type" : "text","width":"120"},
+    {"name":"客户单号","code":"ordNum","type" : "text","width":"150"},
+    {"name":"采购单号","code":"purchaseNum","type" : "text","width":"120"},
+    {"name":"期待上门时间","code":"prePickupDate","type" : "text","width":"200"},
+    {"name":"派车类型","code":"departBusiTypeName","type" : "text","width":"120"},
+
+    {"name":"批次号","code":"batchNumAlias","type" : "text","width":"150"},
+    {"name":"子单号","code":"chlidOrderNo","type" : "text","width":"150"},
+   
+    {"name":"车牌号","code":"plateNumber","type" : "text","width":"100"},
+    {"name":"车辆属性","code":"vehicleAttributesName","type" : "text","width":"120"},
+    {"name":"司机姓名","code":"driverName","type" : "text","width":"100"},
+    {"name":"司机手机","code":"driverBill","type" : "text","width":"120"},
+    {"name":"派车时间","code":"allocateTime","type" : "text","width":"150"},
+    {"name":"派车费用","code":"divideOrderFeeDouble","type" : "text","width":"150","isSum":"true","entityId":"624"},
+    {"name":"开始里程","code":"beginCarMileage","type" : "text","width":"100"},
+    {"name":"结束里程","code":"endCarMileage","type" : "text","width":"100"},
+    {"name":"开始油表读数","code":"beginOilMeter","type" : "text","width":"100"},
+    {"name":"结束油表读数","code":"endOilMeter","type" : "text","width":"100"},
+ 
+   
+    {"name":"客户类型","code":"customerTypeName","type" : "text","width":"120"},
+    {"name":"下单客户","code":"customerTenantName","type" : "text","width":"200"},
+    {"name":"品牌","code":"brandName","type" : "text","width":"120"},
+    {"name":"运单状态","code":"orderOutStateName","type" : "text","width":"120"},
+    {"name":"运单类型","code":"orderTypeName","type" : "text","width":"120"},
+    {"name":"下单时间","code":"createDate","type" : "text","width":"150"},
+    {"name":"实际托运时间","code":"billingDate","type" : "text","width":"150"},
+    {"name":"审核时间","code":"auditDate","type" : "text","width":"150"},
+    {"name":"发货店仓","code":"consignorName","type" : "text","width":"120"},
+    {"name":"发货人","code":"consignorLinkmanName","type" : "text","width":"120"},
+    {"name":"发货手机","code":"consignorBill","type" : "text","width":"120"},
+    {"name":"发货电话","code":"consignorTelephone","type" : "text","width":"120"},
+    {"name":"发货省市区","code":"sourceCityAddr","type" : "text","width":"120"},
+    {"name":"发货详细地址","code":"sourceAddress","type" : "text","width":"200"},
+    {"name":"收货店仓","code":"consigneeName","type" : "text","width":"120"},
+    {"name":"收货人","code":"consigneeLinkmanName","type" : "text","width":"120"},
+    {"name":"收货手机","code":"consigneeBill","type" : "text","width":"120"},
+    {"name":"收货电话","code":"consigneeTelephone","type" : "text","width":"120"},
+    {"name":"收货省市区","code":"destCityAddr","type" : "text","width":"120"},
+    {"name":"收货详细地址","code":"destAddress","type" : "text","width":"200"},
+    {"name":"货品名","code":"goodsName","type" : "text","width":"120"},
+    {"name":"打包件数","code":"packageNumber","type" : "text","isSum":"true"},
+    {"name":"打包体积（方）","code":"packageVolume","type" : "text","isSum":"true","width":"150"},
+    {"name":"打包重量（公斤）","code":"packageWeight","type" : "text","isSum":"true","width":"150"},
+   
+];
 let tabs = [
     {name: "专线物流", active: true,selectType: 1},
-    {name: "快递快运", selectType: 2 }
+    {name: "快递快运", selectType: 2 },
+    {name: "直提直送", selectType: 3 }
 ];
 let tabsAdd = [
     {name: "手动跟踪", active: true,selectType: 1},
@@ -428,7 +483,9 @@ let tabsAdd = [
 ];
 let tabsOrderTranfer = [
     {name: "待配载", active: true,selectType: 1,url:"api/ordTransitOutgoingBO.ajax?cmd=doQueryNeedTransferOne",ordersTransferTable:"ordersTransferTable_1",head:headAddWait,num:"*"},
-    {name: "已配载", selectType: 2,url:"api/ordTransitOutgoingBO.ajax?cmd=doQuery",ordersTransferTable:"ordersTransferTable_2",head:headAlreadyTransfer,num:"*" }
+    {name: "已配载", active: false,selectType: 2,url:"api/ordTransitOutgoingBO.ajax?cmd=doQuery",ordersTransferTable:"ordersTransferTable_2",head:headAlreadyTransfer,num:"*" },
+    {name: "已派车", active: false,selectType: 3,url:"api/ordDepartInfoBO.ajax?cmd=doQueryDetail",ordersTransferTable:"ordersTransferTable_3",head:headAlreadyDispatch,num:"*" }
+
 ];
 
 export{

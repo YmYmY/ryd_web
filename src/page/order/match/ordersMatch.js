@@ -155,7 +155,7 @@ export default {
         }
       });
       // 区域部门
-      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+      that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
         if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
           that.regionList = data.items;
           that.regionList.unshift({regionName:"所有",regionId:"-1"});
@@ -173,6 +173,7 @@ export default {
       });
        // 供应商
        params = {};
+       params.tenantStatus = 1;
        params.pTenantId = this.common.getCookie("tenantId");
        that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", params,function(data){
          if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
@@ -190,8 +191,8 @@ export default {
       this.query.queryTimes=[];
       var bnow = new Date();
       bnow.setDate(bnow.getDate() -7);  
-      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm")+":00");
-      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
+      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
     },
     // 第一优先
   selectSupplierOne(){
@@ -507,16 +508,23 @@ export default {
       this.currentTab = tab;
       this.$refs.ordersMatchManager.clean();
       console.log("切换到::::::"+tab.name);
-      debugger
       if(this.common.isNotBlank(tab.head) ){
         this.head = tab.head;
+      }else{
+        this.head = this.common.copyObj(this.headTem);
+      } 
+      if(this.common.isNotBlank(tab.ordersTable) ){
         this.ordersMatchTable = tab.ordersTable;
       }else{
-       this.head = this.common.copyObj(this.headTem);
-       this.ordersMatchTable = this.ordersTableTem;
-      } 
+        this.ordersMatchTable = tab.ordersTable;
+      }
       this.clear();
-      this.doQuery();
+      this.$nextTick(()=>{  //表头变动后重载表格(解决多tab切换code重复问题)
+        this.refreshTable = true;
+        this.$nextTick(()=>{  //重载后渲染成功再查询数据
+          this.doQuery();
+        })
+      })
     }
   },
   components: {

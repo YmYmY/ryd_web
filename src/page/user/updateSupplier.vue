@@ -118,10 +118,11 @@
                     </div>
                 </li>
                 <li class="item">
-                    <label class="label-term">支持选项</label>
+                    <label class="label-term">合同主体</label>
                     <div class="input-text">
-                        <el-checkbox v-model="collectionType">代收货款</el-checkbox>
-                        <el-checkbox v-model="payTo">到付款</el-checkbox>
+                        <el-select v-model="obj.contractSubject" placeholder="请选择">
+                            <el-option v-for="item in contractSubjectList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>
+                        </el-select>
                     </div>
                 </li>
             </ul>
@@ -140,6 +141,15 @@
                         <el-select  v-model="obj.supplierId" filterable  placeholder="请选择供应商">
                             <el-option v-for="item in supplierTenantList" :key="item.tenantId" :label="item.supplierFullName" :value="item.tenantId"></el-option>
                         </el-select>
+                    </div>
+                </li>
+            </ul>
+            <ul class="content clearfix">
+                <li class="item">
+                    <label class="label-term">支持选项</label>
+                    <div class="input-text">
+                        <el-checkbox v-model="collectionType">代收货款</el-checkbox>
+                        <el-checkbox v-model="payTo">到付款</el-checkbox>
                     </div>
                 </li>
             </ul>
@@ -201,7 +211,7 @@
                     </div>
                 </li>
                 <li class="item">
-                    <label class="label-term">结算方式</label>
+                    <label class="label-term"><em>*</em>结算方式</label>
                     <div class="input-text">
                         <el-select v-model="obj.payType" placeholder="请选择">
                             <el-option v-for="item in payTypeList" :key="item.codeValue" :label="item.codeName" :value="item.codeValue"></el-option>

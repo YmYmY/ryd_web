@@ -40,35 +40,35 @@ export default {
                 this.$route.meta.keep = true;
             })
             /* 路由异常错误处理，尝试解析一个异步组件时发生错误，重新渲染目标页面 */
-            let _this = this;
-            this.$router.onError((error) => {
-                console.log(error);
-                const pattern = /Loading chunk (\d)+ failed/g;
-                const isChunkLoadFailed = error.message.match(pattern);
-                const targetPath = router.history.pending.fullPath;
-                console.log(targetPath);
-                console.log("捕获到js丢失");
-                _this.$confirm('发现系统更新，是否刷新页面，以便下一步操作', '提示', {
-                    confirmButtonText: '刷新页面',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    let time = new Date().getTime();
-                    let href = "/index.html?v="+time;
-                    window.location.href = href;
-                }).catch(() => {
-                    _this.tabs.forEach((obj,index) => {
-                        if (obj.urlId == item.urlId) {
-                            this.$set(obj,"active",true);
-                            isHaveItem = true;
-                            itemIndex = index;
-                        }
-                    })
-                });
-                if (isChunkLoadFailed) {
-                    _this.$router.replace(targetPath);
-                }
-            });            
+            // let _this = this;
+            // this.$router.onError((error) => {
+            //     console.log(error);
+            //     const pattern = /Loading chunk (\d)+ failed/g;
+            //     const isChunkLoadFailed = error.message.match(pattern);
+            //     const targetPath = router.history.pending.fullPath;
+            //     console.log(targetPath);
+            //     console.log("捕获到js丢失");
+            //     _this.$confirm('发现系统更新，是否刷新页面，以便下一步操作', '提示', {
+            //         confirmButtonText: '刷新页面',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         let time = new Date().getTime();
+            //         let href = "/index.html?v="+time;
+            //         window.location.href = href;
+            //     }).catch(() => {
+            //         _this.tabs.forEach((obj,index) => {
+            //             if (obj.urlId == item.urlId) {
+            //                 this.$set(obj,"active",true);
+            //                 isHaveItem = true;
+            //                 itemIndex = index;
+            //             }
+            //         })
+            //     });
+            //     if (isChunkLoadFailed) {
+            //         _this.$router.replace(targetPath);
+            //     }
+            // });            
 
             //tab栏逻辑
             this.$set(item,"active",true);
@@ -124,6 +124,26 @@ export default {
                 }
             }
             this.calcTab();
+        },
+        refresh(id){
+            this.$route.meta.keep = false;
+            for(let index in this.tabs){
+                let el = this.common.copyObj(this.tabs[index]);
+                if(el.urlId == id){
+                    this.tabs[index] = {
+                        urlName: el.urlName,
+                        urlId: el.urlId,
+                        urlPath: el.urlPath,
+                        urlPathName: el.urlPathName+new Date().getTime()
+                    },
+                    this.changeTab(index);
+                    this.$nextTick(()=>{
+                        this.tabs[index] = el;
+                        this.changeTab(index);
+                    })
+                    break;
+                }
+            }
         },
         calcTab(itemIndex){
             let _this = this;

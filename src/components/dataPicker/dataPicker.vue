@@ -1,7 +1,7 @@
 <template>
     <div id="dataPickerComponent" class="filterSelectComponents">
         <el-date-picker 
-            v-model="model" 
+            v-model="date" 
             value-format="yyyy-MM-dd HH:mm:ss"
             type="datetimerange"
             :picker-options="pickerOptions"

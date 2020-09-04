@@ -21,7 +21,9 @@ export default {
                 regionId:null,
                 freightType:null,
                 tenantName:null,
+                payType:"-1",
             },
+            payTypeList:[],
             supplierTenantList:[],
             regionList:[],
             freightTypeList:[],
@@ -66,6 +68,7 @@ export default {
                 regionId:null,
                 freightType:null,
                 tenantName:null,
+                payType:"-1",
             }
         },
         doQuerySysTenantDefSupplier:function () {
@@ -86,6 +89,9 @@ export default {
             that.common.postUrl("api/sysTenantDefBO.ajax?cmd=getSysTenantDefCityName", {"pTenantId":tenantId},function(data){
                 that.supplierTenantList = data.items;
             });
+            that.common.postUrl("api/sysStaticDataBO.ajax?cmd=selectSysStaticDataByCodeType",{"codeType":"PAY_TYPE","hasAll":true},function (data) {
+                that.payTypeList = data.items;
+            })
         },
         //新增
         addClientPrice:function () {

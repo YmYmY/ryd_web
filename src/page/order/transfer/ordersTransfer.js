@@ -5,6 +5,8 @@ import innerTab from "@/components/innerTab/innerTab.vue"
 import printSet from "@/components/printSet/printSet.vue"
 import mycity from '@/components/mycity/mycity.vue'
 import makeTransitUp from "@/page/fc/makeTransitUp.vue"
+import commonPrint from '@/page/order/kd/commonPrint.js'
+
 
 export default {
   name: 'orders',
@@ -12,7 +14,9 @@ export default {
     next(that => {
         //调用刷新方法
         that.doQuery();
+        // 统计
         that.doQuerySum(that.tabs[1]);
+        that.doQuerySum(that.tabs[2]);
     });
   },
   data() {
@@ -32,8 +36,22 @@ export default {
         queryTimes:[],
         queryTimeType:"1",
         queryOrderType:"1",
-        queryTransitTimes:[]
+        queryTransitTimes:[],
+        queryAllocateTimes:[]
       },
+      queryTransfer:{
+        queryTimes:[],
+        queryTimeType:"1",
+        queryOrderType:"1",
+        queryTransitTimes:[],
+      },
+      queryDispatch:{
+        queryTimes:[],
+        queryTimeType:"1",
+        queryOrderType:"1",
+        queryAllocateTimes:[]
+      },
+      selectCombinedStsList:[],
       supplierTenantList:[],
       selectSupplierTypeList :[],  //供应商类型
       selectTransitOrderTimeList :[],//中转 时间
@@ -46,6 +64,7 @@ export default {
         makeUpShow:false,
         outgoingId:"",
         orderId:"",
+        combinedSts:"",
       cancelRemark : "",
       supplierList : [
         {codeValue:"supplierTenantIdByCarrier",codeName:"承运关系"},
@@ -58,6 +77,11 @@ export default {
         {codeName:"重复",codeValue:"1"},
         {codeName:"不重复",codeValue:"2"}
      ], 
+     fcPaymentStsList:[
+      {codeName:"所有",codeValue:"-1"},
+      {codeName:"未申请",codeValue:"1"},
+      {codeName:"已申请",codeValue:"2"}
+     ],
       
     }
   },
@@ -69,15 +93,63 @@ export default {
     this.initHtml();
   },
   methods: {
+    initDevices(){
+      let that  = this;
+      that.common.initDevices("1,4",function(arrs){
+        if(that.common.isNotBlank(arrs) && arrs.length > 0){
+            // that.currentPrinter = arrs[0];
+            // console.log(that.currentPrinter);
+            for(let i in arrs){
+              if(arrs[i].businessTypes == 1){
+                 that.currentPrinter = arrs[i];
+                 console.log("执行面单打印机：");
+                 console.log(that.currentPrinter);
+              }
+              if(arrs[i].businessTypes == 4){
+                that.currentPrinter4 = arrs[i];
+                console.log("执行电子面单打印机：");
+                console.log(that.currentPrinter4);
+              }
+           }
+        }
+      });
+    },
+  // 打印电子面单
+   doPrintBtach(){
+    let that = this;
+    if(that.common.isBlank(that.currentPrinter4) || that.common.isBlank(that.currentPrinter4.printerName)){
+      that.$message({"type":"success", message: "请先选择打印打印机"});   
+      that.printerViewHtml(); //设置打印机
+      return;
+    }
+    let orders = that.$refs.ordersTransferManager.getSelectItem();
+    if(that.common.isBlank(orders) || orders.length == 0){
+       that.$message({"type":"success", message: "请先选择打印信息"});   
+       return;
+    }
+    let ordersTem = [];
+    let ordersMap = {};
+    for(let i in orders ){
+        let o = orders[i];
+        if(that.common.isBlank(o.outgoingTrackingNum)){
+          that.$message({"type":"success", message: "请选择存在中转单号的信息"});   
+          return;
+        }
+        ordersMap[o.outgoingTrackingNum] = o;
+    }
+
+    for(let k in ordersMap){
+       ordersMap[k].orderNo =ordersMap[k].trackingNum ;
+       ordersTem.push(ordersMap[k]);
+    }
+    commonPrint.doPrintBtach(that.currentPrinter4,ordersTem);
+  }, 
     //分页查询
-    doQuery(currentTab) {
+    doQuery() {
       let that = this;
-      let currentTabFlag = that.common.isNotBlank(currentTab) ? true : false; // 是否初始化  填写时间
-      if(that.common.isBlank(currentTab)){
-         currentTab = that.currentTab;
-      }
-      let params = that.query;
-      if(currentTab.selectType == 1){
+      let params = {};
+      if(that.currentTab.selectType == 1){
+          params = that.query;
           if(that.common.isBlank(params.queryTimes)){
             that.$message({"type":"success", message: "请选择查询时间范围"});   
             return;
@@ -90,24 +162,12 @@ export default {
             that.$message({"type":"success", message: "请选择查询结束时间"});   
             return;
           }
-          if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
-            params.beginTime = params.queryTimes[0];
-         }
-         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
-            params.endTime = params.queryTimes[1];
-         }
-         params[that.query.selectSupplierTenant] = that.query.selectSupplierTenantValue;
-         params.beginTransitTime ="";
-         params.endTransitTime ="";
-      }else{
-          if(currentTabFlag){
-              let bnow = new Date();
-              bnow.setDate(bnow.getDate() -30);  
-              params.beginTransitTime = that.common.formatTime(bnow,"yyyy-MM-dd HH:mm:ss");
-              params.endTransitTime = that.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss");     
-              params.beginTime = "";
-              params.endTime = "";         
-          }else{
+          params.beginTime = params.queryTimes[0];
+          params.endTime = params.queryTimes[1];
+          params[that.query.selectSupplierTenant] = that.query.selectSupplierTenantValue;
+      }else  if(that.currentTab.selectType == 2){
+
+            params = that.queryTransfer;
             if(that.common.isBlank(params.queryTransitTimes)){
               that.$message({"type":"success", message: "请选择查询时间范围"});   
               return;
@@ -120,30 +180,54 @@ export default {
               that.$message({"type":"success", message: "请选择查询结束时间"});   
               return;
             }
-              
-           if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[0])){
-               params.beginTransitTime = params.queryTransitTimes[0];
+            params.beginTransitTime = params.queryTransitTimes[0];
+            params.endTransitTime = params.queryTransitTimes[1];
+            if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+               params.beginTime = params.queryTimes[0];
+            }
+            if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+               params.endTime = params.queryTimes[1];
+            }
+          
+      }else{
+
+           params = that.queryDispatch;
+           params.departType = 4; // 派车
+           if(that.common.isBlank(params.queryAllocateTimes)){
+            that.$message({"type":"success", message: "请选择查询时间范围"});   
+            return;
            }
-           if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[1])){
-               params.endTransitTime = params.queryTransitTimes[1];
-           }
+          if(that.common.isBlank(params.queryAllocateTimes[0])){
+            that.$message({"type":"success", message: "请选择查询开始时间"});   
+            return;
           }
+          if(that.common.isBlank(params.queryAllocateTimes[1])){
+            that.$message({"type":"success", message: "请选择查询结束时间"});   
+            return;
+          }
+          params.beginAllocateTime = params.queryAllocateTimes[0];
+          params.endAllocateTime = params.queryAllocateTimes[1];
+
+         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+             params.beginTime = params.queryTimes[0];
+         }
+         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+            params.endTime = params.queryTimes[1];
+         }
       }
-      let url = currentTab.url;
+
+      let url = that.currentTab.url;
       that.$refs.ordersTransferManager.load(url, params, function (data) {
-          currentTab.num = data.totalNum+"";
-      })
+        that.currentTab.num = data.totalNum+"";
+      });
     },
 
     // 统计处理
     doQuerySum(currentTab) {
       let that = this;
-      let currentTabFlag = that.common.isNotBlank(currentTab) ? true : false; // 是否初始化  填写时间
-      if(that.common.isBlank(currentTab)){
-         currentTab = that.currentTab;
-      }
-      let params = that.query;
+      let params = {};
       if(currentTab.selectType == 1){
+          params = that.query;
           if(that.common.isBlank(params.queryTimes)){
             that.$message({"type":"success", message: "请选择查询时间范围"});   
             return;
@@ -156,44 +240,56 @@ export default {
             that.$message({"type":"success", message: "请选择查询结束时间"});   
             return;
           }
-          if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
-            params.beginTime = params.queryTimes[0];
-         }
-         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
-            params.endTime = params.queryTimes[1];
-         }
+         params.beginTime = params.queryTimes[0];
+         params.endTime = params.queryTimes[1];
          params[that.query.selectSupplierTenant] = that.query.selectSupplierTenantValue;
-         params.beginTransitTime ="";
-         params.endTransitTime ="";
+      }else if(currentTab.selectType == 2){
+        params = that.queryTransfer;
+        if(that.common.isBlank(params.queryTransitTimes)){
+          that.$message({"type":"success", message: "请选择查询时间范围"});   
+          return;
+        }
+        if(that.common.isBlank(params.queryTransitTimes[0])){
+          that.$message({"type":"success", message: "请选择查询开始时间"});   
+          return;
+        }
+        if(that.common.isBlank(params.queryTransitTimes[1])){
+          that.$message({"type":"success", message: "请选择查询结束时间"});   
+          return;
+        }
+        params.beginTransitTime = params.queryTransitTimes[0];
+        params.endTransitTime = params.queryTransitTimes[1];
+        if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+           params.beginTime = params.queryTimes[0];
+        }
+        if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+           params.endTime = params.queryTimes[1];
+        }
       }else{
-          if(currentTabFlag){
-              let bnow = new Date();
-              bnow.setDate(bnow.getDate() -30);  
-              params.beginTransitTime = that.common.formatTime(bnow,"yyyy-MM-dd HH:mm:ss");
-              params.endTransitTime = that.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss");     
-              params.beginTime = "";
-              params.endTime = "";         
-          }else{
-            if(that.common.isBlank(params.queryTransitTimes)){
-              that.$message({"type":"success", message: "请选择查询时间范围"});   
-              return;
-            }
-            if(that.common.isBlank(params.queryTransitTimes[0])){
-              that.$message({"type":"success", message: "请选择查询开始时间"});   
-              return;
-            }
-            if(that.common.isBlank(params.queryTransitTimes[1])){
-              that.$message({"type":"success", message: "请选择查询结束时间"});   
-              return;
-            }
-              
-           if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[0])){
-               params.beginTransitTime = params.queryTransitTimes[0];
-           }
-           if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[1])){
-               params.endTransitTime = params.queryTransitTimes[1];
-           }
-          }
+
+        params = that.queryDispatch;
+        params.departType = 4; // 派车
+        if(that.common.isBlank(params.queryAllocateTimes)){
+         that.$message({"type":"success", message: "请选择查询时间范围"});   
+         return;
+        }
+       if(that.common.isBlank(params.queryAllocateTimes[0])){
+         that.$message({"type":"success", message: "请选择查询开始时间"});   
+         return;
+       }
+       if(that.common.isBlank(params.queryAllocateTimes[1])){
+         that.$message({"type":"success", message: "请选择查询结束时间"});   
+         return;
+       }
+       params.beginAllocateTime = params.queryAllocateTimes[0];
+       params.endAllocateTime = params.queryAllocateTimes[1];
+
+      if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+          params.beginTime = params.queryTimes[0];
+      }
+      if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+         params.endTime = params.queryTimes[1];
+      }
       }
       let url = currentTab.url;
       that.common.postUrl(url,params,function(data){
@@ -211,6 +307,7 @@ export default {
         codeTypes.push("TRANSIT_PAYMENT_TYPE");
         codeTypes.push("SELECT_ORDERS");
         codeTypes.push("SELECT_TRANSIT_ADD_ORDERS");
+        codeTypes.push("COMBINED_STS");
         that.common.postUrl(url,{"codeTypes":codeTypes.join(",")},function(data){
           that.selectOrderTimeList = [];
           that.selectOrderTimeList.push(data.SELECT_ORDER_TIME[0]);
@@ -222,6 +319,10 @@ export default {
           that.selectOrderList = data.SELECT_ORDERS;
           that.selectTransferOrderList = data.SELECT_TRANSIT_ADD_ORDERS;
           that.selectTransitPaymentTypeList.unshift({codeName:"所有",codeValue:"-1"});
+
+          that.selectCombinedStsList = data.COMBINED_STS;
+          that.selectCombinedStsList.unshift({codeName:"所有",codeValue:"-1"});
+
           that.initHtml();
         });
       },
@@ -231,12 +332,13 @@ export default {
         let params = {};
         let that = this;
         // 区域部门
-        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionTenantList",params,function(data){
+        that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionSubordinate",params,function(data){
           if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
             that.regionList = data.items;
             that.regionList.unshift({regionName:"所有",regionId:"-1"});
           }
         });
+
         // 所有区域部门
         that.common.postUrl("api/sysRegionBO.ajax?cmd=getSysRegionAll",params,function(data){
           if(that.common.isNotBlank(data) && that.common.isNotBlank(data.items)){
@@ -265,33 +367,44 @@ export default {
     },
 
     initHtml(){
+
+      this.query = {};
+      this.queryTransfer = {};
+      this.queryDispatch = {};
+
       this.query.queryTimeType = "1";
-      this.query.queryTansitAddType = "1";
       this.query.queryTimes=[];
-      this.query.queryTransitTimeType = "1";
       this.query.queryOrderType = "1";
-      this.query.queryTransitTimes=[];
       this.query.selectSupplierTenant = "supplierTenantIdByCarrier";
+      this.query.queryAllocateTimes = [];
+
+
+      this.queryTransfer.queryTimeType = "1";
+      this.queryTransfer.queryTimes=[];
+      this.queryTransfer.queryTansitAddType = "1";
+      this.queryTransfer.queryOrderType = "1";
+      this.queryTransfer.queryTransitTimeType = "1";
+      this.queryTransfer.queryTransitTimes=[];
+
+
+      this.queryDispatch.queryTimeType = "1";
+      this.queryDispatch.queryTimes=[];
+      this.queryDispatch.queryOrderType = "1";
+      this.queryDispatch.queryAllocateTimes = [];
       let bnow = new Date();
       bnow.setDate(bnow.getDate() -7);  
-      if(this.currentTab.selectType == 1){
-        this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm"));
-        this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm"));
-      }else{
-        bnow.setDate(bnow.getDate() -23);  
-        this.query.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd HH:mm:ss"));
-        this.query.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd HH:mm:ss"));
-      }
-    },
-    // 初始化打印机
-    initDevices(){
-      let that  = this;
-      that.common.initDevices("1",function(arrs){
-        if(that.common.isNotBlank(arrs) && arrs.length > 0){
-            that.currentPrinter = arrs[0];
-            console.log(that.currentPrinter);
-        }
-      });
+
+      this.query.queryTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.query.queryTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
+
+      bnow.setDate(bnow.getDate() -23);  
+      this.queryTransfer.queryTransitTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.queryTransfer.queryTransitTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
+
+      this.queryDispatch.queryAllocateTimes.push(this.common.formatTime(bnow,"yyyy-MM-dd")+" 00:00:00");
+      this.queryDispatch.queryAllocateTimes.push(this.common.formatTime(new Date(),"yyyy-MM-dd")+" 23:59:59");
+     
+      
     },
     // 修改 运单
     modifyOrder(){
@@ -460,49 +573,152 @@ export default {
         }
         this.$emit('openTab', item);
       },
-      // 按单取消 批量
-      cancelTransitOrders(){
+       // 修改/查看配载 1 修改 2查看-派车
+      toDepartOrderView(type){
         let that = this;
         let arrs = that.$refs.ordersTransferManager.getSelectItem();
         if(that.common.isBlank(arrs) || arrs.length == 0){
-            that.$message({"type":"success", message: "请先选择取消中转信息"});   
+            that.$message({"type":"success", message: "请先选择一条信息"});   
             return;
         }
-        let orderIds = [];
-        let omap = {};
-        let arrsTem = [];
-        for(let i in arrs){
-            let d = arrs[i];
-            orderIds.push(d.orderId);
-            if(this.common.isBlank(omap[d.batchNum] )){
-              arrsTem.push(d.batchNum);
-            }
-            omap[d.batchNum] = d.batchNum;
-        }
-    
-        if(arrsTem.length > 1){
-          that.$message({"type":"success", message: "按单取消需要选择相同批次信息"});   
+        if(arrs.length > 1 ){
+          that.$message({"type":"success", message: "只能选择一条信息"});   
           return;
         }
-        let params = {};
-        params.batchNum = arrs[0].batchNum;
-        params.batchNumAlias = arrs[0].batchNumAlias;
-        params.orderIdsStr = orderIds.join(",");
-        let tsize = orderIds.length;
-        that.$confirm('确认取消'+tsize+"单中转信息?", '提示', {
-           confirmButtonText: '确定',
-           cancelButtonText: '取消',
-           type: 'warning'
-        }).then(() => {
-            that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=cancelTransit", params,function(data){
-               that.$message({"type":"success", message: "取消批次【"+arrs[0].batchNumAlias+"】【"+orderIds.length+"】单成功"});   
-               that.$refs.ordersTransferManager.load();
-            },null,null,true);
-        }).catch(() => {
-               
-        });
-       
+        let batchNum = arrs[0].batchNum;
+        let order = {};
+        order.batchNum = batchNum;
+        order.type = 0; // 默认物流
+        order.view = false;
+        let urlName = "修改派车配载";
+        if(type == 2){
+            urlName = "派车配载详情";
+            order.view = true;
+        }
+        //派车
+        order.type = 2;
+        let item = {
+          urlName: urlName,
+          urlId: "modify_or_view_transit_"+order.batchNum,
+          urlPath: "/order/transfer/transferAdd.vue",
+          urlPathName: "/modifyOrViewTransitOrder",
+          query:order,
+        }
+        this.$emit('openTab', item);
       },
+        // 按单取消 批量
+    cancelTransitOrders(){
+      let that = this;
+      let arrs = that.$refs.ordersTransferManager.getSelectItem();
+      if(that.common.isBlank(arrs) || arrs.length == 0){
+          that.$message({"type":"success", message: "请先选择取消中转信息"});   
+          return;
+      }
+      let orderIds = [];
+      let omap = {};
+      let arrsTem = [];
+      let flag = false;
+      for(let i in arrs){
+          let d = arrs[i];
+          orderIds.push(d.orderId);
+          if(this.common.isBlank(omap[d.batchNum] )){
+            arrsTem.push(d.batchNum);
+          }
+          omap[d.batchNum] = d.batchNum;
+          if(d.combinedSts == 2){
+            that.$message({"type":"success", message: "合单数据不允许取消单个单，请取操作批次取消 或者 修改配载里面移除相关单"});   
+            flag = true;
+            return;
+          }
+      }
+      if(flag){
+         return;
+      }
+      // if(arrsTem.length > 1){
+      //   that.$message({"type":"success", message: "按单取消需要选择相同批次信息"});   
+      //   return;
+      // }
+      
+      let tsize = orderIds.length;
+      if(tsize > 20){
+        that.$message({"type":"success", message: "按单取消每次最多选择20条"});   
+        return;
+      }
+      that.$confirm('确认取消'+tsize+"单中转信息?", '提示', {
+         confirmButtonText: '确定',
+         cancelButtonText: '取消',
+         type: 'warning'
+      }).then(async () => {
+         
+        for(let i in arrs){
+          let order = arrs[i];
+          let params = {};
+          params.batchNum = order.batchNum;
+          params.batchNumAlias = order.batchNumAlias;
+          params.orderIdsStr = order.orderId;
+          params.trackingNum = order.trackingNum;
+          let d = await that.cancelTransit(params);
+        }
+        that.$refs.ordersTransferManager.load();
+      }).catch(() => {
+             
+      });
+    },
+    // 循环单个取消
+   async cancelTransit(params){
+      let that = this;
+      let data = await that.common.postUrl("api/ordTransitOutgoingBO.ajax?cmd=cancelTransit", params);
+      that.$message({"type":"success", message: "批次【"+params.batchNumAlias+"】,运单号【"+params.trackingNum+"】取消成功"});   
+      return data;
+    },
+     // 按单取消 批量-派车单
+     cancelDepartOrders(){
+      let that = this;
+      let arrs = that.$refs.ordersTransferManager.getSelectItem();
+      if(that.common.isBlank(arrs) || arrs.length == 0){
+          that.$message({"type":"success", message: "请先选择取消单信息"});   
+          return;
+      }
+      let orderIds = [];
+      for(let i in arrs){
+          let d = arrs[i];
+          orderIds.push(d.orderId);
+         
+      }
+      let tsize = orderIds.length;
+      if(tsize > 20){
+        that.$message({"type":"success", message: "按单取消每次最多选择20条"});   
+        return;
+      }
+      that.$confirm('确认取消'+tsize+"单派车信息?", '提示', {
+         confirmButtonText: '确定',
+         cancelButtonText: '取消',
+         type: 'warning'
+      }).then(async () => {
+         
+        for(let i in arrs){
+          let order = arrs[i];
+          let params = {};
+          params.batchNum = order.batchNum;
+          params.batchNumAlias = order.batchNumAlias;
+          params.orderId = order.orderId;
+          params.trackingNum = order.trackingNum;
+          let d = await that.cancelDepartOrder(params);
+        }
+        that.$refs.ordersTransferManager.load();
+      }).catch(() => {
+             
+      });
+    },
+    // 循环单个取消
+   async cancelDepartOrder(params){
+      let that = this;
+      let data = await that.common.postUrl("api/ordDepartInfoBO.ajax?cmd=cancelDepartOrder", params);
+      that.$message({"type":"success", message: "派车批次【"+params.batchNumAlias+"】,运单号【"+params.trackingNum+"】取消成功"});   
+      return data;
+    },
+
+    
       // 按批次取消
       cancelTransitBatchNum(){
         let that = this;
@@ -531,7 +747,35 @@ export default {
               
        });
   
-      
+      },
+       // 按批次取消-派车单
+       cancelDepartBatch(){
+        let that = this;
+        let arrs = that.$refs.ordersTransferManager.getSelectItem();
+        if(that.common.isBlank(arrs) || arrs.length == 0){
+           that.$message({"type":"success", message: "请先选择一条取消批次信息"});   
+           return;
+        }
+        if(arrs.length > 1 ){
+          that.$message({"type":"success", message: "只能选择一条取消"});   
+          return;
+        }
+        let params = {};
+        params.batchNum = arrs[0].batchNum;
+        params.batchNumAlias = arrs[0].batchNumAlias;
+        that.$confirm('确认取消批次'+params.batchNumAlias+"派车信息?", '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+       }).then(() => {
+         that.common.postUrl("api/ordDepartInfoBO.ajax?cmd=cancelDepartBatch", params,function(data){
+            that.$message({"type":"success", message: "取消批次"+params.batchNumAlias+"成功"});   
+            that.$refs.ordersTransferManager.load();
+         },null,null,true);
+       }).catch(() => {
+              
+       });
+  
       },
       // 中转跟踪
       trackingOrderView(){
@@ -565,47 +809,75 @@ export default {
     // 批量导出
     exportOrders(){
       let that = this;
-      let params = that.query;
+      let params = {};
       if(this.currentTab.selectType == 1){
-        if(that.common.isBlank(params.queryTimes)){
-          that.$message({"type":"success", message: "请选择查询时间范围"});   
-          return;
-        }
-        if(that.common.isBlank(params.queryTimes[0])){
-          that.$message({"type":"success", message: "请选择查询开始时间"});   
-          return;
-        }
-        if(that.common.isBlank(params.queryTimes[1])){
-          that.$message({"type":"success", message: "请选择查询结束时间"});   
-          return;
-        }
-    }else{
-        if(that.common.isBlank(params.queryTransitTimes)){
-          that.$message({"type":"success", message: "请选择查询时间范围"});   
-          return;
-        }
-        if(that.common.isBlank(params.queryTransitTimes[0])){
-          that.$message({"type":"success", message: "请选择查询开始时间"});   
-          return;
-        }
-        if(that.common.isBlank(params.queryTransitTimes[1])){
-          that.$message({"type":"success", message: "请选择查询结束时间"});   
-          return;
-        }
-    }
-    if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
-       params.beginTime = params.queryTimes[0];
-    }
-    if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
-       params.endTime = params.queryTimes[1];
-    }
-    if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[0])){
-       params.beginTransitTime = params.queryTransitTimes[0];
-    }
-    if(params.queryTransitTimes.length > 0 && that.common.isNotBlank(params.queryTransitTimes[1])){
-       params.endTransitTime = params.queryTransitTimes[1];
-    }
-    this.$refs.ordersTransferManager.downloadExcelFile();
+          params = that.query;
+          if(that.common.isBlank(params.queryTimes)){
+            that.$message({"type":"success", message: "请选择查询时间范围"});   
+            return;
+          }
+          if(that.common.isBlank(params.queryTimes[0])){
+            that.$message({"type":"success", message: "请选择查询开始时间"});   
+            return;
+          }
+          if(that.common.isBlank(params.queryTimes[1])){
+            that.$message({"type":"success", message: "请选择查询结束时间"});   
+            return;
+          }
+          params.beginTime = params.queryTimes[0];
+          params.endTime = params.queryTimes[1];
+          params[that.query.selectSupplierTenant] = that.query.selectSupplierTenantValue;
+      }else  if(this.currentTab.selectType == 2){
+
+            params = that.queryTransfer;
+            if(that.common.isBlank(params.queryTransitTimes)){
+              that.$message({"type":"success", message: "请选择查询时间范围"});   
+              return;
+            }
+            if(that.common.isBlank(params.queryTransitTimes[0])){
+              that.$message({"type":"success", message: "请选择查询开始时间"});   
+              return;
+            }
+            if(that.common.isBlank(params.queryTransitTimes[1])){
+              that.$message({"type":"success", message: "请选择查询结束时间"});   
+              return;
+            }
+            params.beginTransitTime = params.queryTransitTimes[0];
+            params.endTransitTime = params.queryTransitTimes[1];
+            if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+               params.beginTime = params.queryTimes[0];
+            }
+            if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+               params.endTime = params.queryTimes[1];
+            }
+          
+      }else{
+
+           params = that.queryDispatch;
+           params.departType = 4; // 派车
+           if(that.common.isBlank(params.queryAllocateTimes)){
+            that.$message({"type":"success", message: "请选择查询时间范围"});   
+            return;
+           }
+          if(that.common.isBlank(params.queryAllocateTimes[0])){
+            that.$message({"type":"success", message: "请选择查询开始时间"});   
+            return;
+          }
+          if(that.common.isBlank(params.queryAllocateTimes[1])){
+            that.$message({"type":"success", message: "请选择查询结束时间"});   
+            return;
+          }
+          params.beginAllocateTime = params.queryAllocateTimes[0];
+          params.endAllocateTime = params.queryAllocateTimes[1];
+
+         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[0])){
+             params.beginTime = params.queryTimes[0];
+         }
+         if(params.queryTimes.length > 0 && that.common.isNotBlank(params.queryTimes[1])){
+            params.endTime = params.queryTimes[1];
+         }
+      }
+      this.$refs.ordersTransferManager.downloadExcelFile();
 
     },
     // 列表双击
@@ -648,15 +920,32 @@ export default {
         this.ordersTransferTable = this.ordersTransferTableTem;
       }
       this.clear();
-      debugger
-      this.doQuery();
+      this.$nextTick(()=>{  //表头变动后重载表格(解决多tab切换code重复问题)
+        this.refreshTable = true;
+        this.$nextTick(()=>{  //重载后渲染成功再查询数据
+          this.doQuery();
+        })
+      })
+
+     
+      
     },
     //打印-设置确定回调
     sureCallback(data){
-      if(this.common.isNotBlank(data)){
-        this.currentPrinter = data[0];
-        console.log("当前执行打印机：");
-        console.log(this.currentPrinter);
+      let that = this;
+      if(that.common.isNotBlank(data)){
+        for(let i in data){
+          if(data[i].businessTypes == 1){
+            that.currentPrinter = data[i];
+            console.log("执行面单打印机：");
+            console.log(that.currentPrinter);
+         }
+         if(data[i].businessTypes == 4){
+           that.currentPrinter4 = data[i];
+           console.log("执行电子面单打印机：");
+           console.log(that.currentPrinter4);
+         }
+        }
       }
     },
     // 参数处理 -> 异常TAB 用到
@@ -680,6 +969,14 @@ export default {
             return;
         }
         for(let el of selectData){
+            if(el.combinedSts == 2){
+                that.$message.error('合单数据不能批量申请付款！');
+                return;
+            }
+            if(el.transitPaySts != 1){
+                that.$message.error('数据不为待申请！');
+                return;
+            }
             if(that.common.isBlank(el.outgoingFeeDouble) || el.outgoingFeeDouble <= 0){
                 that.$message.error('中转费用为零无法申请付款！');
                 return;
@@ -718,26 +1015,33 @@ export default {
           that.makeUpShow=false;
       },
       showPay:function(){
-          let that = this;
-          let selectData = that.$refs.ordersTransferManager.getSelectItem();
-          if(selectData.length == 0){
-              that.$message.error('请选择需要付款申请的数据！');
-              return;
-          }
-          if(selectData.length != 1){
-              that.$message.error('只能选择一条数据！');
-              return;
-          }
-          that.orderId = selectData[0].orderId;
-          that.outgoingId = selectData[0].outgoingId;
-          that.makeUpShow=true;
-      },
-  },
-  components: {
-    tableCommon,
-    innerTab,
-    printSet,
-    mycity,
-      makeTransitUp
-  }
+        let that = this;
+        let selectData = that.$refs.ordersTransferManager.getSelectItem();
+        if(selectData.length == 0){
+            that.$message.error('请选择需要付款申请的数据！');
+            return;
+        }
+        if(selectData.length != 1){
+            that.$message.error('只能选择一条数据！');
+            return;
+        }
+        if(selectData[0].transitPaySts != 1){
+            that.$message.error('数据不为待申请！');
+            return;
+        }
+        that.orderId = selectData[0].orderId;
+        that.outgoingId = selectData[0].outgoingId;
+        that.combinedSts = selectData[0].combinedSts;
+        that.makeUpShow=true;
+    },
+},
+components: {
+  tableCommon,
+  innerTab,
+  printSet,
+  mycity,
+  makeTransitUp,
+  commonPrint
 }
+}
+   
